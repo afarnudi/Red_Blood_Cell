@@ -49,7 +49,7 @@ double VolumeMemerane(double Membrane_Node_Position[Membrane_num_of_Nodes][3],in
 void  Actin_Force_calculator( double  Actin_Node_Position [][3],double  Actin_Node_VelocityRungKuta [][3],double  Actin_Node_Force [][3],double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds, double &Total_Potential_Energy);
 //double  energyActin( double  Actin_Node_Position [][3],double  Actin_Node_Velocity [][3],double  Actin_Node_Force [][3],double Actin_Node_Pair_List[][3]   );
 void Actin_Membrane_Barrier(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3],  int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2]);
-void Actin_Membrane_Barrier_2(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3],  int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2]);
+void Actin_Membrane_Barrier_2(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3],  int Membrane_triangle_list[Membrane_num_of_Triangles][3]);
 
 void Nucleus_Membrane_Barrier(int Nucleus_Membrane_list_of_Nodes[], double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Outer_Membrane_num_of_triangles, int  Outer_Membrane_num_of_Nodes);
 void Nucleus_Membrane_Barrier_2(int Nucleus_Membrane_list_of_Nodes[], double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Outer_Membrane_num_of_triangles, int  Outer_Membrane_num_of_Nodes);
@@ -92,7 +92,7 @@ int spatial_contact_matrix_y [ size_spatialcontactmatrix] [size_spatialcontactma
 int spatial_contact_matrix_z [ size_spatialcontactmatrix] [size_spatialcontactmatrix]={0};
 void update_spatial_contact_matrix(double contact_coordinates[3]);
 double COM_of_nucleus_membrane[3];
-void COM_of_nucleus_membrane_function(double (&Membrane_Node_Position)[Membrane_num_of_Nodes][3],int Nucleus_Membrane_list_of_Nodes[], int  Outer_Membrane_num_of_Nodes);
+//void COM_of_nucleus_membrane_function(double (&Membrane_Node_Position)[Membrane_num_of_Nodes][3],int Nucleus_Membrane_list_of_Nodes[], int  Outer_Membrane_num_of_Nodes);
 //-------------------------------chromaton-------------------------
 
 
@@ -120,7 +120,7 @@ void  ECM_rigidity_constructor(double  ECM_Node_Position [][3],double ECM_Node_P
 void  ECM_Force( double  ECM_Node_Position [][3],double  ECM_Node_Velocity [][3],double  ECM_Node_Force [][3],double ECM_Node_Pair_List[][3]  ,double ECM_upper_surface_Node_Pairs[] ,double ECM_varying_stiffness_coefficient[], int ECM_num_of_Bonds, double &Total_Potential_Energy);
 int interactingECM,interactingMemrane;
 
-void cellshift( double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double Actin_Node_Position[Actin_num_of_Nodes][3],double Chromatin_Bead_Position[Chromatin_num_of_Beads][3],double  ECM_Node_Position [][3] ,double  Membrane_Node_Velocity [Membrane_num_of_Nodes][3],double Actin_Node_Velocity[Actin_num_of_Nodes][3],double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3]);
+void cellshift( double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double Actin_Node_Position[Actin_num_of_Nodes][3],double  Membrane_Node_Velocity [Membrane_num_of_Nodes][3],double Actin_Node_Velocity[Actin_num_of_Nodes][3]);
 
 #define membraneshiftinXdirection 0
 #define membraneshiftinZdirection 0
@@ -180,7 +180,7 @@ double total_tracking_foece_now;
 
 
 
-void CellCOM( double com[3],double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double  Actin_Node_Position [][3] ,double Chromatin_Bead_Position[Chromatin_num_of_Beads][3]);
+void CellCOM( double com[3],double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double  Actin_Node_Position [][3]);
 
 void Vector_transformation (double MV[3],double  M[3][3] ,double V[3]);
 
@@ -234,22 +234,22 @@ double kineticenergyactin (double  Actin_Node_Velocity [][3] );
 double kineticenergysolvent ();
 double kineticenergychromatin (double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3]);
 double kineticenergyECM (double  ECM_Node_Velocity [][3]);
-void Thermostat(int istep, double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], double Actin_Node_Velocity[][3], double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3], double ECM_Node_Velocity[][3]);
+void Thermostat(int istep, double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], double Actin_Node_Velocity[][3]);
 //-----------------------------thermostat------------------
 
 
 //---------------------------restart-----------------------
 
-void restartsave(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], double Chromatin_Bead_Position[Chromatin_num_of_Beads][3], double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3], double ECM_Node_Position[][3], double ECM_Node_Velocity [][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds);
+void restartsave(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds);
 
 
-void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3],double Actin_Node_Pair_List[][3], double Chromatin_Bead_Position[Chromatin_num_of_Beads][3], double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3], double ECM_Node_Position [][3], double ECM_Node_Velocity [][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds);
+void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3],double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds);
 //---------------------------restart-----------------------
 
 
 //Povray------
 # define export_povray_step_distance 10000  // clear!
-void povray_output_creator(int currentStep, double Membrane_Node_Position[Membrane_num_of_Nodes][3], int  Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Membrane_Node_Pair_list[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], double Chromatin_Bead_Position[Chromatin_num_of_Beads][3], double  ECM_Node_Position[][3], double ECM_Node_Pair_List[][3], int ECM_surface_triangle_list[ECM_Surface_num_of_Triangles][3], int Outer_Membrane_num_of_triangles, int Membrane_num_of_Node_Pairs, int Outer_Membrane_num_of_Node_Pairs, int Actin_num_of_Bonds, int ECM_num_of_Bonds);
+void povray_output_creator(int currentStep, double Membrane_Node_Position[Membrane_num_of_Nodes][3], int  Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Membrane_Node_Pair_list[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Outer_Membrane_num_of_triangles, int Membrane_num_of_Node_Pairs, int Outer_Membrane_num_of_Node_Pairs, int Actin_num_of_Bonds);
 
 //Ali
 void Membrane_Actin_shared_Node_Force_calculator (double Membrane_Node_Position[Membrane_num_of_Nodes][3],double  Actin_Node_Position [Actin_num_of_Nodes][3], double Membrane_Node_Force [Membrane_num_of_Nodes][3], double  Actin_Node_Force [Actin_num_of_Nodes][3], int Membrane_Actin_shared_Node_list[Actin_Membrane_shared_num_of_Nodes][2], double Membrane_Node_velocity[Membrane_num_of_Nodes][3], double Actin_Node_velocity[Actin_num_of_Nodes][3]);// updates forces + relavant potential energy
@@ -339,9 +339,9 @@ int main() //main**
     
     
     bool resume=false;//If true the programme will call upon the 'restartread' function and read the positions and velocities of the nodes from an external file that is determined inside the function.
-    bool chromatin_contant_matrix_calculation_flag=false;
-    bool cell_has_nucleus=false;
-    bool cell_has_ecm=false;
+//    bool chromatin_contant_matrix_calculation_flag=false;
+//    bool cell_has_nucleus=false;
+//    bool cell_has_ecm=false;
     //-----------------------------------------------membrane:
     int counter = 0;//This counter counts the number of MD steps and wil be used to determin on which steps the preogramme is saved ('restartsave').
     double Membrane_Node_Position[Membrane_num_of_Nodes][3], Membrane_Node_Velocity[Membrane_num_of_Nodes][3],Membrane_Node_Force[Membrane_num_of_Nodes][3];
@@ -353,36 +353,27 @@ int main() //main**
     
     Membrane_constructor(Membrane_Node_Position,Membrane_Node_Velocity,Membrane_Node_Force,Membrane_triangle_list);
     
-    int Membrane_Normal_direction[Membrane_num_of_Triangles][2];// n[i][0]= +1(-1) if the membrane triangle belongs to the outer membrane(Nucleus); And  n[i][1]= +1(-1) if the normal product of the triangle nodes (with the default order) is positive (negative).
+//    int Membrane_Normal_direction[Membrane_num_of_Triangles][2];// n[i][0]= +1(-1) if the membrane triangle belongs to the outer membrane(Nucleus); And  n[i][1]= +1(-1) if the normal product of the triangle nodes (with the default order) is positive (negative).
     
     int  Outer_Membrane_num_of_triangles;       // will be updated in Membrane_Normal_direction_Identifier
-    int  Nucleus_Membrane_num_of_triangles;     // will be updated in normalsorter
-    Membrane_Normal_direction_Identifier(Membrane_Node_Position, Membrane_triangle_list, Membrane_Normal_direction, Outer_Membrane_num_of_triangles, Nucleus_Membrane_num_of_triangles, cell_has_nucleus);
+//    int  Nucleus_Membrane_num_of_triangles;     // will be updated in normalsorter
+//    Membrane_Normal_direction_Identifier(Membrane_Node_Position, Membrane_triangle_list, Membrane_Normal_direction, Outer_Membrane_num_of_triangles, Nucleus_Membrane_num_of_triangles, cell_has_nucleus);
+    Membrane_Normal_direction_Identifier(Membrane_Node_Position, Membrane_triangle_list, Outer_Membrane_num_of_triangles);
     
-    int  Outer_Membrane_num_of_Nodes;  // Is calculated in 'Membrane_Normal_direction_Identifier'
-    if (cell_has_nucleus==true) {
-        Outer_Membrane_Identifier(Membrane_Normal_direction, Membrane_triangle_list, Outer_Membrane_num_of_triangles, Outer_Membrane_num_of_Nodes);
-    } else {
-        Outer_Membrane_num_of_Nodes=Membrane_num_of_Nodes;
-    }
-    
-    
+    int Outer_Membrane_num_of_Nodes=Membrane_num_of_Nodes;  // Is calculated in 'Membrane_Normal_direction_Identifier'
     int Outer_Membrane_list_of_Nodes[Outer_Membrane_num_of_Nodes];
-    int Nucleus_Membrane_list_of_Nodes[Membrane_num_of_Nodes-Outer_Membrane_num_of_Nodes];
-    
-    if (cell_has_nucleus==true) {
-        Membrane_and_Nucleus_Node_list_builder( Membrane_Node_Position,Nucleus_Membrane_list_of_Nodes,Outer_Membrane_list_of_Nodes,Membrane_triangle_list, Outer_Membrane_num_of_triangles);
-    } else {
-        for (int i=0; i<Membrane_num_of_Nodes; i++) {
-            Outer_Membrane_list_of_Nodes[i]=i;
-        }
+//    int Nucleus_Membrane_list_of_Nodes[Membrane_num_of_Nodes-Outer_Membrane_num_of_Nodes];
+    for (int i=0; i<Membrane_num_of_Nodes; i++) {
+        Outer_Membrane_list_of_Nodes[i]=i;
     }
-    
+
     int  Membrane_num_of_Triangle_Pairs;
+//    int  Membrane_triangle_triangle_neighbour_list[Membrane_num_of_Triangles][3];
+    vector <vector <int> > Membrane_triangle_triangle_neighbour_list;
+    Membrane_triangle_triangle_neighbour_list.resize(Membrane_num_of_Triangles);
     Membrane_num_of_Triangle_Pairs=Membrane_triangle_pair_counter( Membrane_triangle_list);
     int Membrane_Triangle_Pair_Nodes[Membrane_num_of_Triangle_Pairs][4]; // pos1 pos2 pos3 and po4 of all interactions are stored here
-    Membrane_Triangle_Pair_Identifier(Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_num_of_Triangle_Pairs);
-    
+    Membrane_Triangle_Pair_Identifier(Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_num_of_Triangle_Pairs, Membrane_triangle_triangle_neighbour_list);
     
     int Outer_Membrane_num_of_Node_Pairs ; // usefull in POV ray- modulate in void sortingbonds(int bondslist[][2],int tri[3][Membrane_num_of_Triangles])
     int Membrane_num_of_Node_Pairs;
@@ -422,14 +413,14 @@ int main() //main**
     //--------------------------------Migration---------------------------
     double centerOfmassoftheCell[3];
     
-    ofstream movement_of_cell_COM;
-    movement_of_cell_COM.open("results/movement_of_cell_COM.txt");
-    movement_of_cell_COM << std:: fixed;
+    ofstream write_cell_COM;
+    write_cell_COM.open("results/movement_of_cell_COM.txt");
+    write_cell_COM << std:: fixed;
     
     
-    ofstream total_tracking_foece_ofstream;
-    total_tracking_foece_ofstream.open("results/total_tracking_foece.txt");
-    total_tracking_foece_ofstream << std:: fixed;
+//    ofstream total_tracking_force_ofstream;
+//    total_tracking_force_ofstream.open("results/total_tracking_foece.txt");
+//    total_tracking_force_ofstream << std:: fixed;
     //--------------------------------Migration---------------------------
     
     //---------------------------------------------------actin:
@@ -451,88 +442,88 @@ int main() //main**
     Membrane_Actin_shared_Node_Identifier(Membrane_Actin_shared_Node_list, Membrane_Node_Position, Actin_Node_Position);
     
     //-------------------------------chromaton--------------------------
-    if (cell_has_nucleus==true) {
-        double Chromatin_Bead_Position[Chromatin_num_of_Beads][3];
-        double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3];
-        double Chromatin_Bead_Force[Chromatin_num_of_Beads][3];
-        float CmLaststeps[Chromatin_num_of_Beads][Chromatin_num_of_Beads];
-        double   Dissimilaritycut = sigmachromatin*Chromatin_Scaling_Factor*1.5;  //  within this distance chromatins are consedered in contact
-        
-        Chromatin_constructor(Chromatin_Bead_Position, Chromatin_Bead_Velocity, Chromatin_Bead_Force, chromatin_contant_matrix_calculation_flag, CmLaststeps);
-        
-        
-        
-        ofstream d2_10ofstream;
-        d2_10ofstream.open("results/d2_10.txt"); // refrecne at the beginning
-        d2_10ofstream << std:: fixed;
-        
-        ofstream d2_32ofstream;
-        d2_32ofstream.open("results/d2_32.txt"); // refrecne at the beginning
-        d2_32ofstream << std:: fixed;
-        //--d2_32_REDUCED.txt
-        float ContactProbablilityNumber; //stores the total prob number of contacts
-        ofstream REDUCEDd2_32ofstream;
-        REDUCEDd2_32ofstream.open("results/d2_32_REDUCED.txt");
-        REDUCEDd2_32ofstream << std:: fixed;
-        
-        ofstream cm3ofstream;
-        cm3ofstream.open("results/Cm3.txt");
-        cm3ofstream << std:: fixed;
-        float Cm[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // contact matrix at now
-        float Cm0[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for first StepCm0 steps
-        float Cm1[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for last StepCm1 steps
-        float Cm2[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for last 2*StepCm2 steps
-        float Cm3[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for last StepCm2 steps
-        float d2_10;  // d^2 between cm0 and cm1
-        float d2_32;  // d^2 between cm2 and cm3
-        float ContactNumber; //stores the number of contacts
-        // spatialcontact matrix
-        
-        int Flag=0; // useful in contact prob matrix
-        
-        if ((chromatin_contant_matrix_calculation_flag==true) && (cell_has_nucleus=true)) {
-            
-            
-            for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
-            {
-                for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
-                {
-                    Cm0[i1][j1]=0;
-                    Cm1[i1][j1]=0;
-                    Cm2[i1][j1]=0;
-                    Cm3[i1][j1]=0;
-                }
-            }
-        }
-    }//if nucleus has nucleus
+//    if (cell_has_nucleus==true) {
+//        double Chromatin_Bead_Position[Chromatin_num_of_Beads][3];
+//        double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3];
+//        double Chromatin_Bead_Force[Chromatin_num_of_Beads][3];
+//        float CmLaststeps[Chromatin_num_of_Beads][Chromatin_num_of_Beads];
+//        double   Dissimilaritycut = sigmachromatin*Chromatin_Scaling_Factor*1.5;  //  within this distance chromatins are consedered in contact
+//        
+//        Chromatin_constructor(Chromatin_Bead_Position, Chromatin_Bead_Velocity, Chromatin_Bead_Force, chromatin_contant_matrix_calculation_flag, CmLaststeps);
+//        
+//        
+//        
+//        ofstream d2_10ofstream;
+//        d2_10ofstream.open("results/d2_10.txt"); // refrecne at the beginning
+//        d2_10ofstream << std:: fixed;
+//        
+//        ofstream d2_32ofstream;
+//        d2_32ofstream.open("results/d2_32.txt"); // refrecne at the beginning
+//        d2_32ofstream << std:: fixed;
+//        //--d2_32_REDUCED.txt
+//        float ContactProbablilityNumber; //stores the total prob number of contacts
+//        ofstream REDUCEDd2_32ofstream;
+//        REDUCEDd2_32ofstream.open("results/d2_32_REDUCED.txt");
+//        REDUCEDd2_32ofstream << std:: fixed;
+//        
+//        ofstream cm3ofstream;
+//        cm3ofstream.open("results/Cm3.txt");
+//        cm3ofstream << std:: fixed;
+//        float Cm[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // contact matrix at now
+//        float Cm0[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for first StepCm0 steps
+//        float Cm1[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for last StepCm1 steps
+//        float Cm2[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for last 2*StepCm2 steps
+//        float Cm3[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for last StepCm2 steps
+//        float d2_10;  // d^2 between cm0 and cm1
+//        float d2_32;  // d^2 between cm2 and cm3
+//        float ContactNumber; //stores the number of contacts
+//        // spatialcontact matrix
+//        
+//        int Flag=0; // useful in contact prob matrix
+//        
+//        if (chromatin_contant_matrix_calculation_flag==true) {
+//            
+//            
+//            for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
+//            {
+//                for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
+//                {
+//                    Cm0[i1][j1]=0;
+//                    Cm1[i1][j1]=0;
+//                    Cm2[i1][j1]=0;
+//                    Cm3[i1][j1]=0;
+//                }
+//            }
+//        }
+//    }//if nucleus has nucleus
     //-------------------------------chromaton--------------------------
     
     
     //--------------------------------ECM--------------------------------
-    if (cell_has_ecm==true) {
-        double ECM_Node_Position[ECM_num_of_Nodes][3];
-        double ECM_Node_Velocity[ECM_num_of_Nodes][3];
-        double ECM_Node_Force[ECM_num_of_Nodes][3];
-        int ECM_surface_triangle_list[ECM_Surface_num_of_Triangles][3]; // first Membrane_num_of_triangles elements are for outer membrane and after that nucleus elementsk
-        int ECM_num_of_Bonds;
-        ECM_num_of_Bonds=ECM_Node_Pair_Identifier();
-        double ECM_upper_surface_Node_Pairs[ECM_num_of_Bonds]; // 0.0 = Node pair is located on the upper surface of th ECM. 1= Node pair is not on the upper surface, hence in the volume or the edge or buttom surface.
-        double ECM_varying_stiffness_coefficient[ECM_num_of_Bonds];
-        double ECM_Node_Pair_List[ECM_num_of_Bonds][3]; // In the first two elements, the label (intigers) of the node pairs are stored, and in the last element their distance. The distance is used in the force calculations for the Maxwell spring initial length. The initial length is updated during each step so we have a diferent initial length, hence the Maxwell spring.
-        
-        ECM_constructor(ECM_Node_Position, ECM_Node_Velocity, ECM_Node_Force, ECM_surface_triangle_list, ECM_Node_Pair_List, ECM_upper_surface_Node_Pairs, ECM_num_of_Bonds);
-        
-        // resume**
-        ECM_rigidity_constructor(ECM_Node_Position, ECM_Node_Pair_List, ECM_varying_stiffness_coefficient, ECM_num_of_Bonds);
-        vector<vector<int> > ECM_Membrane_Trinagle_neighbours_2;//A 2D list of the trinagles (first index) and their ECM neighbours (seconde index)
-        ECM_Membrane_Trinagle_neighbours_2.resize(Outer_Membrane_num_of_triangles);
-        
-        vector<int>  ECM_Membrane_Trinagle_neighbours_3;//A 1D list of the trinagles (first index) and its ECM neighbour
-        ECM_Membrane_Trinagle_neighbours_3.resize(Outer_Membrane_num_of_triangles);
-        
-        vector<int>  Membrane_Edge_triangle_and_ECM_neighbours;// A 2d list of Membrane triangles that meke up the contact edge of the membrane (first element) and their corresponding ECM neighbours (second element). The membrane triangles are located right above the ECM triangles at a specific distance and at an angle (perpindicular) to the ECMs.
-        Membrane_Edge_triangle_and_ECM_neighbours.resize(Outer_Membrane_num_of_triangles);
-    }
+//    if (cell_has_ecm==true) {
+//        double ECM_Node_Position[ECM_num_of_Nodes][3];
+//        double ECM_Node_Velocity[ECM_num_of_Nodes][3];
+//        double ECM_Node_Force[ECM_num_of_Nodes][3];
+//        int ECM_surface_triangle_list[ECM_Surface_num_of_Triangles][3]; // first Membrane_num_of_triangles elements are for outer membrane and after that nucleus elementsk
+//        int ECM_num_of_Bonds;
+//        ECM_num_of_Bonds=ECM_Node_Pair_Identifier();
+//        double ECM_upper_surface_Node_Pairs[ECM_num_of_Bonds]; // 0.0 = Node pair is located on the upper surface of th ECM. 1= Node pair is not on the upper surface, hence in the volume or the edge or buttom surface.
+//        double ECM_varying_stiffness_coefficient[ECM_num_of_Bonds];
+//        double ECM_Node_Pair_List[ECM_num_of_Bonds][3]; // In the first two elements, the label (intigers) of the node pairs are stored, and in the last element their distance. The distance is used in the force calculations for the Maxwell spring initial length. The initial length is updated during each step so we have a diferent initial length, hence the Maxwell spring.
+//
+//        ECM_constructor(ECM_Node_Position, ECM_Node_Velocity, ECM_Node_Force, ECM_surface_triangle_list, ECM_Node_Pair_List, ECM_upper_surface_Node_Pairs, ECM_num_of_Bonds);
+//
+//        // resume**
+//        ECM_rigidity_constructor(ECM_Node_Position, ECM_Node_Pair_List, ECM_varying_stiffness_coefficient, ECM_num_of_Bonds);
+//        vector<vector<int> > ECM_Membrane_Trinagle_neighbours_2;//A 2D list of the trinagles (first index) and their ECM neighbours (seconde index)
+//        ECM_Membrane_Trinagle_neighbours_2.resize(Outer_Membrane_num_of_triangles);
+//
+//        vector<int>  ECM_Membrane_Trinagle_neighbours_3;//A 1D list of the trinagles (first index) and its ECM neighbour
+//        ECM_Membrane_Trinagle_neighbours_3.resize(Outer_Membrane_num_of_triangles);
+//
+//        vector<int>  Membrane_Edge_triangle_and_ECM_neighbours;// A 2d list of Membrane triangles that meke up the contact edge of the membrane (first element) and their corresponding ECM neighbours (second element). The membrane triangles are located right above the ECM triangles at a specific distance and at an angle (perpindicular) to the ECMs.
+//        Membrane_Edge_triangle_and_ECM_neighbours.resize(Outer_Membrane_num_of_triangles);
+//    }
 
     //--------------------------------ECM--------------------------------
     
@@ -563,11 +554,11 @@ int main() //main**
     
     
     
-    cellshift(Membrane_Node_Position, Actin_Node_Position, Chromatin_Bead_Position, ECM_Node_Position, Membrane_Node_Velocity, Actin_Node_Velocity, Chromatin_Bead_Velocity);
+    cellshift(Membrane_Node_Position, Actin_Node_Position, Membrane_Node_Velocity, Actin_Node_Velocity);
     if( resume==true )
     {
-        restartread(Membrane_Node_Position,Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Normal_direction, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Chromatin_Bead_Position, Chromatin_Bead_Velocity, ECM_Node_Position, ECM_Node_Velocity, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds);
-        cellshift(Membrane_Node_Position, Actin_Node_Position, Chromatin_Bead_Position, ECM_Node_Position, Membrane_Node_Velocity, Actin_Node_Velocity, Chromatin_Bead_Velocity);
+        restartread(Membrane_Node_Position,Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds);
+        cellshift(Membrane_Node_Position, Actin_Node_Position, Membrane_Node_Velocity, Actin_Node_Velocity);
     }
     //*******************************************************************************************************
     /*BUG
@@ -582,7 +573,7 @@ int main() //main**
     // We should probably find the reason why or get rid of one.
     //*******************************************************************************************************
     
-    ECM_constructor(ECM_Node_Position, ECM_Node_Velocity, ECM_Node_Force, ECM_surface_triangle_list, ECM_Node_Pair_List, ECM_upper_surface_Node_Pairs, ECM_num_of_Bonds);
+//    ECM_constructor(ECM_Node_Position, ECM_Node_Velocity, ECM_Node_Force, ECM_surface_triangle_list, ECM_Node_Pair_List, ECM_upper_surface_Node_Pairs, ECM_num_of_Bonds);
     
     //==========================================================================================================================
     //==========================================================================================================================
@@ -597,39 +588,39 @@ int main() //main**
     double adhesion_distance_threshold;
     bool membrane_bead_adhesion=false;
     int bead_membrane_neighbour_update_step;
-    
-    //Check membrane for contact point
-    if (membrane_bead_adhesion==false) {
-        for (int membrane_tri_index=0; membrane_tri_index<Membrane_num_of_Triangles; membrane_tri_index++) {
-            double membrane_triangle_com[3];
-            double temp_membrane_bead_distance;
-            membrane_triangle_com[0]=(Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][0]][0]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][1]][0]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][2]][0])/3.0;
-            membrane_triangle_com[1]=(Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][0]][1]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][1]][1]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][2]][1])/3.0;
-            membrane_triangle_com[2]=(Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][0]][2]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][1]][2]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][2]][2])/3.0;
-            
-            temp_membrane_bead_distance=(membrane_triangle_com[0]-adhesive_bead_position[0])*(membrane_triangle_com[0]-adhesive_bead_position[0])+(membrane_triangle_com[1]-adhesive_bead_position[1])*(membrane_triangle_com[1]-adhesive_bead_position[1])+ (membrane_triangle_com[2]-adhesive_bead_position[2])*(membrane_triangle_com[2]-adhesive_bead_position[2]);
-            
-            if (temp_membrane_bead_distance<adhesion_distance_threshold*adhesion_distance_threshold) {
-                membrane_triangle_adhesive_bead_adhesion_point=membrane_tri_index;
-                membrane_bead_adhesion=true;
-                break;
-            }
-        }
-    }
-    
-    
-    
-    //bead membrane Force calculations:
-    for (int neighbour_index=0; neighbour_index<membrane_triangle_adhesive_bead_neighbour_list.size(); neighbour_index++) {
-        //apply force between nodes.
-    }
+//
+//    //Check membrane for contact point
+//    if (membrane_bead_adhesion==false) {
+//        for (int membrane_tri_index=0; membrane_tri_index<Membrane_num_of_Triangles; membrane_tri_index++) {
+//            double membrane_triangle_com[3];
+//            double temp_membrane_bead_distance;
+//            membrane_triangle_com[0]=(Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][0]][0]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][1]][0]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][2]][0])/3.0;
+//            membrane_triangle_com[1]=(Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][0]][1]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][1]][1]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][2]][1])/3.0;
+//            membrane_triangle_com[2]=(Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][0]][2]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][1]][2]+Membrane_Node_Position[Membrane_triangle_list[membrane_tri_index][2]][2])/3.0;
+//
+//            temp_membrane_bead_distance=(membrane_triangle_com[0]-adhesive_bead_position[0])*(membrane_triangle_com[0]-adhesive_bead_position[0])+(membrane_triangle_com[1]-adhesive_bead_position[1])*(membrane_triangle_com[1]-adhesive_bead_position[1])+ (membrane_triangle_com[2]-adhesive_bead_position[2])*(membrane_triangle_com[2]-adhesive_bead_position[2]);
+//
+//            if (temp_membrane_bead_distance<adhesion_distance_threshold*adhesion_distance_threshold) {
+//                membrane_triangle_adhesive_bead_adhesion_point=membrane_tri_index;
+//                membrane_bead_adhesion=true;
+//                break;
+//            }
+//        }
+//    }
+//
+//
+//
+//    //bead membrane Force calculations:
+//    for (int neighbour_index=0; neighbour_index<membrane_triangle_adhesive_bead_neighbour_list.size(); neighbour_index++) {
+//        //apply force between nodes.
+//    }
     
     
     int counter2=0;
     cout<<"Beginning the MD loop\n";
     for(int MD_Step=0 ;MD_Step<=MD_num_of_steps ; MD_Step++)
     {
-        cout<<test_cout<<endl;
+//        cout<<test_cout<<endl;
         //------------------------------------------------------------------------------------
         //------------------------------- Beginning of Membrane position update --------------
         //---------------------------------- Velocity Verlet ---------------------------------
@@ -666,42 +657,27 @@ int main() //main**
         //------------------------------------------------------------------------------------
         
         //------------------------------------------------------------------------------------
-        //------------------------------- Beginning of Chromatin position update -----------------------------
-        //------------------------------------------------------------------------------------
-        
-        for(int j=0 ; j<Chromatin_num_of_Beads ; j++)
-        {
-            Chromatin_Bead_Position[j][0] += Chromatin_Bead_Velocity[j][0]*MD_Time_Step-Chromatin_Bead_Force[j][0]*MD_Time_Step*MD_Time_Step/(2.0*Chromatin_Bead_Mass);
-            Chromatin_Bead_Position[j][1] += Chromatin_Bead_Velocity[j][1]*MD_Time_Step-Chromatin_Bead_Force[j][1]*MD_Time_Step*MD_Time_Step/(2.0*Chromatin_Bead_Mass);
-            Chromatin_Bead_Position[j][2] += Chromatin_Bead_Velocity[j][2]*MD_Time_Step-Chromatin_Bead_Force[j][2]*MD_Time_Step*MD_Time_Step/(2.0*Chromatin_Bead_Mass);
-        }
-        
-        //------------------------------------------------------------------------------------
-        //------------------------------- End of Chromatin position update -----------------------------
-        //------------------------------------------------------------------------------------
-        
-        //------------------------------------------------------------------------------------
         //------------------------------- Beginning of ECM position update -----------------------------
         //------------------------------------------------------------------------------------
-        
-        for(int j=0 ; j<ECM_num_of_Nodes ; j++)
-        {
-            // Ptential Bug. Because I have yet to understand the reason behind this condition.
-            //*******************************************************************************************************
-            //***************** From what I understand, this condition implies that the position of Nodes on the ECM
-            // that pass a certain depth (In this code y determins depth/hight) will not be updated, hence, the Nodes
-            // will freez after moving to a 'Membrane_Centre_distance_from_ECM + ECM_Thickness' depth.
-            //*******************************************************************************************************
-            
-            if( ECM_Node_Position[j][1]!= -( Membrane_Centre_distance_from_ECM + ECM_Thickness) && ECM_Node_Position[j][1]>= -( Membrane_Centre_distance_from_ECM + 0.8*ECM_Thickness))
-            {
-                ECM_Node_Position[j][0] += ECM_Flexibility * (ECM_Node_Velocity[j][0]*MD_Time_Step - ECM_Node_Force[j][0]*MD_Time_Step*MD_Time_Step/(ECM_Node_Mass*2.0) );
-                ECM_Node_Position[j][1] += ECM_Flexibility * (ECM_Node_Velocity[j][1]*MD_Time_Step -ECM_Node_Force[j][1]*MD_Time_Step*MD_Time_Step/(ECM_Node_Mass*2.0) );
-                ECM_Node_Position[j][2] += ECM_Flexibility * (ECM_Node_Velocity[j][2]*MD_Time_Step -ECM_Node_Force[j][2]*MD_Time_Step*MD_Time_Step/(ECM_Node_Mass*2.0) );
-            }
-            
-            
-        }
+//
+//        for(int j=0 ; j<ECM_num_of_Nodes ; j++)
+//        {
+//            // Ptential Bug. Because I have yet to understand the reason behind this condition.
+//            //*******************************************************************************************************
+//            //***************** From what I understand, this condition implies that the position of Nodes on the ECM
+//            // that pass a certain depth (In this code y determins depth/hight) will not be updated, hence, the Nodes
+//            // will freez after moving to a 'Membrane_Centre_distance_from_ECM + ECM_Thickness' depth.
+//            //*******************************************************************************************************
+//
+//            if( ECM_Node_Position[j][1]!= -( Membrane_Centre_distance_from_ECM + ECM_Thickness) && ECM_Node_Position[j][1]>= -( Membrane_Centre_distance_from_ECM + 0.8*ECM_Thickness))
+//            {
+//                ECM_Node_Position[j][0] += ECM_Flexibility * (ECM_Node_Velocity[j][0]*MD_Time_Step - ECM_Node_Force[j][0]*MD_Time_Step*MD_Time_Step/(ECM_Node_Mass*2.0) );
+//                ECM_Node_Position[j][1] += ECM_Flexibility * (ECM_Node_Velocity[j][1]*MD_Time_Step -ECM_Node_Force[j][1]*MD_Time_Step*MD_Time_Step/(ECM_Node_Mass*2.0) );
+//                ECM_Node_Position[j][2] += ECM_Flexibility * (ECM_Node_Velocity[j][2]*MD_Time_Step -ECM_Node_Force[j][2]*MD_Time_Step*MD_Time_Step/(ECM_Node_Mass*2.0) );
+//            }
+//
+//
+//        }
         //------------------------------------------------------------------------------------
         //------------------------------- Beginning of the periodic condition -----------------------------
         //------------------------------------------------------------------------------------
@@ -725,22 +701,6 @@ int main() //main**
                     {
                         
                         Membrane_Node_Position[j][ww]=Membrane_Node_Position[j][ww]+(Lbox+1.0 );
-                    }
-                }
-            }
-            
-            for(int ww=0 ; ww<2 ; ww++)
-            {
-                for(int j=0 ; j<Chromatin_num_of_chains ; j++)  //
-                {
-                    if( Chromatin_Bead_Position[j][ww]> (Lbox+1.0)/2.0  )
-                    {
-                        
-                        Chromatin_Bead_Position[j][ww] += -(Lbox+1.0 );
-                    }
-                    if( Chromatin_Bead_Position[j][ww]< (-Lbox-1.0)/2.0 )
-                    {
-                        Chromatin_Bead_Position[j][ww] += (Lbox+1.0 );
                     }
                 }
             }
@@ -768,13 +728,6 @@ int main() //main**
             Actin_Node_Velocity[j][2] += -Actin_Node_Force[j][2]*MD_Time_Step/(Actin_Node_Mass*2.0);
             
         }
-        
-        for(int j=0 ; j<Chromatin_num_of_Beads ; j++)  // loop to encount every particle  and update its velocity
-        {
-            Chromatin_Bead_Velocity[j][0] += -Chromatin_Bead_Force[j][0]*MD_Time_Step/(2.0*Chromatin_Bead_Mass);
-            Chromatin_Bead_Velocity[j][1] += -Chromatin_Bead_Force[j][1]*MD_Time_Step/(2.0*Chromatin_Bead_Mass);
-            Chromatin_Bead_Velocity[j][2] += -Chromatin_Bead_Force[j][2]*MD_Time_Step/(2.0*Chromatin_Bead_Mass);
-        }
         //*******************************************************************************************************
         /*Improvment
          |---\   |    |  /---\
@@ -787,13 +740,13 @@ int main() //main**
         //***************** It is a good idea to set a condition for the 'Flexibility' of the *******************
         //***************** Membrane, so that the velocity and Force are not run altogether   *******************
         //*******************************************************************************************************
-        for(int j=0 ; j<ECM_num_of_Nodes ; j++)  //ECM
-        {
-            ECM_Node_Velocity[j][0] += -ECM_Node_Force[j][0]*MD_Time_Step/(ECM_Node_Mass*2.0);
-            ECM_Node_Velocity[j][1] += -ECM_Node_Force[j][1]*MD_Time_Step/(ECM_Node_Mass*2.0);
-            ECM_Node_Velocity[j][2] += -ECM_Node_Force[j][2]*MD_Time_Step/(ECM_Node_Mass*2.0);
-        }
-        
+//        for(int j=0 ; j<ECM_num_of_Nodes ; j++)  //ECM
+//        {
+//            ECM_Node_Velocity[j][0] += -ECM_Node_Force[j][0]*MD_Time_Step/(ECM_Node_Mass*2.0);
+//            ECM_Node_Velocity[j][1] += -ECM_Node_Force[j][1]*MD_Time_Step/(ECM_Node_Mass*2.0);
+//            ECM_Node_Velocity[j][2] += -ECM_Node_Force[j][2]*MD_Time_Step/(ECM_Node_Mass*2.0);
+//        }
+//
         //------------------------------------------------------------------------------------
         //------------------------------- Beginning of the Force Calculations -----------------------------
         //------------------------------------------------------------------------------------
@@ -814,18 +767,12 @@ int main() //main**
             Actin_Node_Force[j][1]=0.0;
             Actin_Node_Force[j][2]=0.0;
         }
-        for(int j=0 ; j<Chromatin_num_of_Beads ; j++)
-        {
-            Chromatin_Bead_Force[j][0]=0.0;
-            Chromatin_Bead_Force[j][1]=0.0;
-            Chromatin_Bead_Force[j][2]=0.0;
-        }
-        for(int j=0 ; j<ECM_num_of_Nodes ; j++)
-        {
-            ECM_Node_Force[j][0]=0.0;
-            ECM_Node_Force[j][1]=0.0;
-            ECM_Node_Force[j][2]=0.0;
-        }
+//        for(int j=0 ; j<ECM_num_of_Nodes ; j++)
+//        {
+//            ECM_Node_Force[j][0]=0.0;
+//            ECM_Node_Force[j][1]=0.0;
+//            ECM_Node_Force[j][2]=0.0;
+//        }
         
         
         
@@ -837,7 +784,7 @@ int main() //main**
         {
             for(int s=0; s< fluidity*Membrane_num_of_Nodes ;s++)
             {
-                MonteCarlo(Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, Total_Potential_Energy, Membrane_Node_Position, Membrane_Normal_direction, Outer_Membrane_num_of_triangles, Nucleus_Membrane_num_of_triangles, Membrane_num_of_Triangle_Pairs, Membrane_num_of_Node_Pairs);
+//                MonteCarlo(Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, Total_Potential_Energy, Membrane_Node_Position, Membrane_Normal_direction, Outer_Membrane_num_of_triangles, Nucleus_Membrane_num_of_triangles, Membrane_num_of_Triangle_Pairs, Membrane_num_of_Node_Pairs);
                 counter2=0;
             }
             counter2++;
@@ -882,9 +829,9 @@ int main() //main**
         Membrane_Actin_shared_Node_Force_calculator(Membrane_Node_Position, Actin_Node_Position, Membrane_Node_Force,Actin_Node_Force, Membrane_Actin_shared_Node_list, Membrane_Node_Velocity, Actin_Node_Velocity);
         
         
-        Chromatin_Force_calculator(Chromatin_Bead_Position, Chromatin_Bead_Velocity, Chromatin_Bead_Force, Total_Potential_Energy);
+//        Chromatin_Force_calculator(Chromatin_Bead_Position, Chromatin_Bead_Velocity, Chromatin_Bead_Force, Total_Potential_Energy);
         
-        loop_force_chromatin(Chromatin_Bead_Position, Chromatin_Bead_Force, Total_Potential_Energy);
+//        loop_force_chromatin(Chromatin_Bead_Position, Chromatin_Bead_Force, Total_Potential_Energy);
         
         if (energy_calculation_flag==1.0) {
             Chromatin_total_potential_Energy=Total_Potential_Energy-Membrane_total_potential_Energy-Actin_total_potential_Energy;
@@ -892,22 +839,22 @@ int main() //main**
         }
         
         
-        COM_of_nucleus_membrane_function(Membrane_Node_Position, Nucleus_Membrane_list_of_Nodes,  Outer_Membrane_num_of_Nodes);
-        hardsphereforcechromatin(Chromatin_Bead_Position, Chromatin_Bead_Velocity, Chromatin_Bead_Force, chromatin_contant_matrix_calculation_flag, CmLaststeps, Cm, Cm1, Cm3, Dissimilaritycut);
+//        COM_of_nucleus_membrane_function(Membrane_Node_Position, Nucleus_Membrane_list_of_Nodes,  Outer_Membrane_num_of_Nodes);
+//        hardsphereforcechromatin(Chromatin_Bead_Position, Chromatin_Bead_Velocity, Chromatin_Bead_Force, chromatin_contant_matrix_calculation_flag, CmLaststeps, Cm, Cm1, Cm3, Dissimilaritycut);
         
         //        Chromatin_membrane_Barrier(Chromatin_Bead_Position, Chromatin_Bead_Velocity, Chromatin_Bead_Force, Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Normal_direction, Outer_Membrane_num_of_triangles);
-        Chromatin_membrane_Barrier_2(Chromatin_Bead_Position, Chromatin_Bead_Velocity, Chromatin_Bead_Force, Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Normal_direction, Outer_Membrane_num_of_triangles);
+//        Chromatin_membrane_Barrier_2(Chromatin_Bead_Position, Chromatin_Bead_Velocity, Chromatin_Bead_Force, Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Normal_direction, Outer_Membrane_num_of_triangles);
         
         if(MD_Step%Membrane_barrier_calculation_rate==0)
         {
             //            Actin_Membrane_Barrier(Actin_Node_Position, Actin_Node_Velocity, Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Normal_direction);
-            Actin_Membrane_Barrier_2(Actin_Node_Position, Actin_Node_Velocity, Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Normal_direction);
+            Actin_Membrane_Barrier_2(Actin_Node_Position, Actin_Node_Velocity, Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list);
             //            Nucleus_Membrane_Barrier(Nucleus_Membrane_list_of_Nodes, Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Normal_direction, Outer_Membrane_num_of_triangles, Outer_Membrane_num_of_Nodes);
-            Nucleus_Membrane_Barrier_2(Nucleus_Membrane_list_of_Nodes, Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Normal_direction, Outer_Membrane_num_of_triangles, Outer_Membrane_num_of_Nodes);
+//            Nucleus_Membrane_Barrier_2(Nucleus_Membrane_list_of_Nodes, Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Normal_direction, Outer_Membrane_num_of_triangles, Outer_Membrane_num_of_Nodes);
             
         }
         
-        ECM_Force(ECM_Node_Position, ECM_Node_Velocity, ECM_Node_Force, ECM_Node_Pair_List, ECM_upper_surface_Node_Pairs, ECM_varying_stiffness_coefficient, ECM_num_of_Bonds, Total_Potential_Energy);
+//        ECM_Force(ECM_Node_Position, ECM_Node_Velocity, ECM_Node_Force, ECM_Node_Pair_List, ECM_upper_surface_Node_Pairs, ECM_varying_stiffness_coefficient, ECM_num_of_Bonds, Total_Potential_Energy);
         
         if (energy_calculation_flag==1.0) {
             ECM_total_potential_Energy=Total_Potential_Energy-Membrane_total_potential_Energy-Actin_total_potential_Energy-Chromatin_total_potential_Energy;
@@ -915,14 +862,14 @@ int main() //main**
         }
         
         
-        if(calculateAngleFromCOM ==1)
-        {
-            CellCOM( centerOfmassoftheCell,Membrane_Node_Position,Actin_Node_Position ,Chromatin_Bead_Position);
-        }
+//        if(calculateAngleFromCOM ==1)
+//        {
+//            CellCOM( centerOfmassoftheCell,Membrane_Node_Position,Actin_Node_Position ,Chromatin_Bead_Position);
+//        }
         
         
         //        Membrane_ECM_interaction_4(MD_Step, Membrane_Node_Position,Membrane_Node_Velocity, Membrane_Node_Force,ECM_Node_Position, ECM_Node_Velocity, ECM_Node_Force, ECM_surface_triangle_list,Membrane_triangle_list, Membrane_Normal_direction, ECM_Membrane_Trinagle_neighbours_2,centerOfmassoftheCell, Outer_Membrane_num_of_triangles, Outer_Membrane_num_of_Nodes, Outer_Membrane_list_of_Nodes, Membrane_Edge_triangle_and_ECM_neighbours, Total_Potential_Energy);
-        Membrane_ECM_interaction_5(MD_Step, Membrane_Node_Position,Membrane_Node_Velocity, Membrane_Node_Force,ECM_Node_Position, ECM_Node_Velocity, ECM_Node_Force, ECM_surface_triangle_list,Membrane_triangle_list, Membrane_Normal_direction, ECM_Membrane_Trinagle_neighbours_3,centerOfmassoftheCell, Outer_Membrane_num_of_triangles, Outer_Membrane_num_of_Nodes, Outer_Membrane_list_of_Nodes, Membrane_Edge_triangle_and_ECM_neighbours, Total_Potential_Energy);
+//        Membrane_ECM_interaction_5(MD_Step, Membrane_Node_Position,Membrane_Node_Velocity, Membrane_Node_Force,ECM_Node_Position, ECM_Node_Velocity, ECM_Node_Force, ECM_surface_triangle_list,Membrane_triangle_list, Membrane_Normal_direction, ECM_Membrane_Trinagle_neighbours_3,centerOfmassoftheCell, Outer_Membrane_num_of_triangles, Outer_Membrane_num_of_Nodes, Outer_Membrane_list_of_Nodes, Membrane_Edge_triangle_and_ECM_neighbours, Total_Potential_Energy);
         
         if (energy_calculation_flag==1.0) {
             ECM_membrane_total_potential_Energy=Total_Potential_Energy-Membrane_total_potential_Energy-Actin_total_potential_Energy-Chromatin_total_potential_Energy-ECM_total_potential_Energy;
@@ -966,23 +913,14 @@ int main() //main**
         }
         
         
-        for(int j=0 ; j<Chromatin_num_of_Beads ; j++)  // loop to encount every particle  and update its velocity
-        {
-            Chromatin_Bead_Velocity[j][0] += -Chromatin_Bead_Force[j][0]*MD_Time_Step/(2.0*Chromatin_Bead_Mass);
-            Chromatin_Bead_Velocity[j][1] += -Chromatin_Bead_Force[j][1]*MD_Time_Step/(2.0*Chromatin_Bead_Mass);
-            Chromatin_Bead_Velocity[j][2] += -Chromatin_Bead_Force[j][2]*MD_Time_Step/(2.0*Chromatin_Bead_Mass);
-            //            if (isnan(Chromatin_Bead_Force[j][0])==true || isnan(Chromatin_Bead_Force[j][1])==true || isnan(Chromatin_Bead_Force[j][2])==true) {
-            //                cout<<"here\n";
-            //            }
-        }
-        
-        for(int j=0 ; j<ECM_num_of_Nodes ; j++)  //ECM
-        {
-            
-            ECM_Node_Velocity[j][0]= ECM_Node_Velocity[j][0]-ECM_Node_Force[j][0]*MD_Time_Step/(ECM_Node_Mass*2.0);
-            ECM_Node_Velocity[j][1]= ECM_Node_Velocity[j][1]-ECM_Node_Force[j][1]*MD_Time_Step/(ECM_Node_Mass*2.0);
-            ECM_Node_Velocity[j][2]= ECM_Node_Velocity[j][2]-ECM_Node_Force[j][2]*MD_Time_Step/(ECM_Node_Mass*2.0);
-        }
+//
+//        for(int j=0 ; j<ECM_num_of_Nodes ; j++)  //ECM
+//        {
+//
+//            ECM_Node_Velocity[j][0]= ECM_Node_Velocity[j][0]-ECM_Node_Force[j][0]*MD_Time_Step/(ECM_Node_Mass*2.0);
+//            ECM_Node_Velocity[j][1]= ECM_Node_Velocity[j][1]-ECM_Node_Force[j][1]*MD_Time_Step/(ECM_Node_Mass*2.0);
+//            ECM_Node_Velocity[j][2]= ECM_Node_Velocity[j][2]-ECM_Node_Force[j][2]*MD_Time_Step/(ECM_Node_Mass*2.0);
+//        }
         
         if(solventon==1)
         {
@@ -1112,7 +1050,7 @@ int main() //main**
         {
             
             cout<<"Saving temp..."<<endl;
-            restartsave(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Normal_direction, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list,Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Chromatin_Bead_Position,Chromatin_Bead_Velocity, ECM_Node_Position,ECM_Node_Velocity, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds);
+            restartsave(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list,Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds);
         }
         
         //--------------------------------Thermostate
@@ -1130,7 +1068,7 @@ int main() //main**
         //*******************************************************************************************************
         if(counter%RunThermostatePerstep==0)
         {
-            Thermostat(MD_Step, Membrane_Node_Velocity, Actin_Node_Velocity, Chromatin_Bead_Velocity, ECM_Node_Velocity);
+            Thermostat(MD_Step, Membrane_Node_Velocity, Actin_Node_Velocity);
         }
         
         
@@ -1140,13 +1078,13 @@ int main() //main**
         //--------------------------------------------------------------------saving and friends!
         if (counter%savingstep==0  )  // SAVING AND CALCULATION SECTION
         {
-            if (energy_calculation_flag==1.0) {
-                write_energy<<counter<<"\t"<<Total_Potential_Energy<<"\t"<<Membrane_total_potential_Energy<<"\t"<<Actin_total_potential_Energy<<"\t"<<Chromatin_total_potential_Energy<<"\t"<<ECM_total_potential_Energy<<"\t"<<ECM_membrane_total_potential_Energy<<"\n";
-            }
-            
+//            if (energy_calculation_flag==1.0) {
+//                write_energy<<counter<<"\t"<<Total_Potential_Energy<<"\t"<<Membrane_total_potential_Energy<<"\t"<<Actin_total_potential_Energy<<"\t"<<Chromatin_total_potential_Energy<<"\t"<<ECM_total_potential_Energy<<"\t"<<ECM_membrane_total_potential_Energy<<"\n";
+//            }
+//
             //            cout << Membrane_surface_area_calculator(Membrane_Node_Position, Membrane_triangle_list, Outer_Membrane_num_of_triangles) << "  "<< s0membrane<<endl;
             //            cout << surfaceareaNucleus(Membrane_Node_Position, Membrane_triangle_list, Outer_Membrane_num_of_triangles ) << "  "<< s0nucleus<<endl;
-            total_tracking_foece_ofstream << "total_tracking_foece_now= "<<total_tracking_foece_now<<endl;
+//            total_tracking_foece_ofstream << "total_tracking_foece_now= "<<total_tracking_foece_now<<endl;
             //*******************************************************************************************************
             /*BUG
              |---\   |    |  /---\
@@ -1180,27 +1118,27 @@ int main() //main**
                 trajectory <<"membrane"  <<setprecision(5)<< setw(20)<<Membrane_Node_Position[lambda][0]<< setw(20)<<Membrane_Node_Position[lambda][1]<< setw(20)<<Membrane_Node_Position[lambda][2]<<endl;
             }
             
-            for(int j=0; j<Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes;j++) // saving trajectory
-            {   lambda=Nucleus_Membrane_list_of_Nodes[j];
-                trajectory <<"nucleus"  <<setprecision(5)<< setw(20)<<Membrane_Node_Position[lambda][0]<< setw(20)<<Membrane_Node_Position[lambda][1]<< setw(20)<<Membrane_Node_Position[lambda][2]<<endl;
-            }
+//            for(int j=0; j<Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes;j++) // saving trajectory
+//            {   lambda=Nucleus_Membrane_list_of_Nodes[j];
+//                trajectory <<"nucleus"  <<setprecision(5)<< setw(20)<<Membrane_Node_Position[lambda][0]<< setw(20)<<Membrane_Node_Position[lambda][1]<< setw(20)<<Membrane_Node_Position[lambda][2]<<endl;
+//            }
             
             
-            for (int nchain=0;nchain<Chromatin_num_of_chains;nchain++)
-            {
-                for(int j=nchain*(Chromatin_num_of_Beads/Chromatin_num_of_chains)  ;j< (nchain+1)*(Chromatin_num_of_Beads/Chromatin_num_of_chains) ; j++ )  // all beads interaction whit the next one
-                {
-                    // trajectory << "c"<<nchain<<  setprecision(5)<< setw(20)<<Chromatin_Bead_Position[0][j]<< setw(20)<<Chromatin_Bead_Position[1][j]<< setw(20)<<Chromatin_Bead_Position[2][j]<<endl;
-                    trajectory << "chromatin_"<< nchain <<" "<<setprecision(5)<< setw(20)<<Chromatin_Bead_Position[j][0]<< setw(20)<<Chromatin_Bead_Position[j][1]<< setw(20)<<Chromatin_Bead_Position[j][2]<<endl;
-                }
-            }
+//            for (int nchain=0;nchain<Chromatin_num_of_chains;nchain++)
+//            {
+//                for(int j=nchain*(Chromatin_num_of_Beads/Chromatin_num_of_chains)  ;j< (nchain+1)*(Chromatin_num_of_Beads/Chromatin_num_of_chains) ; j++ )  // all beads interaction whit the next one
+//                {
+//                    // trajectory << "c"<<nchain<<  setprecision(5)<< setw(20)<<Chromatin_Bead_Position[0][j]<< setw(20)<<Chromatin_Bead_Position[1][j]<< setw(20)<<Chromatin_Bead_Position[2][j]<<endl;
+//                    trajectory << "chromatin_"<< nchain <<" "<<setprecision(5)<< setw(20)<<Chromatin_Bead_Position[j][0]<< setw(20)<<Chromatin_Bead_Position[j][1]<< setw(20)<<Chromatin_Bead_Position[j][2]<<endl;
+//                }
+//            }
             
-            
-            for(int j=0; j< ECM_num_of_Nodes ;j++) // saving trajectory
-            {
-                trajectory << "ecm" <<  setprecision(5)<< setw(20)<<ECM_Node_Position[j][0]<< setw(20)<<ECM_Node_Position[j][1]<< setw(20)<<ECM_Node_Position[j][2]<<endl;
-            }
-            
+//
+//            for(int j=0; j< ECM_num_of_Nodes ;j++) // saving trajectory
+//            {
+//                trajectory << "ecm" <<  setprecision(5)<< setw(20)<<ECM_Node_Position[j][0]<< setw(20)<<ECM_Node_Position[j][1]<< setw(20)<<ECM_Node_Position[j][2]<<endl;
+//            }
+//
             
             
             for(int j=0; j< Actin_num_of_Nodes ;j++) // saving trajectory
@@ -1213,14 +1151,14 @@ int main() //main**
             
             
             
-            if(showsolvent==1)
-            {
-                for(int j=0; j< nsolvent;j++) // saving trajectory
-                {
-                    trajectory << "solvent"<<  setprecision(5)<< setw(20)<<xsolvent[0][j]<< setw(20)<<xsolvent[1][j]<< setw(20)<<xsolvent[2][j]<<endl;
-                }
-                
-            }
+//            if(showsolvent==1)
+//            {
+//                for(int j=0; j< nsolvent;j++) // saving trajectory
+//                {
+//                    trajectory << "solvent"<<  setprecision(5)<< setw(20)<<xsolvent[0][j]<< setw(20)<<xsolvent[1][j]<< setw(20)<<xsolvent[2][j]<<endl;
+//                }
+//
+//            }
             
             for(int j=0; j<num_of_test_particles;j++) // saving trajectory
             {
@@ -1245,9 +1183,9 @@ int main() //main**
             
             ///__________________________________________________Traj__________________________
             
-            CellCOM( centerOfmassoftheCell,Membrane_Node_Position,Actin_Node_Position ,Chromatin_Bead_Position);
+            CellCOM( centerOfmassoftheCell, Membrane_Node_Position, Actin_Node_Position);
             
-            movement_of_cell_COM << MD_Step << " "<< centerOfmassoftheCell[0]<<" "<<centerOfmassoftheCell[1]<<" "<<centerOfmassoftheCell[2]<<endl;
+            write_cell_COM << MD_Step << " "<< centerOfmassoftheCell[0]<<" "<<centerOfmassoftheCell[1]<<" "<<centerOfmassoftheCell[2]<<endl;
             
             
             
@@ -1261,160 +1199,160 @@ int main() //main**
         
         
         //d2_10_______________________________________dissimilarity
-        if (chromatin_contant_matrix_calculation_flag==true) {
-            // *********build cm0
-            if(MD_Step<=StepCm0 & ReadCm0rfomFile==0)
-            {
-                for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
-                {
-                    for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
-                    {
-                        Cm0[i1][j1]=Cm0[i1][j1]+Cm[i1][j1];
-                    }
-                }
-                if(MD_Step==StepCm0)
-                {
-                    for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
-                    {
-                        for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
-                        {
-                            Cm0[i1][j1]=Cm0[i1][j1]/(StepCm0+1); //normalizing
-                        }
-                    }
-                    ofstream Cm0save;  //saving
-                    Cm0save.open("results/Cm0.txt");
-                    for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
-                    {
-                        for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
-                        {
-                            Cm0save  <<  Cm0[i1][j1] << "  ";
-                        }
-                        Cm0save  <<endl;
-                    }
-                }
-                
-            }
-            else if (MD_Step==0 & ReadCm0rfomFile==1)
-            {
-                
-                ifstream Cm0read;  //reading
-                Cm0read.open("Cm0.txt");
-                for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
-                {
-                    for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
-                    {
-                        Cm0read >> Cm0[i1][j1];
-                    }
-                }
-            }
-            
-            // *********build cm0
-            
-            
-            
-            if(MD_Step%StepCm1 ==0 & MD_Step!=0)
-            {
-                
-                d2_10=0.0;
-                for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
-                {
-                    for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
-                    {
-                        Cm1[i1][j1]=Cm1[i1][j1]/StepCm1; //normalize contact matrix
-                        d2_10=d2_10+( (Cm1[i1][j1]-Cm0[i1][j1]) )*( (Cm1[i1][j1]-Cm0[i1][j1]) ); //calculate distance
-                        Cm1[i1][j1]=0.0; //refresh cm1
-                    }
-                }
-                
-                if (ReadCm0rfomFile==0 & MD_Step>StepCm0)
-                {
-                    d2_10ofstream<<  MD_Step <<"         "<<d2_10 << endl;
-                }
-                else if (ReadCm0rfomFile==1)
-                {
-                    d2_10ofstream<<  MD_Step <<"         "<<d2_10 << endl;
-                }
-                
-            }
-            //d2_10_______________________________________dissimilarity
-            
-            
-            
-            //d2_32_______________________________________dissimilarity
-            
-            
-            
-            if(MD_Step%StepCm2 ==0 & MD_Step!=0)
-            {
-                d2_32=0.0;
-                ContactNumber=0;
-                ContactProbablilityNumber=0;
-                
-                for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
-                {
-                    for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
-                    {
-                        if(Cm2[i1][j1]!=0.0 & i1!=j1 ) //consider the contacts in offdiagonal
-                        {
-                            ContactNumber=ContactNumber+1.0;
-                            ContactProbablilityNumber=ContactProbablilityNumber+Cm2[i1][j1];
-                        }
-                        
-                        
-                        Cm3[i1][j1]=Cm3[i1][j1]/StepCm2; //normalize contact matrix
-                        d2_32=d2_32+( (Cm3[i1][j1]-Cm2[i1][j1]) )*( (Cm3[i1][j1]-Cm2[i1][j1]) ); //calculate distance
-                        Cm2[i1][j1]=Cm3[i1][j1]; //refresh cm2
-                        Cm3[i1][j1]=0.0; //refresh cm3
-                    }
-                }
-                
-                if(MD_Step>StepCm2) //let StepCm2 to become calculated
-                {
-                    d2_32ofstream<<  MD_Step <<"         "<< "         "<<d2_32 << endl;  //save
-                    REDUCEDd2_32ofstream <<" "<<VolumeNucleus(Membrane_Node_Position, Membrane_triangle_list, Membrane_Normal_direction, Outer_Membrane_num_of_triangles)
-                    << " "<< ContactNumber   <<  " "  <<d2_32/ContactProbablilityNumber <<endl;
-                    
-                    
-                    for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
-                    {
-                        for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
-                        {
-                            cm3ofstream << Cm2[i1][j1] << "   ";  //note thar cm3 is reset and  stored in cm2
-                        }
-                        cm3ofstream <<"  " <<endl;
-                    }
-                    cm3ofstream <<"  " <<endl;
-                    cm3ofstream <<"  " <<endl;
-                    cm3ofstream <<"  " <<endl;
-                }
-            }
-            
-            //d2_32_______________________________________dissimilarity
-            
-            
-            
-            
-            
-            //______________________________________contact matrix part__________________________________________
-            if (MD_Step==(MD_num_of_steps-StepsCmLaststeps)  &  MD_Step!=0  ) // for last steps cacculate contact matrix
-            {
-                for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
-                {
-                    for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
-                    {
-                        CmLaststeps[i1][j1]=0.0;
-                        Flag=1;
-                        //                    cout <<"StepsCmLaststeps flaged" <<endl;
-                    }
-                }
-            }
-            //______________________________________contact matrix part__________________________________________
-            
-        }
+//        if (chromatin_contant_matrix_calculation_flag==true) {
+//            // *********build cm0
+//            if(MD_Step<=StepCm0 & ReadCm0rfomFile==0)
+//            {
+//                for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
+//                {
+//                    for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
+//                    {
+//                        Cm0[i1][j1]=Cm0[i1][j1]+Cm[i1][j1];
+//                    }
+//                }
+//                if(MD_Step==StepCm0)
+//                {
+//                    for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
+//                    {
+//                        for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
+//                        {
+//                            Cm0[i1][j1]=Cm0[i1][j1]/(StepCm0+1); //normalizing
+//                        }
+//                    }
+//                    ofstream Cm0save;  //saving
+//                    Cm0save.open("results/Cm0.txt");
+//                    for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
+//                    {
+//                        for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
+//                        {
+//                            Cm0save  <<  Cm0[i1][j1] << "  ";
+//                        }
+//                        Cm0save  <<endl;
+//                    }
+//                }
+//
+//            }
+//            else if (MD_Step==0 & ReadCm0rfomFile==1)
+//            {
+//
+//                ifstream Cm0read;  //reading
+//                Cm0read.open("Cm0.txt");
+//                for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
+//                {
+//                    for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
+//                    {
+//                        Cm0read >> Cm0[i1][j1];
+//                    }
+//                }
+//            }
+//
+//            // *********build cm0
+//
+//
+//
+//            if(MD_Step%StepCm1 ==0 & MD_Step!=0)
+//            {
+//
+//                d2_10=0.0;
+//                for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
+//                {
+//                    for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
+//                    {
+//                        Cm1[i1][j1]=Cm1[i1][j1]/StepCm1; //normalize contact matrix
+//                        d2_10=d2_10+( (Cm1[i1][j1]-Cm0[i1][j1]) )*( (Cm1[i1][j1]-Cm0[i1][j1]) ); //calculate distance
+//                        Cm1[i1][j1]=0.0; //refresh cm1
+//                    }
+//                }
+//
+//                if (ReadCm0rfomFile==0 & MD_Step>StepCm0)
+//                {
+//                    d2_10ofstream<<  MD_Step <<"         "<<d2_10 << endl;
+//                }
+//                else if (ReadCm0rfomFile==1)
+//                {
+//                    d2_10ofstream<<  MD_Step <<"         "<<d2_10 << endl;
+//                }
+//
+//            }
+//            //d2_10_______________________________________dissimilarity
+//
+//
+//
+//            //d2_32_______________________________________dissimilarity
+//
+//
+//
+//            if(MD_Step%StepCm2 ==0 & MD_Step!=0)
+//            {
+//                d2_32=0.0;
+//                ContactNumber=0;
+//                ContactProbablilityNumber=0;
+//
+//                for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
+//                {
+//                    for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
+//                    {
+//                        if(Cm2[i1][j1]!=0.0 & i1!=j1 ) //consider the contacts in offdiagonal
+//                        {
+//                            ContactNumber=ContactNumber+1.0;
+//                            ContactProbablilityNumber=ContactProbablilityNumber+Cm2[i1][j1];
+//                        }
+//
+//
+//                        Cm3[i1][j1]=Cm3[i1][j1]/StepCm2; //normalize contact matrix
+//                        d2_32=d2_32+( (Cm3[i1][j1]-Cm2[i1][j1]) )*( (Cm3[i1][j1]-Cm2[i1][j1]) ); //calculate distance
+//                        Cm2[i1][j1]=Cm3[i1][j1]; //refresh cm2
+//                        Cm3[i1][j1]=0.0; //refresh cm3
+//                    }
+//                }
+//
+//                if(MD_Step>StepCm2) //let StepCm2 to become calculated
+//                {
+//                    d2_32ofstream<<  MD_Step <<"         "<< "         "<<d2_32 << endl;  //save
+//                    REDUCEDd2_32ofstream <<" "<<VolumeNucleus(Membrane_Node_Position, Membrane_triangle_list, Membrane_Normal_direction, Outer_Membrane_num_of_triangles)
+//                    << " "<< ContactNumber   <<  " "  <<d2_32/ContactProbablilityNumber <<endl;
+//
+//
+//                    for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
+//                    {
+//                        for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
+//                        {
+//                            cm3ofstream << Cm2[i1][j1] << "   ";  //note thar cm3 is reset and  stored in cm2
+//                        }
+//                        cm3ofstream <<"  " <<endl;
+//                    }
+//                    cm3ofstream <<"  " <<endl;
+//                    cm3ofstream <<"  " <<endl;
+//                    cm3ofstream <<"  " <<endl;
+//                }
+//            }
+//
+//            //d2_32_______________________________________dissimilarity
+//
+//
+//
+//
+//
+//            //______________________________________contact matrix part__________________________________________
+//            if (MD_Step==(MD_num_of_steps-StepsCmLaststeps)  &  MD_Step!=0  ) // for last steps cacculate contact matrix
+//            {
+//                for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
+//                {
+//                    for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
+//                    {
+//                        CmLaststeps[i1][j1]=0.0;
+//                        Flag=1;
+//                        //                    cout <<"StepsCmLaststeps flaged" <<endl;
+//                    }
+//                }
+//            }
+//            //______________________________________contact matrix part__________________________________________
+//
+//        }
         
         if (MD_Step%(export_povray_step_distance)==0    ) // for last steps cacculate contact matrix
         {
-            povray_output_creator(MD_Step, Membrane_Node_Position, Membrane_triangle_list, Membrane_Normal_direction,  Membrane_Node_Pair_list, Actin_Node_Position, Actin_Node_Pair_List, Chromatin_Bead_Position,   ECM_Node_Position, ECM_Node_Pair_List, ECM_surface_triangle_list, Outer_Membrane_num_of_triangles, Membrane_num_of_Node_Pairs, Outer_Membrane_num_of_Node_Pairs, Actin_num_of_Bonds, ECM_num_of_Bonds);
+//            povray_output_creator(MD_Step, Membrane_Node_Position, Membrane_triangle_list, Membrane_Normal_direction,  Membrane_Node_Pair_list, Actin_Node_Position, Actin_Node_Pair_List, Outer_Membrane_num_of_triangles, Membrane_num_of_Node_Pairs, Outer_Membrane_num_of_Node_Pairs, Actin_num_of_Bonds);
         }
     }
     
@@ -1426,8 +1364,7 @@ int main() //main**
     
     
     //pov
-    povray_output_creator( MD_num_of_steps, Membrane_Node_Position, Membrane_triangle_list,
-                          Membrane_Normal_direction, Membrane_Node_Pair_list, Actin_Node_Position,Actin_Node_Pair_List, Chromatin_Bead_Position, ECM_Node_Position, ECM_Node_Pair_List, ECM_surface_triangle_list, Outer_Membrane_num_of_triangles, Membrane_num_of_Node_Pairs, Outer_Membrane_num_of_Node_Pairs, Actin_num_of_Bonds, ECM_num_of_Bonds);
+//    povray_output_creator( MD_num_of_steps, Membrane_Node_Position, Membrane_triangle_list, Membrane_Normal_direction, Membrane_Node_Pair_list, Actin_Node_Position,Actin_Node_Pair_List, Outer_Membrane_num_of_triangles, Membrane_num_of_Node_Pairs, Outer_Membrane_num_of_Node_Pairs, Actin_num_of_Bonds);
     //pov
     
     
@@ -1479,30 +1416,30 @@ int main() //main**
     
     
     //_____________________________ contact matrix:
-    ofstream contact;
-    contact.open("results/contactLaststeps.txt");
-    
-    for(int i=0;i<Chromatin_num_of_Beads;i++)
-    {
-        for(int j=0;j<Chromatin_num_of_Beads;j++)
-        {
-            if(Flag==0)
-            {
-                contact<< CmLaststeps[i][j]/MD_num_of_steps<<" ";
-            }
-            else if(Flag==1)
-            {
-                contact<< ((double)CmLaststeps[i][j])/((double)StepsCmLaststeps)<<" ";
-            }
-        }
-        contact<<endl;
-    }
+//    ofstream contact;
+//    contact.open("results/contactLaststeps.txt");
+//
+//    for(int i=0;i<Chromatin_num_of_Beads;i++)
+//    {
+//        for(int j=0;j<Chromatin_num_of_Beads;j++)
+//        {
+//            if(Flag==0)
+//            {
+//                contact<< CmLaststeps[i][j]/MD_num_of_steps<<" ";
+//            }
+//            else if(Flag==1)
+//            {
+//                contact<< ((double)CmLaststeps[i][j])/((double)StepsCmLaststeps)<<" ";
+//            }
+//        }
+//        contact<<endl;
+//    }
     
     
     //_______________________________restart:
     
     cout<<"Saving..."<<endl;
-    restartsave(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Normal_direction, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Chromatin_Bead_Position, Chromatin_Bead_Velocity, ECM_Node_Position, ECM_Node_Velocity, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds);
+    restartsave(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds);
     
     
     
@@ -1530,19 +1467,19 @@ int main() //main**
             }
         }
         
-        for(int j=0; j<Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes;j++) // saving trajectory
-        {
-            if(Nucleus_Membrane_list_of_Nodes[j]==ettha)
-            {
-                alpha=j+Outer_Membrane_num_of_Nodes;
-            }
-            if(Nucleus_Membrane_list_of_Nodes[j]==gammmma)
-            {
-                beta=j+Outer_Membrane_num_of_Nodes;
-            }
-        }
-        
-        topo1<< "topo addbond "<< alpha<< "  "<<beta<<" ;"; // add bond for membane
+//        for(int j=0; j<Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes;j++) // saving trajectory
+//        {
+//            if(Nucleus_Membrane_list_of_Nodes[j]==ettha)
+//            {
+//                alpha=j+Outer_Membrane_num_of_Nodes;
+//            }
+//            if(Nucleus_Membrane_list_of_Nodes[j]==gammmma)
+//            {
+//                beta=j+Outer_Membrane_num_of_Nodes;
+//            }
+//        }
+//
+//        topo1<< "topo addbond "<< alpha<< "  "<<beta<<" ;"; // add bond for membane
         
         
         
@@ -1576,18 +1513,18 @@ int main() //main**
     
     
     
-    
-    for(int i=0;i<ECM_num_of_Bonds;i++)
-    {
-        w1=(int)  ECM_Node_Pair_List[i][0];
-        w2=(int)  ECM_Node_Pair_List[i][1];
-        
-        topo1<< "topo addbond "<< w1 +Membrane_num_of_Nodes + Chromatin_num_of_Beads << "  "<<w2+Membrane_num_of_Nodes + Chromatin_num_of_Beads <<" ;";
-    }
-    
-    topo1 << " draw delete all " <<endl;
-    topo1 << " draw color red " <<endl;
-    
+//
+//    for(int i=0;i<ECM_num_of_Bonds;i++)
+//    {
+//        w1=(int)  ECM_Node_Pair_List[i][0];
+//        w2=(int)  ECM_Node_Pair_List[i][1];
+//
+//        topo1<< "topo addbond "<< w1 +Membrane_num_of_Nodes + Chromatin_num_of_Beads << "  "<<w2+Membrane_num_of_Nodes + Chromatin_num_of_Beads <<" ;";
+//    }
+//
+//    topo1 << " draw delete all " <<endl;
+//    topo1 << " draw color red " <<endl;
+//
     //    for(int i=0;i<ECM_Surface_num_of_Triangles;i++)
     //    {
     // topo1 << " draw triangle {"<< ECM_Node_Position[ ECM_surface_triangle_list[i][0] ] [0]  << "  "<< ECM_Node_Position[ ECM_surface_triangle_list[i][0] ] [1] << "  "<< ECM_Node_Position[ ECM_surface_triangle_list[i][0] ] [2]  << "}";
@@ -1605,31 +1542,6 @@ int main() //main**
 
 
 ///______________________basic functions:
-
-
-
-
-
-
-void thermostat(double (&Chromatin_Bead_Velocity)[Chromatin_num_of_Beads][3] )//rescaling V to reach true temprature
-{
-    
-    double alpha,K,change;
-    K= kineticenergychromatin(Chromatin_Bead_Velocity);
-    alpha=Chromatin_num_of_Beads*KT/K;
-    
-    change=sqrt(alpha);
-    for(int i=0 ; i<Chromatin_num_of_Beads ;i++)
-    {
-        
-        Chromatin_Bead_Velocity[i][0] *= change;
-        Chromatin_Bead_Velocity[i][1] *= change;
-        Chromatin_Bead_Velocity[i][2] *= change;
-        
-    }
-    
-}
-
 
 
 
@@ -1972,119 +1884,119 @@ int parallelORantiparallel( double xpos[3][5] )// + for parallel  -for anti para
     //************************************ Parallel or anti parallel calculator  calculator
 }
 
-void MonteCarlo(  int Membrane_triangle_list[Membrane_num_of_Triangles][3],int Membrane_Triangle_Pair_Nodes[][4] ,int Membrane_Node_Pair_list[][2],double &Total_Potential_Energy,double Membrane_Node_Position[Membrane_num_of_Nodes][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Outer_Membrane_num_of_triangles, int Nucleus_Membrane_num_of_triangles, int Membrane_num_of_Triangle_Pairs, int Membrane_num_of_Node_Pairs)
-{
-    int t1=-1,t2=-1,t3=-1,t4=-1,l1=-1,l2=-1,l3=-1; // just numbers
-    
-    int  linepos,lineA,lineB,lineC,lineD,Aa,Bb,Cc,Dd ; // IN ORDER TO REVERSE CHANGES IF STEP NOT ACCEPTED IN trapezium fuction
-    
-    //    Bug: I commented out this part because it just goes through the same calculations as we had in the 'Membrane_Force_Calculator' function.
-    Total_Potential_Energy=potentialenergy(Membrane_Node_Position, Membrane_Node_Pair_list, Membrane_Triangle_Pair_Nodes, Membrane_triangle_list, Outer_Membrane_num_of_triangles, Nucleus_Membrane_num_of_triangles, Membrane_num_of_Triangle_Pairs, Membrane_num_of_Node_Pairs);
-    
-    double temp_total_potential_energy=0.0, Metropolis_condition=0.0;
-    //C++11
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<> rd1(0,Membrane_num_of_Triangle_Pairs-1);
-    uniform_int_distribution<> rd2(1,3);
-    
-    
-    /// selecting a bond randomly  (bond is supposed to be between t1 and t2 )  and flippping bonds
-    l1=rd1(gen);
-    t1=Membrane_Triangle_Pair_Nodes[l1][0];
-    t2=Membrane_Triangle_Pair_Nodes[l1][1];
-    t3=Membrane_Triangle_Pair_Nodes[l1][2];
-    t4=Membrane_Triangle_Pair_Nodes[l1][3];
-    
-    
-    
-    
-    
-    //      -----------------------------------------update trapezium
-    trapeziumUpdateMonteCarlo(Membrane_Triangle_Pair_Nodes,t1,t2,t3,t4,linepos,lineA,lineB,lineC,lineD,Aa,Bb,Cc,Dd, Membrane_num_of_Triangle_Pairs);
-    if( Aa!=Bb & Aa!=Cc & Aa!=Dd & Bb!=Cc & Bb!=Dd & Cc!=Dd  ) //updaing condition
-    {
-        for(int i=0;i<Membrane_num_of_Node_Pairs;i++)
-        {
-            if ((Membrane_Node_Pair_list[i][0]==t1 & Membrane_Node_Pair_list[i][1]==t2)  || (Membrane_Node_Pair_list[i][0]==t2 & Membrane_Node_Pair_list[i][1]==t1))
-            {
-                Membrane_Node_Pair_list[i][0]=t3;
-                Membrane_Node_Pair_list[i][1]=t4;
-                l3=i;
-                temp_total_potential_energy=potentialenergy(Membrane_Node_Position, Membrane_Node_Pair_list, Membrane_Triangle_Pair_Nodes, Membrane_triangle_list, Outer_Membrane_num_of_triangles, Nucleus_Membrane_num_of_triangles, Membrane_num_of_Triangle_Pairs, Membrane_num_of_Node_Pairs);
-                // cout<<"change  "<<endl;
-                
-            }
-        }
-    }
-    else
-    {
-        temp_total_potential_energy=10000000000;
-    }
-    ///    END   -----------------------------------------update trapezium
-    
-    //C++11
-    uniform_real_distribution<> rd3(0,1);
-    
-    Metropolis_condition=( exp(   (-temp_total_potential_energy+Total_Potential_Energy)/KT ));
-    if (    rd3(gen) > Metropolis_condition   )  // if the changes are not accepted  ==== reverse the changes
-    {
-        //        I have to check to see if I do this the next montecarlo step will have bugs or not.
-        //        Total_Potential_Energy=temp_total_potential_energy;
-        if( Aa!=Bb & Aa!=Cc & Aa!=Dd & Bb!=Cc & Bb!=Dd & Cc!=Dd  )
-        {
-            
-            // if(linepos=!-1)
-            {
-                
-                Membrane_Node_Pair_list[l3][0]=t1;   //revesing Bonds
-                Membrane_Node_Pair_list[l3][1]=t2;
-                Membrane_Triangle_Pair_Nodes[linepos][0]=t1;  //revesing trapezium
-                Membrane_Triangle_Pair_Nodes[linepos][1]=t2;
-                Membrane_Triangle_Pair_Nodes[linepos][2]=t3;
-                Membrane_Triangle_Pair_Nodes[linepos][3]=t4;
-                
-            }
-            // if( lineA=!-1)
-            {
-                Membrane_Triangle_Pair_Nodes[lineA][3]=t2;
-                Membrane_Triangle_Pair_Nodes[lineA][2]=Aa;
-            }
-            
-            
-            //if( lineB=!-1)
-            {
-                Membrane_Triangle_Pair_Nodes[lineB][3]=t2;
-                Membrane_Triangle_Pair_Nodes[lineB][2]=Bb;
-            }
-            
-            
-            
-            
-            // if( lineC=!-1)
-            {
-                Membrane_Triangle_Pair_Nodes[lineC][3]=t1;
-                Membrane_Triangle_Pair_Nodes[lineC][2]=Cc;
-            }
-            
-            
-            //  if( lineD=!-1)
-            {
-                
-                Membrane_Triangle_Pair_Nodes[lineD][3]=t1;
-                Membrane_Triangle_Pair_Nodes[lineD][2]=Dd;
-            }
-            
-        }
-        
-    }
-    else  // if changes are acepted we update trianglesa and normalvector inside this function:
-    {
-        updatetriangle(t1,t2,t3,t4,Membrane_triangle_list,l1,l2,Membrane_Node_Position,Membrane_Normal_direction);
-        //   cout << "accept  "<< -U2+U <<endl;
-    }
-    
-}
+//void MonteCarlo(  int Membrane_triangle_list[Membrane_num_of_Triangles][3],int Membrane_Triangle_Pair_Nodes[][4] ,int Membrane_Node_Pair_list[][2],double &Total_Potential_Energy,double Membrane_Node_Position[Membrane_num_of_Nodes][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Outer_Membrane_num_of_triangles, int Nucleus_Membrane_num_of_triangles, int Membrane_num_of_Triangle_Pairs, int Membrane_num_of_Node_Pairs)
+//{
+//    int t1=-1,t2=-1,t3=-1,t4=-1,l1=-1,l2=-1,l3=-1; // just numbers
+//
+//    int  linepos, lineA, lineB, lineC,lineD,Aa,Bb,Cc,Dd ; // IN ORDER TO REVERSE CHANGES IF STEP NOT ACCEPTED IN trapezium fuction
+//
+//    //    Bug: I commented out this part because it just goes through the same calculations as we had in the 'Membrane_Force_Calculator' function.
+//    Total_Potential_Energy=potentialenergy(Membrane_Node_Position, Membrane_Node_Pair_list, Membrane_Triangle_Pair_Nodes, Membrane_triangle_list, Outer_Membrane_num_of_triangles, Nucleus_Membrane_num_of_triangles, Membrane_num_of_Triangle_Pairs, Membrane_num_of_Node_Pairs);
+//
+//    double temp_total_potential_energy=0.0, Metropolis_condition=0.0;
+//    //C++11
+//    random_device rd;
+//    mt19937 gen(rd());
+//    uniform_int_distribution<> rd1(0,Membrane_num_of_Triangle_Pairs-1);
+//    uniform_int_distribution<> rd2(1,3);
+//
+//
+//    /// selecting a bond randomly  (bond is supposed to be between t1 and t2 )  and flippping bonds
+//    l1=rd1(gen);
+//    t1=Membrane_Triangle_Pair_Nodes[l1][0];
+//    t2=Membrane_Triangle_Pair_Nodes[l1][1];
+//    t3=Membrane_Triangle_Pair_Nodes[l1][2];
+//    t4=Membrane_Triangle_Pair_Nodes[l1][3];
+//
+//
+//
+//
+//
+//    //      -----------------------------------------update trapezium
+//    trapeziumUpdateMonteCarlo(Membrane_Triangle_Pair_Nodes,t1,t2,t3,t4,linepos,lineA,lineB,lineC,lineD,Aa,Bb,Cc,Dd, Membrane_num_of_Triangle_Pairs);
+//    if( Aa!=Bb & Aa!=Cc & Aa!=Dd & Bb!=Cc & Bb!=Dd & Cc!=Dd  ) //updaing condition
+//    {
+//        for(int i=0;i<Membrane_num_of_Node_Pairs;i++)
+//        {
+//            if ((Membrane_Node_Pair_list[i][0]==t1 & Membrane_Node_Pair_list[i][1]==t2)  || (Membrane_Node_Pair_list[i][0]==t2 & Membrane_Node_Pair_list[i][1]==t1))
+//            {
+//                Membrane_Node_Pair_list[i][0]=t3;
+//                Membrane_Node_Pair_list[i][1]=t4;
+//                l3=i;
+//                temp_total_potential_energy=potentialenergy(Membrane_Node_Position, Membrane_Node_Pair_list, Membrane_Triangle_Pair_Nodes, Membrane_triangle_list, Outer_Membrane_num_of_triangles, Nucleus_Membrane_num_of_triangles, Membrane_num_of_Triangle_Pairs, Membrane_num_of_Node_Pairs);
+//                // cout<<"change  "<<endl;
+//
+//            }
+//        }
+//    }
+//    else
+//    {
+//        temp_total_potential_energy=10000000000;
+//    }
+//    ///    END   -----------------------------------------update trapezium
+//
+//    //C++11
+//    uniform_real_distribution<> rd3(0,1);
+//
+//    Metropolis_condition=( exp(   (-temp_total_potential_energy+Total_Potential_Energy)/KT ));
+//    if (    rd3(gen) > Metropolis_condition   )  // if the changes are not accepted  ==== reverse the changes
+//    {
+//        //        I have to check to see if I do this the next montecarlo step will have bugs or not.
+//        //        Total_Potential_Energy=temp_total_potential_energy;
+//        if( Aa!=Bb & Aa!=Cc & Aa!=Dd & Bb!=Cc & Bb!=Dd & Cc!=Dd  )
+//        {
+//
+//            // if(linepos=!-1)
+//            {
+//
+//                Membrane_Node_Pair_list[l3][0]=t1;   //revesing Bonds
+//                Membrane_Node_Pair_list[l3][1]=t2;
+//                Membrane_Triangle_Pair_Nodes[linepos][0]=t1;  //revesing trapezium
+//                Membrane_Triangle_Pair_Nodes[linepos][1]=t2;
+//                Membrane_Triangle_Pair_Nodes[linepos][2]=t3;
+//                Membrane_Triangle_Pair_Nodes[linepos][3]=t4;
+//
+//            }
+//            // if( lineA=!-1)
+//            {
+//                Membrane_Triangle_Pair_Nodes[lineA][3]=t2;
+//                Membrane_Triangle_Pair_Nodes[lineA][2]=Aa;
+//            }
+//
+//
+//            //if( lineB=!-1)
+//            {
+//                Membrane_Triangle_Pair_Nodes[lineB][3]=t2;
+//                Membrane_Triangle_Pair_Nodes[lineB][2]=Bb;
+//            }
+//
+//
+//
+//
+//            // if( lineC=!-1)
+//            {
+//                Membrane_Triangle_Pair_Nodes[lineC][3]=t1;
+//                Membrane_Triangle_Pair_Nodes[lineC][2]=Cc;
+//            }
+//
+//
+//            //  if( lineD=!-1)
+//            {
+//
+//                Membrane_Triangle_Pair_Nodes[lineD][3]=t1;
+//                Membrane_Triangle_Pair_Nodes[lineD][2]=Dd;
+//            }
+//
+//        }
+//
+//    }
+//    else  // if changes are acepted we update trianglesa and normalvector inside this function:
+//    {
+//        updatetriangle(t1,t2,t3,t4,Membrane_triangle_list,l1,l2,Membrane_Node_Position,Membrane_Normal_direction);
+//        //   cout << "accept  "<< -U2+U <<endl;
+//    }
+//
+//}
 
 void trapeziumUpdateMonteCarlo(int Membrane_Triangle_Pair_Nodes[][4],int p1, int p2,int p3,int p4, int &linepos,int &lineA,int &lineB,int &lineC,int &lineD,int &Aa,int &Bb,int &Cc,int &Dd, int Membrane_num_of_Triangle_Pairs)
 {
@@ -3050,7 +2962,7 @@ void Actin_Membrane_Barrier( double  Actin_Node_Position [][3], double  Actin_No
     }
     
 }
-void Actin_Membrane_Barrier_2( double  Actin_Node_Position [][3], double  Actin_Node_Velocity [][3], double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3],  int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2])
+void Actin_Membrane_Barrier_2( double  Actin_Node_Position [][3], double  Actin_Node_Velocity [][3], double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3],  int Membrane_triangle_list[Membrane_num_of_Triangles][3])
 {
     double membrane_triangle_COM_position[3]; // coordinates to the centre of mass of the triangles
     double membrane_triangle_COM_velocity[3]; // velocity of the center of mass of the triangles
@@ -3082,9 +2994,9 @@ void Actin_Membrane_Barrier_2( double  Actin_Node_Position [][3], double  Actin_
                 AC[1]=Membrane_Node_Position[ Membrane_triangle_list[i][2]][1]-Membrane_Node_Position[ Membrane_triangle_list[i][0]][1];
                 AC[2]=Membrane_Node_Position[ Membrane_triangle_list[i][2]][2]-Membrane_Node_Position[ Membrane_triangle_list[i][0]][2];
                 crossvector(ABxAC,AB,AC);
-                ABxAC[0]=ABxAC[0]*Membrane_Normal_direction[i][1];
-                ABxAC[1]=ABxAC[1]*Membrane_Normal_direction[i][1];
-                ABxAC[2]=ABxAC[2]*Membrane_Normal_direction[i][1];
+//                ABxAC[0]=ABxAC[0]*Membrane_Normal_direction[i][1];
+//                ABxAC[1]=ABxAC[1]*Membrane_Normal_direction[i][1];
+//                ABxAC[2]=ABxAC[2]*Membrane_Normal_direction[i][1];
                 
                 ABxAC_unit_vector[0]=ABxAC[0]/vectorlength(ABxAC);
                 ABxAC_unit_vector[1]=ABxAC[1]/vectorlength(ABxAC);
@@ -3101,7 +3013,7 @@ void Actin_Membrane_Barrier_2( double  Actin_Node_Position [][3], double  Actin_
                 relevant_velocity[2] = Actin_Node_Velocity[actin_counter][2]-membrane_triangle_COM_velocity[2];
                 
                 if    ( (abs( perpendicular_distance )<Actin_Membrane_Radius_of_Hard_Sphere_Interaction)
-                       && (innerproduct(relevant_velocity,ABxAC)*Membrane_Normal_direction[i][0]>0)
+                       && (innerproduct(relevant_velocity,ABxAC)>0)
                        )
                 {
                     double Actin_velocity_N_new, Actin_velocity_N, Membrane_triangle_COM_velocity_N_new, Membrane_triangle_COM_velocity_N;
@@ -3811,27 +3723,27 @@ void update_spatial_contact_matrix(double contact_coordinates[3])
     }
 }
 
-void COM_of_nucleus_membrane_function(double (&Membrane_Node_Position)[Membrane_num_of_Nodes][3],int Nucleus_Membrane_list_of_Nodes[], int  Outer_Membrane_num_of_Nodes)
-{
-    int lambda;
-    COM_of_nucleus_membrane[0]=0.0;
-    COM_of_nucleus_membrane[1]=0.0;
-    COM_of_nucleus_membrane[2]=0.0;
-    
-    for(int j=0; j<Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes;j++) // saving trajectory
-    {   lambda=Nucleus_Membrane_list_of_Nodes[j];
-        
-        COM_of_nucleus_membrane[0] += Membrane_Node_Position[lambda][0];
-        COM_of_nucleus_membrane[1] += Membrane_Node_Position[lambda][1];
-        COM_of_nucleus_membrane[2] += Membrane_Node_Position[lambda][2];
-        
-    }
-    
-    COM_of_nucleus_membrane[0]=  COM_of_nucleus_membrane[0]/( double(Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes) );
-    COM_of_nucleus_membrane[1]=  COM_of_nucleus_membrane[1]/( double(Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes) );
-    COM_of_nucleus_membrane[2]=  COM_of_nucleus_membrane[2]/( double(Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes) );
-    
-}
+//void COM_of_nucleus_membrane_function(double (&Membrane_Node_Position)[Membrane_num_of_Nodes][3],int Nucleus_Membrane_list_of_Nodes[], int  Outer_Membrane_num_of_Nodes)
+//{
+//    int lambda;
+//    COM_of_nucleus_membrane[0]=0.0;
+//    COM_of_nucleus_membrane[1]=0.0;
+//    COM_of_nucleus_membrane[2]=0.0;
+//
+//    for(int j=0; j<Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes;j++) // saving trajectory
+//    {   lambda=Nucleus_Membrane_list_of_Nodes[j];
+//
+//        COM_of_nucleus_membrane[0] += Membrane_Node_Position[lambda][0];
+//        COM_of_nucleus_membrane[1] += Membrane_Node_Position[lambda][1];
+//        COM_of_nucleus_membrane[2] += Membrane_Node_Position[lambda][2];
+//
+//    }
+//
+//    COM_of_nucleus_membrane[0]=  COM_of_nucleus_membrane[0]/( double(Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes) );
+//    COM_of_nucleus_membrane[1]=  COM_of_nucleus_membrane[1]/( double(Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes) );
+//    COM_of_nucleus_membrane[2]=  COM_of_nucleus_membrane[2]/( double(Membrane_num_of_Nodes- Outer_Membrane_num_of_Nodes) );
+//
+//}
 
 
 void loop_force_chromatin(double Chromatin_Bead_Position[Chromatin_num_of_Beads][3],double Chromatin_Bead_Force[Chromatin_num_of_Beads][3], double &Total_Potential_Energy)
@@ -5961,7 +5873,7 @@ void Membrane_ECM_interactionHELPER_newstrategy(double ECM_Node_Position [][3], 
     
 }
 
-void cellshift( double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double Actin_Node_Position[Actin_num_of_Nodes][3],double Chromatin_Bead_Position[Chromatin_num_of_Beads][3],double  ECM_Node_Position [][3] ,double  Membrane_Node_Velocity [Membrane_num_of_Nodes][3],double Actin_Node_Velocity[Actin_num_of_Nodes][3],double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3])
+void cellshift( double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double Actin_Node_Position[Actin_num_of_Nodes][3],double  Membrane_Node_Velocity [Membrane_num_of_Nodes][3],double Actin_Node_Velocity[Actin_num_of_Nodes][3])
 {
     for (int i=0; i<Membrane_num_of_Nodes ; i++)
     {
@@ -5972,12 +5884,6 @@ void cellshift( double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double
     {
         Actin_Node_Position[i][0]= Actin_Node_Position[i][0]+membraneshiftinXdirection;
         Actin_Node_Position[i][2]= Actin_Node_Position[i][2]+membraneshiftinZdirection;
-    }
-    
-    for (int i=0; i<Chromatin_num_of_Beads ; i++)
-    {
-        Chromatin_Bead_Position[i][0] += membraneshiftinXdirection;
-        Chromatin_Bead_Position[i][2] += membraneshiftinZdirection;
     }
     
     for (int i=0; i<Membrane_num_of_Nodes ; i++)
@@ -5991,18 +5897,12 @@ void cellshift( double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double
         
     }
     
-    for (int i=0; i<Chromatin_num_of_Beads ; i++)
-    {
-        Chromatin_Bead_Velocity[i][1] += cell_downward_speed;
-        
-    }
-    
 }
 
 
 //___________________migration
 
-void CellCOM( double com[3],double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double  Actin_Node_Position [][3] ,double Chromatin_Bead_Position[Chromatin_num_of_Beads][3])
+void CellCOM( double com[3],double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double  Actin_Node_Position [][3])
 {
     com[0]=0;
     com[1]=0;
@@ -6014,8 +5914,8 @@ void CellCOM( double com[3],double  Membrane_Node_Position [Membrane_num_of_Node
         com [0] += Membrane_Node_Mass*Membrane_Node_Position [i][0];
         com [1] += Membrane_Node_Mass*Membrane_Node_Position [i][1];
         com [2] += Membrane_Node_Mass*Membrane_Node_Position [i][2];
-        sigmaM += Membrane_Node_Mass;
     }
+    sigmaM += Membrane_num_of_Nodes*Membrane_Node_Mass;
     //----------------------actin---------------------
     //*******************************************************************************************************
     /*BUG
@@ -6034,18 +5934,18 @@ void CellCOM( double com[3],double  Membrane_Node_Position [Membrane_num_of_Node
         com [0] += Actin_Node_Mass* Actin_Node_Position [i] [0];
         com [1] += Actin_Node_Mass* Actin_Node_Position [i] [1];
         com [2] += Actin_Node_Mass* Actin_Node_Position [i] [2];
-        sigmaM += Membrane_Node_Mass;
+        
         
     }
-    
+    sigmaM += (Actin_num_of_Nodes-Actin_Membrane_shared_num_of_Nodes)*Membrane_Node_Mass;
     //----------------------chromatin---------------------
-    for(int i=0;i<Chromatin_num_of_Beads;i++)
-    {
-        com [0] += Chromatin_Bead_Mass*Chromatin_Bead_Position [i][0];
-        com [1] += Chromatin_Bead_Mass*Chromatin_Bead_Position [i][1];
-        com [2] += Chromatin_Bead_Mass*Chromatin_Bead_Position [i][2];
-        sigmaM += Chromatin_Bead_Mass;
-    }
+//    for(int i=0;i<Chromatin_num_of_Beads;i++)
+//    {
+//        com [0] += Chromatin_Bead_Mass*Chromatin_Bead_Position [i][0];
+//        com [1] += Chromatin_Bead_Mass*Chromatin_Bead_Position [i][1];
+//        com [2] += Chromatin_Bead_Mass*Chromatin_Bead_Position [i][2];
+//        sigmaM += Chromatin_Bead_Mass;
+//    }
     
     //----------------------------------------
     com [0]=com[0]/sigmaM;
@@ -6636,7 +6536,7 @@ double kineticenergychromatin (double Chromatin_Bead_Velocity[Chromatin_num_of_B
 }
 
 
-void Thermostat(int istep, double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], double Actin_Node_Velocity[][3], double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3], double ECM_Node_Velocity[][3])
+void Thermostat(int istep, double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], double Actin_Node_Velocity[][3])
 {
     double alpha;
     //----------------------membrane---------------------
@@ -6669,29 +6569,29 @@ void Thermostat(int istep, double Membrane_Node_Velocity[Membrane_num_of_Nodes][
     
     //----------------------solvent---------------------
     
-    alpha=sqrt(      (3* nsolvent  *KT) / kineticenergysolvent(  )         );/// NOTE THAT THERMOSTATE IS FOR MEMBRANE YET. IN ORDER TO
+//    alpha=sqrt(      (3* nsolvent  *KT) / kineticenergysolvent(  )         );/// NOTE THAT THERMOSTATE IS FOR MEMBRANE YET. IN ORDER TO
     /// UPDATE IT FOR BOTH THE MEMBRANE AND NUCLEI WE HAVE TO
     /// WRITE  alpha=sqrt(      (2*3*Membrane_num_of_Nodes*KT) / kineticenergy( Membrane_Node_Velocity,vnuclei
-    for(int i=0;i<nsolvent;i++)
-    {
-        vsolvent [0][i]=vsolvent [0][i]*alpha;
-        vsolvent [1][i]=vsolvent [1][i]*alpha;
-        vsolvent [2][i]=vsolvent [2][i]*alpha;
-    }
+//    for(int i=0;i<nsolvent;i++)
+//    {
+//        vsolvent [0][i]=vsolvent [0][i]*alpha;
+//        vsolvent [1][i]=vsolvent [1][i]*alpha;
+//        vsolvent [2][i]=vsolvent [2][i]*alpha;
+//    }
     
     
     //----------------------chromatin---------------------
     
-    if(istep%ThermostatOnChromatin==0)
-    {
-        alpha=sqrt(      (3*Chromatin_num_of_Beads*KT) / kineticenergychromatin( Chromatin_Bead_Velocity )         );
-        for(int i=0;i<Chromatin_num_of_Beads;i++)
-        {
-            Chromatin_Bead_Velocity [i][0] *= alpha;
-            Chromatin_Bead_Velocity [i][1] *= alpha;
-            Chromatin_Bead_Velocity [i][2] *= alpha;
-        }
-    }
+//    if(istep%ThermostatOnChromatin==0)
+//    {
+//        alpha=sqrt(      (3*Chromatin_num_of_Beads*KT) / kineticenergychromatin( Chromatin_Bead_Velocity )         );
+//        for(int i=0;i<Chromatin_num_of_Beads;i++)
+//        {
+//            Chromatin_Bead_Velocity [i][0] *= alpha;
+//            Chromatin_Bead_Velocity [i][1] *= alpha;
+//            Chromatin_Bead_Velocity [i][2] *= alpha;
+//        }
+//    }
     
 }
 
@@ -6703,7 +6603,7 @@ void Thermostat(int istep, double Membrane_Node_Velocity[Membrane_num_of_Nodes][
 
 
 //---------------------------restart-----------------------
-void restartsave( double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], double Chromatin_Bead_Position[Chromatin_num_of_Beads][3], double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3], double ECM_Node_Position[][3], double ECM_Node_Velocity [][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds)
+void restartsave( double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds)
 {
     ofstream restart;
     restart.open("restart_1.txt");
@@ -6734,13 +6634,13 @@ void restartsave( double Membrane_Node_Position[Membrane_num_of_Nodes][3], doubl
         }
     }
     
-    for (int i=0; i<Membrane_num_of_Triangles ; i++)
-    {
-        for (int j=0; j<2 ; j++)
-        {
-            restart<< Membrane_Normal_direction[i][j]<<endl;
-        }
-    }
+//    for (int i=0; i<Membrane_num_of_Triangles ; i++)
+//    {
+//        for (int j=0; j<2 ; j++)
+//        {
+//            restart<< Membrane_Normal_direction[i][j]<<endl;
+//        }
+//    }
     
     
     for (int i=0; i<Membrane_num_of_Triangle_Pairs ; i++)
@@ -6783,68 +6683,10 @@ void restartsave( double Membrane_Node_Position[Membrane_num_of_Nodes][3], doubl
         }
     }
     
-    for (int i=0; i<nsolvent ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart<< xsolvent[j][i]<<endl;
-        }
-    }
-    
-    
-    for (int i=0; i<nsolvent ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart<< vsolvent[j][i]<<endl;
-        }
-    }
-    
-    
-    
-    for (int i=0; i<Chromatin_num_of_Beads ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart<< Chromatin_Bead_Position[i][j]<<endl;
-        }
-    }
-    
-    
-    for (int i=0; i<Chromatin_num_of_Beads ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart<< Chromatin_Bead_Velocity[i][j]<<endl;
-        }
-    }
-    
-    
-    for (int i=0; i<ECM_num_of_Nodes ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart<< ECM_Node_Position[i][j]<<endl;
-        }
-    }
-    
-    
-    
-    for (int i=0; i<ECM_num_of_Nodes ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart<< ECM_Node_Velocity[i][j]<<endl;
-        }
-    }
-    
-    
-    
-    
 }
 
 
-void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3],double Actin_Node_Pair_List[][3], double Chromatin_Bead_Position[Chromatin_num_of_Beads][3], double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3], double ECM_Node_Position [][3], double ECM_Node_Velocity [][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds)
+void restartread(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3],double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds)
 {
     
     
@@ -6877,13 +6719,13 @@ void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], doubl
         }
     }
     
-    for (int i=0; i<Membrane_num_of_Triangles ; i++)
-    {
-        for (int j=0; j<2 ; j++)
-        {
-            restart>> Membrane_Normal_direction[i][j];
-        }
-    }
+//    for (int i=0; i<Membrane_num_of_Triangles ; i++)
+//    {
+//        for (int j=0; j<2 ; j++)
+//        {
+//            restart>> Membrane_Normal_direction[i][j];
+//        }
+//    }
     
     
     for (int i=0; i<Membrane_num_of_Triangle_Pairs ; i++)
@@ -6931,62 +6773,6 @@ void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], doubl
             restart>> Actin_Node_Pair_List[i][j];
         }
     }
-    
-    for (int i=0; i<nsolvent ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart>> xsolvent[j][i];
-        }
-    }
-    
-    
-    for (int i=0; i<nsolvent ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart>> vsolvent[j][i];
-        }
-    }
-    
-    
-    
-    for (int i=0; i<Chromatin_num_of_Beads ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart>> Chromatin_Bead_Position[i][j];
-        }
-    }
-    
-    
-    for (int i=0; i<Chromatin_num_of_Beads ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart>> Chromatin_Bead_Velocity[i][j];
-        }
-    }
-    
-    for (int i=0; i<ECM_num_of_Nodes ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart>> ECM_Node_Position[i][j];
-        }
-    }
-    
-    
-    
-    for (int i=0; i<ECM_num_of_Nodes ; i++)
-    {
-        for (int j=0; j<3 ; j++)
-        {
-            restart>> ECM_Node_Velocity[i][j];
-        }
-    }
-    
-    
 }
 
 
@@ -6997,7 +6783,7 @@ void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], doubl
 
 
 
-void povray_output_creator(int currentStep, double Membrane_Node_Position[Membrane_num_of_Nodes][3], int  Membrane_triangle_list [Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Membrane_Node_Pair_list[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], double Chromatin_Bead_Position[Chromatin_num_of_Beads][3], double ECM_Node_Position[][3], double ECM_Node_Pair_List[][3], int ECM_surface_triangle_list[ECM_Surface_num_of_Triangles][3], int Outer_Membrane_num_of_triangles, int Membrane_num_of_Node_Pairs, int Outer_Membrane_num_of_Node_Pairs, int Actin_num_of_Bonds, int ECM_num_of_Bonds)
+void povray_output_creator(int currentStep, double Membrane_Node_Position[Membrane_num_of_Nodes][3], int  Membrane_triangle_list [Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Membrane_Node_Pair_list[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Outer_Membrane_num_of_triangles, int Membrane_num_of_Node_Pairs, int Outer_Membrane_num_of_Node_Pairs, int Actin_num_of_Bonds)
 {
     
     ///____________________________POV
@@ -7196,40 +6982,40 @@ void povray_output_creator(int currentStep, double Membrane_Node_Position[Membra
     
     ///============membrane bonds================
     
-    pov << "union {   // ECM___________________________________________________________________" <<endl;
-    for(int i=0;i<ECM_Surface_num_of_Triangles;i++)
-    {
-        pov << " triangle { <"<< ECM_Node_Position[ ECM_surface_triangle_list[i][0] ] [0]  << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][0] ] [1] << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][0] ] [2]  << ">,";
-        pov << " <"<< ECM_Node_Position[ ECM_surface_triangle_list[i][1] ] [0]  << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][1] ] [1] << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][1] ] [2]  << ">,";
-        pov << " <"<< ECM_Node_Position[ ECM_surface_triangle_list[i][2] ] [0]  << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][2] ] [1] << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][2] ] [2]  << ">" <<endl;
-        pov<< "} " <<endl;
-    }
-    pov<< " texture {ECM}  " <<endl;
-    
-    pov << " }" <<endl;
-    
-    
-    
-    pov << "union { ///=========================================chromatins======================================="<<endl;
-    for(int i=0;i<Chromatin_num_of_Beads;i++)
-    {
-        pov<< "sphere { <" << Chromatin_Bead_Position[i][0]<< ","<< Chromatin_Bead_Position[i][1]<< ","<< Chromatin_Bead_Position[i][2]<< "> ," << "radiusChromatin";
-        pov<< "} " <<endl;
-        
-    }
-    
-    for (int nchain=0;nchain<Chromatin_num_of_chains;nchain++)
-    {
-        for(int i=nchain*(Chromatin_num_of_Beads/Chromatin_num_of_chains)  ;i< (nchain+1)*(Chromatin_num_of_Beads/Chromatin_num_of_chains) -1; i++ )  // all beads interaction whit the next one
-        {
-            pov<< "cylinder { <" << Chromatin_Bead_Position[i][0]<< ","<< Chromatin_Bead_Position[i][1]<< ","<< Chromatin_Bead_Position[i][2]<< "> ," ;
-            pov<< "  <" << Chromatin_Bead_Position[i+1][0]<< ","<< Chromatin_Bead_Position[i+1][1]<< ","<< Chromatin_Bead_Position[i+1][2]<< "> ," <<"radiusChromatin";
-            pov<< "} " <<endl;
-        }
-    }
-    
-    pov<< " texture {chromatins}  no_shadow" <<endl;
-    pov << " }" <<endl;
+//    pov << "union {   // ECM___________________________________________________________________" <<endl;
+//    for(int i=0;i<ECM_Surface_num_of_Triangles;i++)
+//    {
+//        pov << " triangle { <"<< ECM_Node_Position[ ECM_surface_triangle_list[i][0] ] [0]  << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][0] ] [1] << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][0] ] [2]  << ">,";
+//        pov << " <"<< ECM_Node_Position[ ECM_surface_triangle_list[i][1] ] [0]  << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][1] ] [1] << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][1] ] [2]  << ">,";
+//        pov << " <"<< ECM_Node_Position[ ECM_surface_triangle_list[i][2] ] [0]  << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][2] ] [1] << " , "<< ECM_Node_Position[ ECM_surface_triangle_list[i][2] ] [2]  << ">" <<endl;
+//        pov<< "} " <<endl;
+//    }
+//    pov<< " texture {ECM}  " <<endl;
+//
+//    pov << " }" <<endl;
+//
+//
+//
+//    pov << "union { ///=========================================chromatins======================================="<<endl;
+//    for(int i=0;i<Chromatin_num_of_Beads;i++)
+//    {
+//        pov<< "sphere { <" << Chromatin_Bead_Position[i][0]<< ","<< Chromatin_Bead_Position[i][1]<< ","<< Chromatin_Bead_Position[i][2]<< "> ," << "radiusChromatin";
+//        pov<< "} " <<endl;
+//
+//    }
+//
+//    for (int nchain=0;nchain<Chromatin_num_of_chains;nchain++)
+//    {
+//        for(int i=nchain*(Chromatin_num_of_Beads/Chromatin_num_of_chains)  ;i< (nchain+1)*(Chromatin_num_of_Beads/Chromatin_num_of_chains) -1; i++ )  // all beads interaction whit the next one
+//        {
+//            pov<< "cylinder { <" << Chromatin_Bead_Position[i][0]<< ","<< Chromatin_Bead_Position[i][1]<< ","<< Chromatin_Bead_Position[i][2]<< "> ," ;
+//            pov<< "  <" << Chromatin_Bead_Position[i+1][0]<< ","<< Chromatin_Bead_Position[i+1][1]<< ","<< Chromatin_Bead_Position[i+1][2]<< "> ," <<"radiusChromatin";
+//            pov<< "} " <<endl;
+//        }
+//    }
+//
+//    pov<< " texture {chromatins}  no_shadow" <<endl;
+//    pov << " }" <<endl;
     
     ///=========================================chromatins=======================================
     
@@ -7259,22 +7045,22 @@ void povray_output_creator(int currentStep, double Membrane_Node_Position[Membra
     
     ///=========================================ECM network=================================
     
-    pov << "union { ///=========================================ECM bonds======================================="<<endl;
-    for(int i=0;i<ECM_num_of_Bonds;i++)
-    {
-        
-        w1=(int)  ECM_Node_Pair_List[i][0];
-        w2=(int)  ECM_Node_Pair_List[i][1];
-        
-        pov<< "cylinder { <" << ECM_Node_Position[w1][0]<< ","<< ECM_Node_Position[w1][1]<< ","<< ECM_Node_Position[w1][2]<< "> ," ;
-        pov<< "  <" << ECM_Node_Position[w2][0]<< ","<<ECM_Node_Position[w2][1]<< ","<<ECM_Node_Position[w2][2]<< "> ," << "radiBondECM";
-        pov<< "} " <<endl;
-        
-        
-    }
-    
-    pov<< " texture {ECMbonds} no_shadow " <<endl;
-    pov << " }" <<endl;
+//    pov << "union { ///=========================================ECM bonds======================================="<<endl;
+//    for(int i=0;i<ECM_num_of_Bonds;i++)
+//    {
+//
+//        w1=(int)  ECM_Node_Pair_List[i][0];
+//        w2=(int)  ECM_Node_Pair_List[i][1];
+//
+//        pov<< "cylinder { <" << ECM_Node_Position[w1][0]<< ","<< ECM_Node_Position[w1][1]<< ","<< ECM_Node_Position[w1][2]<< "> ," ;
+//        pov<< "  <" << ECM_Node_Position[w2][0]<< ","<<ECM_Node_Position[w2][1]<< ","<<ECM_Node_Position[w2][2]<< "> ," << "radiBondECM";
+//        pov<< "} " <<endl;
+//
+//
+//    }
+//
+//    pov<< " texture {ECMbonds} no_shadow " <<endl;
+//    pov << " }" <<endl;
     
     ///=========================================ECM network=================================
     

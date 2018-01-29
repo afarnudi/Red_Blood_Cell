@@ -84,22 +84,22 @@
 				004AE13D1FF396450054168F /* main.cpp */,
 				004AE14B1FF396B50054168F /* Actin_functions.cpp */,
 				004AE14E1FF396B50054168F /* Actin_functions.hpp */,
+				004AE1511FF396B60054168F /* General_Actin.h */,
 				004AE1491FF396B50054168F /* Actin_membrane_shared_functions.cpp */,
 				004AE1441FF396B40054168F /* Actin_membrane_shared_functions.hpp */,
+				004AE1501FF396B60054168F /* General_Actin_Membrane_shared.h */,
 				004AE1571FF396B60054168F /* Chromatin_functions.cpp */,
 				004AE1541FF396B60054168F /* Chromatin_functions.hpp */,
+				004AE14C1FF396B50054168F /* General_Chromatin.h */,
 				004AE1551FF396B60054168F /* ECM_functions.cpp */,
 				004AE14F1FF396B50054168F /* ECM_functions.hpp */,
-				004AE1501FF396B60054168F /* General_Actin_Membrane_shared.h */,
-				004AE1511FF396B60054168F /* General_Actin.h */,
-				004AE14C1FF396B50054168F /* General_Chromatin.h */,
-				004AE1561FF396B60054168F /* General_constants.h */,
 				004AE1451FF396B40054168F /* General_ECM.h */,
 				004AE1521FF396B60054168F /* General_functions.cpp */,
 				004AE1481FF396B50054168F /* General_functions.hpp */,
-				004AE14A1FF396B50054168F /* General_Membrane.h */,
+				004AE1561FF396B60054168F /* General_constants.h */,
 				004AE14D1FF396B50054168F /* Membrane_functions.cpp */,
 				004AE1531FF396B60054168F /* Membrane_functions.hpp */,
+				004AE14A1FF396B50054168F /* General_Membrane.h */,
 			);
 			path = "Red Blood Cell";
 			sourceTree = "<group>";
@@ -281,7 +281,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;

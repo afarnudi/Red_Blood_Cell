@@ -10,8 +10,9 @@
 #define Membrane_functions_hpp
 
 #include <stdio.h>
+#include <vector>
 #include "General_Membrane.h"
-
+using namespace std;
 
 //  Breif discription:
 //      -This function reads the Gmesh generated file 'membrane' that contains the node position of both the outer membrane and nucleus            nodes. This file also contains the list of nodes that make up tringles, which we also need for our calculations.
@@ -38,7 +39,7 @@ void Membrane_constructor(double Membrane_Node_Position[Membrane_num_of_Nodes][3
 //  Suggested improvments:
 //        1-I do not think that we need to set a list of +/- to use as a multiplier for ABxAC throughout the code for us to have ABxAC pointing out of the cell. Similar to the method I used for the ECM surface triangles, we simply need to swap B <-> C whenever the the inner product of the position of the triangle and the ABxAC vector is negative. This will also releave us of many calculations, confusion, and potential bugs in the code.
 
-void Membrane_Normal_direction_Identifier( double  Membrane_Node_Position [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int  &Outer_Membrane_num_of_triangles, int &Nucleus_Membrane_num_of_triangles, bool cell_has_nucleus);
+void Membrane_Normal_direction_Identifier( double  Membrane_Node_Position [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int  &Outer_Membrane_num_of_triangles);
 
 
 //  Breif discription:
@@ -76,7 +77,7 @@ int Membrane_triangle_pair_counter( int Membrane_triangle_list[Membrane_num_of_T
 //  Suggested improvments:
 //        1-Nothing particular.
 
-void Membrane_Triangle_Pair_Identifier(int Membrane_reiangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int Membrane_num_of_Triangle_Pairs);
+void Membrane_Triangle_Pair_Identifier(int Membrane_reiangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int Membrane_num_of_Triangle_Pairs, vector <vector <int> > &Membrane_triangle_triangle_neighbour_list);
 
 //  Breif discription:
 //        1-Counts the 'Outer_Membrane_num_of_Node_Pairs'.

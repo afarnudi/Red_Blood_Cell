@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 int  Actin_Node_Pair_Identifier( )  // Reads the 'Actin' files and Identifies the Nodes that have a bond between them, hence are a pair.
 {
     vector<vector<int> > Actin_Node_Pair_list_temp;
@@ -166,7 +165,7 @@ int  Actin_Node_Pair_Identifier( )  // Reads the 'Actin' files and Identifies th
 
 void  Actin_constructor(double  Actin_Node_Position [][3],double  Actin_Node_Velocity [][3],double  Actin_Node_Force [][3],double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds)
 {
-    int Actin_pyramid_Node_1,Actin_pyramid_Node_2,Actin_pyramid_Node_3,Actin_pyramid_Node_4;
+    int Actin_pyramid_Node_1, Actin_pyramid_Node_2, Actin_pyramid_Node_3, Actin_pyramid_Node_4;
     double temp_double;
     int Num_of_objects;
     int counter=0;
@@ -188,11 +187,11 @@ void  Actin_constructor(double  Actin_Node_Position [][3],double  Actin_Node_Vel
     }
     
     ///===========================================Find   bondslist   ( temperary files )
-    for(int i=0;i<Actin_num_of_Bonds;i++)
-    {
-        Actin_Node_Pair_List[i][0]=-1;
-        Actin_Node_Pair_List[i][1]=-1;
-    }
+//    for(int i=0;i<Actin_num_of_Bonds;i++)
+//    {
+//        Actin_Node_Pair_List[i][0]=-1;
+//        Actin_Node_Pair_List[i][1]=-1;
+//    }
     ifstream read;
     read.open("actin");
     read>> temp_double;
@@ -226,10 +225,10 @@ void  Actin_constructor(double  Actin_Node_Position [][3],double  Actin_Node_Vel
         read>>Actin_pyramid_Node_3;
         read>>Actin_pyramid_Node_4;
         
-        Actin_pyramid_Node_1=Actin_pyramid_Node_1-1;   //Because Node labels Begin from 0
-        Actin_pyramid_Node_2=Actin_pyramid_Node_2-1;
-        Actin_pyramid_Node_3=Actin_pyramid_Node_3-1;
-        Actin_pyramid_Node_4=Actin_pyramid_Node_4-1;
+        Actin_pyramid_Node_1--;   //Because Node labels Begin from 0
+        Actin_pyramid_Node_2--;
+        Actin_pyramid_Node_3--;
+        Actin_pyramid_Node_4--;
         
         for(int j=0;j<counter;j++)
         {
