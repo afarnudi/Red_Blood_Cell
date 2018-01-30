@@ -23,7 +23,7 @@
 
 using namespace std;
 //-----------------------HEADERS
-void Membrane_Force_Calculator (double Membrane_Node_Position[Membrane_num_of_Nodes][3],double Membrane_Node_Velocity[Membrane_num_of_Nodes][3],double Membrane_Node_Force [Membrane_num_of_Nodes][3],int Membrane_Node_Pair_list[][2],int Membrane_Triangle_Pair_Nodes[][4],double &Total_Potential_Energy, int Membrane_num_of_Triangle_Pairs, int Membrane_num_of_Node_Pairs);// updates forces + relavant potential energy
+void Membrane_Force_Calculator (double Membrane_Node_Position[Membrane_num_of_Nodes][3],double Membrane_Node_Velocity[Membrane_num_of_Nodes][3],double Membrane_Node_Force [Membrane_num_of_Nodes][3],int Membrane_Node_Pair_list[][2], vector<vector<int> > Membrane_Triangle_Pair_Node,double &Total_Potential_Energy, int Membrane_num_of_Triangle_Pairs, int Membrane_num_of_Node_Pairs);// updates forces + relavant potential energy
 
 int parallelORantiparallel( double xpos[3][5] );// + for parallel  -for anti parallel (used in force cacculator of membrane)
 
@@ -240,10 +240,10 @@ void Thermostat(int istep, double Membrane_Node_Velocity[Membrane_num_of_Nodes][
 
 //---------------------------restart-----------------------
 
-void restartsave(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds);
+void restartsave(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], vector<vector<int> > Membrane_Triangle_Pair_Nodes, int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds);
 
 
-void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3],double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds);
+void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], vector< vector<int> > &Membrane_Triangle_Pair_Nodes, int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3],double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds);
 //---------------------------restart-----------------------
 
 
@@ -367,12 +367,15 @@ int main() //main**
         Outer_Membrane_list_of_Nodes[i]=i;
     }
 
-    int  Membrane_num_of_Triangle_Pairs;
+//      Membrane_num_of_Triangle_Pairs;
 //    int  Membrane_triangle_triangle_neighbour_list[Membrane_num_of_Triangles][3];
     vector <vector <int> > Membrane_triangle_triangle_neighbour_list;
+    vector <vector <int> > Membrane_Triangle_Pair_Nodes;
     Membrane_triangle_triangle_neighbour_list.resize(Membrane_num_of_Triangles);
-    Membrane_num_of_Triangle_Pairs=Membrane_triangle_pair_counter( Membrane_triangle_list);
-    int Membrane_Triangle_Pair_Nodes[Membrane_num_of_Triangle_Pairs][4]; // pos1 pos2 pos3 and po4 of all interactions are stored here
+    int Membrane_num_of_Triangle_Pairs=Membrane_triangle_pair_counter( Membrane_triangle_list);
+    Membrane_Triangle_Pair_Nodes.resize(Membrane_num_of_Triangle_Pairs);
+//    int Membrane_Triangle_Pair_Nodes[Membrane_num_of_Triangle_Pairs][4]; // pos1 pos2 pos3 and po4 of all interactions are stored here; The first two elements are the nodes on the common edge of the two triangle pairs. The third and last elements are on the other sides.
+    
     Membrane_Triangle_Pair_Identifier(Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_num_of_Triangle_Pairs, Membrane_triangle_triangle_neighbour_list);
     
     int Outer_Membrane_num_of_Node_Pairs ; // usefull in POV ray- modulate in void sortingbonds(int bondslist[][2],int tri[3][Membrane_num_of_Triangles])
@@ -440,64 +443,6 @@ int main() //main**
     //-----------------------------actin-membrane part: shared beads(suppose to have masses like mass of membrane)
     int Membrane_Actin_shared_Node_list[Actin_Membrane_shared_num_of_Nodes][2];// IMPORTANT: this list contains the indices of shared beads on the membrane and actin. [0] for membrane and [1] for actin.
     Membrane_Actin_shared_Node_Identifier(Membrane_Actin_shared_Node_list, Membrane_Node_Position, Actin_Node_Position);
-    
-    //-------------------------------chromaton--------------------------
-//    if (cell_has_nucleus==true) {
-//        double Chromatin_Bead_Position[Chromatin_num_of_Beads][3];
-//        double Chromatin_Bead_Velocity[Chromatin_num_of_Beads][3];
-//        double Chromatin_Bead_Force[Chromatin_num_of_Beads][3];
-//        float CmLaststeps[Chromatin_num_of_Beads][Chromatin_num_of_Beads];
-//        double   Dissimilaritycut = sigmachromatin*Chromatin_Scaling_Factor*1.5;  //  within this distance chromatins are consedered in contact
-//        
-//        Chromatin_constructor(Chromatin_Bead_Position, Chromatin_Bead_Velocity, Chromatin_Bead_Force, chromatin_contant_matrix_calculation_flag, CmLaststeps);
-//        
-//        
-//        
-//        ofstream d2_10ofstream;
-//        d2_10ofstream.open("results/d2_10.txt"); // refrecne at the beginning
-//        d2_10ofstream << std:: fixed;
-//        
-//        ofstream d2_32ofstream;
-//        d2_32ofstream.open("results/d2_32.txt"); // refrecne at the beginning
-//        d2_32ofstream << std:: fixed;
-//        //--d2_32_REDUCED.txt
-//        float ContactProbablilityNumber; //stores the total prob number of contacts
-//        ofstream REDUCEDd2_32ofstream;
-//        REDUCEDd2_32ofstream.open("results/d2_32_REDUCED.txt");
-//        REDUCEDd2_32ofstream << std:: fixed;
-//        
-//        ofstream cm3ofstream;
-//        cm3ofstream.open("results/Cm3.txt");
-//        cm3ofstream << std:: fixed;
-//        float Cm[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // contact matrix at now
-//        float Cm0[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for first StepCm0 steps
-//        float Cm1[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for last StepCm1 steps
-//        float Cm2[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for last 2*StepCm2 steps
-//        float Cm3[Chromatin_num_of_Beads][Chromatin_num_of_Beads];  // avraged contact matrix for last StepCm2 steps
-//        float d2_10;  // d^2 between cm0 and cm1
-//        float d2_32;  // d^2 between cm2 and cm3
-//        float ContactNumber; //stores the number of contacts
-//        // spatialcontact matrix
-//        
-//        int Flag=0; // useful in contact prob matrix
-//        
-//        if (chromatin_contant_matrix_calculation_flag==true) {
-//            
-//            
-//            for(int i1=0;i1<Chromatin_num_of_Beads;i1++)
-//            {
-//                for(int j1=0;j1<Chromatin_num_of_Beads;j1++)
-//                {
-//                    Cm0[i1][j1]=0;
-//                    Cm1[i1][j1]=0;
-//                    Cm2[i1][j1]=0;
-//                    Cm3[i1][j1]=0;
-//                }
-//            }
-//        }
-//    }//if nucleus has nucleus
-    //-------------------------------chromaton--------------------------
-    
     
     //--------------------------------ECM--------------------------------
 //    if (cell_has_ecm==true) {
@@ -582,12 +527,12 @@ int main() //main**
     //==========================================================================================================================
     
     //============================================== adhesive bead ==============================================
-    double adhesive_bead_position[3];
-    int membrane_triangle_adhesive_bead_adhesion_point;
+//    double adhesive_bead_position[3];
+//    int membrane_triangle_adhesive_bead_adhesion_point;
     vector < int > membrane_triangle_adhesive_bead_neighbour_list;
-    double adhesion_distance_threshold;
-    bool membrane_bead_adhesion=false;
-    int bead_membrane_neighbour_update_step;
+//    double adhesion_distance_threshold;
+//    bool membrane_bead_adhesion=false;
+//    int bead_membrane_neighbour_update_step;
 //
 //    //Check membrane for contact point
 //    if (membrane_bead_adhesion==false) {
@@ -778,7 +723,8 @@ int main() //main**
         
         Membrane_Force_Calculator(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_Node_Force, Membrane_Node_Pair_list, Membrane_Triangle_Pair_Nodes, Total_Potential_Energy,  Membrane_num_of_Triangle_Pairs, Membrane_num_of_Node_Pairs); // **********calling aceel update
         
-        
+        cout<< "All ok!"<<endl;
+        exit (EXIT_FAILURE);
         ConstantSurfaceForceLocalTriangles( Membrane_Node_Position, Membrane_Node_Force, Membrane_triangle_list, Outer_Membrane_num_of_triangles);
         if (MD_Step % mcstep == 0)// collsi
         {
@@ -1549,13 +1495,14 @@ int main() //main**
 //______________________membrane functions
 
 //Also the potential Energy is calculated here
-void Membrane_Force_Calculator (double Membrane_Node_Position[Membrane_num_of_Nodes][3],double Membrane_Node_Velocity[Membrane_num_of_Nodes][3],double Membrane_Node_Force [Membrane_num_of_Nodes][3],int Membrane_Node_Pair_list[][2],int Membrane_Triangle_Pair_Nodes[][4],double &Total_Potential_Energy, int Membrane_num_of_Triangle_Pairs, int Membrane_num_of_Node_Pairs)
+void Membrane_Force_Calculator (double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], double Membrane_Node_Force [Membrane_num_of_Nodes][3], int Membrane_Node_Pair_list[][2], vector< vector<int> > Membrane_Triangle_Pair_Nodes, double &Total_Potential_Energy, int Membrane_num_of_Triangle_Pairs, int Membrane_num_of_Node_Pairs)
 {
-    double le0,le1,lmax,lmin;
-    double deltax,deltay,deltaz,temp_Node_distance,temp_force;
-    int pos1,pos2,pos3,pos4;  // to making calculation of surface force easier
+    double le0, le1, lmax, lmin;
+    double deltax, deltay, deltaz, temp_Node_distance, temp_force;
+    int pos1, pos2, pos3, pos4;  // to make the surface force calculations easier.
     double temp_potential_energy = 0.0;
-    double xpos[3][5],N1[3],N2[3], N3[3],p3p1[3],p3p2[3],p4p2[3],p4p1[3],Ep2p1[3],sinus,F0,F1[3],F2[3],F3[3],F4[3];// for exmple p3p1 is p3-p1 and ....
+    double temp_p1[3], temp_p2[3], temp_p3[3], temp_p4[3];
+    double  N1[3], N2[3], N3[3], p3p1[3], p3p2[3], p4p2[3], p4p1[3], Ep2p1[3], sinus, F0, F1[3], F2[3], F3[3], F4[3];// for exmple p3p1 is p3-p1 and ....
     
     /// calculate network force:
     int temp_Node_A, temp_Node_B;
@@ -1580,7 +1527,7 @@ void Membrane_Force_Calculator (double Membrane_Node_Position[Membrane_num_of_No
             deltay=periodiccondition(deltay);
         }
         
-        temp_Node_distance=sqrt(deltax*deltax+deltay*deltay+deltaz*deltaz);
+        temp_Node_distance=sqrt(deltax*deltax + deltay*deltay + deltaz*deltaz);
         temp_force=0.0;
         double temp_exp_le0=exp(1.0/(le0-temp_Node_distance));
         double temp_exp_le1=exp(1.0/(temp_Node_distance-le1));
@@ -1641,6 +1588,7 @@ void Membrane_Force_Calculator (double Membrane_Node_Position[Membrane_num_of_No
         Membrane_Node_Force[temp_Node_B][2] += -temp_force*deltaz/temp_Node_distance-membrane_damping_coefficient*(Membrane_Node_Velocity[temp_Node_A][2]-Membrane_Node_Velocity[temp_Node_B][2]);
     }
     // End of Membrane Node Pair forces
+    
     // Beginning of the  triangle-triangle (bending) force calculations
     for(int i=0 ;i<Membrane_num_of_Triangle_Pairs;i++)  // who are neighbors?
     {
@@ -1650,104 +1598,43 @@ void Membrane_Force_Calculator (double Membrane_Node_Position[Membrane_num_of_No
         pos3=Membrane_Triangle_Pair_Nodes[i][2];
         pos4=Membrane_Triangle_Pair_Nodes[i][3];
         
-        for(int i2=0;i2<3;i2++)   // storing coordiates of poses in new array in order to imposing periodic boundary
-        {
-            
-            xpos[i2][1]=Membrane_Node_Position[pos1][i2];
-            xpos[i2][2]=Membrane_Node_Position[pos2][i2];
-            xpos[i2][3]=Membrane_Node_Position[pos3][i2];
-            xpos[i2][4]=Membrane_Node_Position[pos4][i2];
-        }
         
-        for(int i2=0;i2<2;i2++)   // puting pos1 in (0,0,?)  --- only x and y  ,z remains untouch
-        {
+        for (int index=0; index<3; index++) {
+            temp_p1[index]=Membrane_Node_Position[pos1][index];
+            temp_p2[index]=Membrane_Node_Position[pos2][index];
+            temp_p3[index]=Membrane_Node_Position[pos3][index];
+            temp_p4[index]=Membrane_Node_Position[pos4][index];
             
-            xpos[i2][2] += -xpos[i2][1];
-            xpos[i2][3] += -xpos[i2][1];
-            xpos[i2][4] += -xpos[i2][1];
-            xpos[i2][1]=0.0;
-        }
-        if (Periodic_condtion_status == 1.0 ) {
-            if(  xpos[0][2]> 6.0*Node_radius  )
-                xpos[0][2]= xpos[0][2]-(Lbox+1.0);
-            
-            if(  xpos[1][2]> 6.0*Node_radius  )
-                xpos[1][2]= xpos[1][2]-(Lbox+1.0);
-            
-            if(  xpos[0][2]< -6.0*Node_radius  )
-                xpos[0][2]= xpos[0][2]+(Lbox+1.0);
-            
-            if(  xpos[1][2]< -6.0*Node_radius  )
-                xpos[1][2]= xpos[1][2]+(Lbox+1.0);
-            
-            
-            
-            if(  xpos[0][3]> 6.0*Node_radius  )
-                xpos[0][3]= xpos[0][3]-(Lbox+1.0);
-            
-            if(  xpos[1][3]> 6.0*Node_radius  )
-                xpos[1][3]= xpos[1][3]-(Lbox+1.0);
-            
-            if(  xpos[0][3]< -6.0*Node_radius  )
-                xpos[0][3]= +xpos[0][3]+(Lbox+1.0);
-            
-            if(  xpos[1][3]<- 6.0*Node_radius  )
-                xpos[1][3]= +xpos[1][3]+(Lbox+1.0);
-            
-            
-            if(  xpos[0][4]> 6.0*Node_radius  )
-                xpos[0][4]= xpos[0][4]-(Lbox+1.0);
-            
-            if(  xpos[1][4]> 6.0*Node_radius  )
-                xpos[1][4]= xpos[1][4]-(Lbox+1.0);
-            
-            if(  xpos[0][4]< -6.0*Node_radius  )
-                xpos[0][4]= +xpos[0][4]+(Lbox+1.0);
-            
-            if(  xpos[1][4]<- 6.0*Node_radius  )
-                xpos[1][4]= +xpos[1][4]+(Lbox+1.0);
-            ///PERIODIC
+            p3p1[index]=temp_p3[index]-temp_p1[index];
+            p3p2[index]=temp_p3[index]-temp_p2[index];
+            p4p2[index]=temp_p4[index]-temp_p2[index];
+            p4p1[index]=temp_p4[index]-temp_p1[index];
+            Ep2p1[index]=temp_p2[index]-temp_p1[index];
         }
         
         
-        
-        ///  FORCE CACCULATION:
-        
-        //****************************** pre calculation:
-        p3p1[0]=xpos[0][3]-xpos[0][1];
-        p3p1[1]=xpos[1][3]-xpos[1][1];
-        p3p1[2]=xpos[2][3]-xpos[2][1];
-        
-        p3p2[0]=xpos[0][3]-xpos[0][2];
-        p3p2[1]=xpos[1][3]-xpos[1][2];
-        p3p2[2]=xpos[2][3]-xpos[2][2];
-        
-        p4p2[0]=xpos[0][4]-xpos[0][2];
-        p4p2[1]=xpos[1][4]-xpos[1][2];
-        p4p2[2]=xpos[2][4]-xpos[2][2];
-        
-        p4p1[0]=xpos[0][4]-xpos[0][1];
-        p4p1[1]=xpos[1][4]-xpos[1][1];
-        p4p1[2]=xpos[2][4]-xpos[2][1];
-        
-        Ep2p1[0]=xpos[0][2]-xpos[0][1];
-        Ep2p1[1]=xpos[1][2]-xpos[1][1];
-        Ep2p1[2]=xpos[2][2]-xpos[2][1];
-        
-        
-        crossvector(N1,p3p1,p3p2);
-        crossvector(N2,p4p2,p4p1);
-        crossvector(N3,N2,N1);
+        crossvector(N1, p3p1, p3p2);
+        crossvector(N2, p4p2, p4p1);
+        crossvector(N3, N2, N1);
         sinus=vectorlength(N3)/(vectorlength(N2)*vectorlength(N1));
-        F0 = Membrane_bending_coefficient*sinus;
+        
+        crossvector(N3, N1, N2);
+        double temp_Ep2p1_length=vectorlength(Ep2p1);
+//        if ((sinus- temp_sinus)>0.0001) {
+//            cout<< "oops!"<<endl;
+//            cout<<"temp_sinus="<<temp_sinus<<"\nsinus="<<sinus<<endl;
+//            exit (EXIT_FAILURE);
+//        }
+        
+        F0 = (1-2*signbit(innerproduct(N3, Ep2p1)))*Membrane_bending_coefficient*sinus;
         //        cout<<"\nF0="<<F0<<endl;
-        if( parallelORantiparallel(xpos ) == +1 )
-        {
-            F0=-F0;
-        }
+//        if( parallelORantiparallel(xpos ) == +1 )
+//        {
+//            F0=-F0;
+//        }
         double temp_N1_length_squared=vectorlength(N1)*vectorlength(N1);
         double temp_N2_length_squared=vectorlength(N2)*vectorlength(N2);
-        double temp_Ep2p1_length=vectorlength(Ep2p1);
+        
         //**************************************************** force calculation
         for (int l=0; l<3; l++) {
             F3[l]= F0 * temp_Ep2p1_length* N1[l]/ temp_N1_length_squared;
@@ -5882,8 +5769,8 @@ void cellshift( double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double
     }
     for (int i=0; i<Actin_num_of_Nodes ; i++)
     {
-        Actin_Node_Position[i][0]= Actin_Node_Position[i][0]+membraneshiftinXdirection;
-        Actin_Node_Position[i][2]= Actin_Node_Position[i][2]+membraneshiftinZdirection;
+        Actin_Node_Position[i][0] += membraneshiftinXdirection;
+        Actin_Node_Position[i][2] += membraneshiftinZdirection;
     }
     
     for (int i=0; i<Membrane_num_of_Nodes ; i++)
@@ -5893,7 +5780,7 @@ void cellshift( double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double
     }
     for (int i=0; i<Actin_num_of_Nodes ; i++)
     {
-        Actin_Node_Velocity[i][1]= Actin_Node_Velocity[i][1]+cell_downward_speed;
+        Actin_Node_Velocity[i][1] += cell_downward_speed;
         
     }
     
@@ -6603,7 +6490,7 @@ void Thermostat(int istep, double Membrane_Node_Velocity[Membrane_num_of_Nodes][
 
 
 //---------------------------restart-----------------------
-void restartsave( double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds)
+void restartsave( double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], vector<vector<int> > Membrane_Triangle_Pair_Nodes, int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds)
 {
     ofstream restart;
     restart.open("restart_1.txt");
@@ -6686,7 +6573,7 @@ void restartsave( double Membrane_Node_Position[Membrane_num_of_Nodes][3], doubl
 }
 
 
-void restartread(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3],double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds)
+void restartread(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], vector< vector<int> > &Membrane_Triangle_Pair_Nodes, int bondslist[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3],double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds)
 {
     
     

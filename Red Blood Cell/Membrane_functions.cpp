@@ -326,12 +326,12 @@ int Membrane_triangle_pair_counter(int Membrane_triangle_list[Membrane_num_of_Tr
 }
 
 
-void Membrane_Triangle_Pair_Identifier(int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int Membrane_num_of_Triangle_Pairs, vector <vector <int> > &Membrane_triangle_triangle_neighbour_list){
+void Membrane_Triangle_Pair_Identifier(int Membrane_triangle_list[Membrane_num_of_Triangles][3], vector <vector <int> > &Membrane_Triangle_Pair_Nodes, int Membrane_num_of_Triangle_Pairs, vector <vector <int> > &Membrane_triangle_triangle_neighbour_list){
     
     int temp_triangle_node_A, temp_triangle_node_B, temp_triangle_node_C, temp_triangle_node_D, neighbour=0, neighbour_indicator;
     int triangle_pairs=0;
-    int temp[4][2*Membrane_num_of_Triangle_Pairs];
-    int temp2[4][2*Membrane_num_of_Triangle_Pairs];
+    int temp[2*Membrane_num_of_Triangle_Pairs][4];
+    int temp2[2*Membrane_num_of_Triangle_Pairs][4];
     
     
     for(int i=0 ;i<Membrane_num_of_Triangles;i++)
@@ -434,27 +434,27 @@ void Membrane_Triangle_Pair_Identifier(int Membrane_triangle_list[Membrane_num_o
                 
                 if(neighbour_indicator==1)
                 {
-                    temp[0] [triangle_pairs]=temp_triangle_node_A;
-                    temp[1] [triangle_pairs]=temp_triangle_node_B;
-                    temp[2] [triangle_pairs]=temp_triangle_node_C;
-                    temp[3] [triangle_pairs]=neighbour;
+                    temp [triangle_pairs][0]=temp_triangle_node_A;
+                    temp [triangle_pairs][1]=temp_triangle_node_B;
+                    temp [triangle_pairs][2]=temp_triangle_node_C;
+                    temp [triangle_pairs][3]=neighbour;
                     
                 }
                 if(neighbour_indicator==2)
                 {
                     
-                    temp[0] [triangle_pairs]=temp_triangle_node_B;
-                    temp[1] [triangle_pairs]=temp_triangle_node_C;
-                    temp[2] [triangle_pairs]=temp_triangle_node_A;
-                    temp[3] [triangle_pairs]=neighbour;
+                    temp [triangle_pairs][0]=temp_triangle_node_B;
+                    temp [triangle_pairs][1]=temp_triangle_node_C;
+                    temp [triangle_pairs][2]=temp_triangle_node_A;
+                    temp [triangle_pairs][3]=neighbour;
                 }
                 if(neighbour_indicator==3)
                 {
                     
-                    temp[0] [triangle_pairs]=temp_triangle_node_C;
-                    temp[1] [triangle_pairs]=temp_triangle_node_A;
-                    temp[2] [triangle_pairs]=temp_triangle_node_B;
-                    temp[3] [triangle_pairs]=neighbour;
+                    temp [triangle_pairs][0]=temp_triangle_node_C;
+                    temp [triangle_pairs][1]=temp_triangle_node_A;
+                    temp [triangle_pairs][2]=temp_triangle_node_B;
+                    temp [triangle_pairs][3]=neighbour;
                 }
                 triangle_pairs++;
             }
@@ -462,76 +462,82 @@ void Membrane_Triangle_Pair_Identifier(int Membrane_triangle_list[Membrane_num_o
         }// end of for(int j=0;j<Membrane_num_of_Triangles;j++)
     }// End of for(int i=0 ;i<Membrane_num_of_Triangles;i++)
     
+    for (int i=0; i<Membrane_num_of_Triangles; i++) {
+        if (Membrane_triangle_triangle_neighbour_list[i].size()!=3) {
+            cout<<"There is an error in the 'Membrane_Triangle_Pair_Identifier' function. This error indicates that there is a membrane triangle that has more/less than 3 triangle neighbours."<<endl;
+        }
+    }
+    
     for(int i=0;i<2*Membrane_num_of_Triangle_Pairs;i++)//saving temp in temp2
     {
         for(int j=0;j<4;j++)
         {
-            temp2[j][i]=temp[j][i];
+            temp2[i][j]=temp[i][j];
         }
     }
     
-    for(int abc=0;abc<2*Membrane_num_of_Triangle_Pairs;abc++)// sorting temp
+    for(int abc=0; abc<2*Membrane_num_of_Triangle_Pairs; abc++)// sorting temp
     {
-        if( temp[0] [abc] > temp[1] [abc]   )
+        if( temp [abc][0] > temp [abc][1]   )
         {
-            temp_triangle_node_A=temp[0] [abc];
-            temp_triangle_node_B=temp[1] [abc];
-            temp[0] [abc]=temp_triangle_node_B;
-            temp[1] [abc]=temp_triangle_node_A;
+            temp_triangle_node_A=temp [abc][0];
+            temp_triangle_node_B=temp [abc][1];
+            temp [abc][0]=temp_triangle_node_B;
+            temp [abc][1]=temp_triangle_node_A;
         }
-        if( temp[0] [abc] > temp[2] [abc]   )
+        if( temp [abc][0] > temp [abc][2]   )
         {
-            temp_triangle_node_A=temp[0] [abc];
-            temp_triangle_node_B=temp[2] [abc];
-            temp[0] [abc]=temp_triangle_node_B;
-            temp[2] [abc]=temp_triangle_node_A;
+            temp_triangle_node_A=temp [abc][0];
+            temp_triangle_node_B=temp [abc][2];
+            temp [abc][0]=temp_triangle_node_B;
+            temp [abc][2]=temp_triangle_node_A;
         }
-        if( temp[0] [abc] > temp[3] [abc]   )
+        if( temp [abc][0] > temp [abc][3]   )
         {
-            temp_triangle_node_A=temp[0] [abc];
-            temp_triangle_node_B=temp[3] [abc];
-            temp[0] [abc]=temp_triangle_node_B;
-            temp[3] [abc]=temp_triangle_node_A;
+            temp_triangle_node_A=temp [abc][0];
+            temp_triangle_node_B=temp [abc][3];
+            temp [abc][0]=temp_triangle_node_B;
+            temp [abc][3]=temp_triangle_node_A;
         }
         
         if( temp[1] [abc] > temp[2] [abc]   )
         {
-            temp_triangle_node_A=temp[1] [abc];
-            temp_triangle_node_B=temp[2] [abc];
-            temp[1] [abc]=temp_triangle_node_B;
-            temp[2] [abc]=temp_triangle_node_A;
+            temp_triangle_node_A=temp [abc][1];
+            temp_triangle_node_B=temp [abc][2];
+            temp [abc][1]=temp_triangle_node_B;
+            temp [abc][2]=temp_triangle_node_A;
         }
         
-        if( temp[1] [abc] > temp[3] [abc]   )
+        if( temp [abc][1] > temp [abc][3]   )
         {
-            temp_triangle_node_A=temp[1] [abc];
-            temp_triangle_node_B=temp[3] [abc];
-            temp[1] [abc]=temp_triangle_node_B;
-            temp[3] [abc]=temp_triangle_node_A;
+            temp_triangle_node_A=temp [abc][1];
+            temp_triangle_node_B=temp [abc][3];
+            temp [abc][1]=temp_triangle_node_B;
+            temp [abc][3]=temp_triangle_node_A;
         }
         
-        if( temp[2] [abc] > temp[3] [abc]   )
+        if( temp [abc][2] > temp [abc][3]   )
         {
-            temp_triangle_node_A=temp[2] [abc];
-            temp_triangle_node_B=temp[3] [abc];
-            temp[2] [abc]=temp_triangle_node_B;
-            temp[3] [abc]=temp_triangle_node_A;
+            temp_triangle_node_A=temp [abc][2];
+            temp_triangle_node_B=temp [abc][3];
+            temp [abc][2]=temp_triangle_node_B;
+            temp [abc][3]=temp_triangle_node_A;
         }
     }
     
     for(int abc=0;abc<2*Membrane_num_of_Triangle_Pairs;abc++)
     {
-        if(temp[0] [abc]!=-1)
+        if(temp [abc][0]!=-1)
         {
-            temp_triangle_node_A=temp[0] [abc];
-            temp_triangle_node_B=temp[1] [abc];
-            temp_triangle_node_C=temp[2] [abc];
-            temp_triangle_node_D=temp[3] [abc];
+            temp_triangle_node_A=temp [abc][0];
+            temp_triangle_node_B=temp [abc][1];
+            temp_triangle_node_C=temp [abc][2];
+            temp_triangle_node_D=temp [abc][3];
             for(int cab=0;cab<2*Membrane_num_of_Triangle_Pairs;cab++)
             {
-                if( temp_triangle_node_A==temp[0] [cab] &   temp_triangle_node_B==temp[1] [cab]   &   temp_triangle_node_C==temp[2] [cab]   &   temp_triangle_node_D==temp[3] [cab] & abc!=cab  )
+                if( temp_triangle_node_A==temp [cab][0] &   temp_triangle_node_B==temp [cab][1]   &   temp_triangle_node_C==temp [cab][2]   &   temp_triangle_node_D==temp [cab][3] & abc!=cab  )
                 {
-                    temp[0] [cab] =-1;
+                    temp [cab][0] =-1;
                 }
                 
             }
@@ -544,16 +550,20 @@ void Membrane_Triangle_Pair_Identifier(int Membrane_triangle_list[Membrane_num_o
     int temp_int=0;
     for(int abc=0;abc<2*Membrane_num_of_Triangle_Pairs;abc++)
     {
-        if( temp[0] [abc]!=-1)
+        if( temp [abc][0]!=-1)
         {
-            Membrane_Triangle_Pair_Nodes[temp_int][0]=temp2[0] [abc];
-            Membrane_Triangle_Pair_Nodes[temp_int][1]=temp2[1] [abc];
-            Membrane_Triangle_Pair_Nodes[temp_int][2]=temp2[2] [abc];
-            Membrane_Triangle_Pair_Nodes[temp_int][3]=temp2[3] [abc];
+            Membrane_Triangle_Pair_Nodes[temp_int].push_back(temp2 [abc][0]) ;
+            Membrane_Triangle_Pair_Nodes[temp_int].push_back(temp2 [abc][1]) ;
+            Membrane_Triangle_Pair_Nodes[temp_int].push_back(temp2 [abc][2]) ;
+            Membrane_Triangle_Pair_Nodes[temp_int].push_back(temp2 [abc][3]) ;
             
             temp_int++;
         }
     }
+//    for (int i=0; i<Membrane_num_of_Triangle_Pairs; i++) {
+//        cout<<Membrane_Triangle_Pair_Nodes[i][0]<<"\t"<<Membrane_Triangle_Pair_Nodes[i][1]<<"\t"<<Membrane_Triangle_Pair_Nodes[i][2]<<"\t"<<Membrane_Triangle_Pair_Nodes[i][3]<<"\n";
+//    }
+    
 }
 
 int Membrane_num_of_Node_Pair_Counter(int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Outer_Membrane_num_of_triangles, int &Outer_Membrane_num_of_Node_Pairs)

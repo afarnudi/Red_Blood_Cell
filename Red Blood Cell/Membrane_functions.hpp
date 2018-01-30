@@ -77,7 +77,7 @@ int Membrane_triangle_pair_counter( int Membrane_triangle_list[Membrane_num_of_T
 //  Suggested improvments:
 //        1-Nothing particular.
 
-void Membrane_Triangle_Pair_Identifier(int Membrane_reiangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int Membrane_num_of_Triangle_Pairs, vector <vector <int> > &Membrane_triangle_triangle_neighbour_list);
+void Membrane_Triangle_Pair_Identifier(int Membrane_reiangle_list[Membrane_num_of_Triangles][3], vector <vector <int> > &Membrane_Triangle_Pair_Nodes, int Membrane_num_of_Triangle_Pairs, vector <vector <int> > &Membrane_triangle_triangle_neighbour_list);
 
 //  Breif discription:
 //        1-Counts the 'Outer_Membrane_num_of_Node_Pairs'.
