@@ -10,8 +10,9 @@
 #define Membrane_functions_hpp
 
 #include <stdio.h>
-#include <vector>
 #include "General_Membrane.h"
+#include <vector>
+
 using namespace std;
 
 //  Breif discription:
@@ -25,7 +26,7 @@ using namespace std;
 
 //  Suggested improvments:
 //        1-We should probably modify this function a bit so that we would not need to manually modify the Gmesh file before handing it down to the programme.
-void Membrane_constructor(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], double Membrane_Node_Force[Membrane_num_of_Nodes][3], int Membrane_triangle_list [Membrane_num_of_Triangles][3]);
+void Membrane_constructor(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], double Membrane_Node_Force[Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3]);
 
 
 //  Breif discription:
@@ -39,7 +40,7 @@ void Membrane_constructor(double Membrane_Node_Position[Membrane_num_of_Nodes][3
 //  Suggested improvments:
 //        1-I do not think that we need to set a list of +/- to use as a multiplier for ABxAC throughout the code for us to have ABxAC pointing out of the cell. Similar to the method I used for the ECM surface triangles, we simply need to swap B <-> C whenever the the inner product of the position of the triangle and the ABxAC vector is negative. This will also releave us of many calculations, confusion, and potential bugs in the code.
 
-void Membrane_Normal_direction_Identifier( double  Membrane_Node_Position [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int  &Outer_Membrane_num_of_triangles);
+void Membrane_Normal_direction_Identifier( double  Membrane_Node_Position [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3]);
 
 
 //  Breif discription:
@@ -53,7 +54,7 @@ void Membrane_Normal_direction_Identifier( double  Membrane_Node_Position [Membr
 //  Suggested improvments:
 //        1-Nothing particular.
 
-void Outer_Membrane_Identifier(int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int  Outer_Membrane_num_of_triangles, int  &Outer_Membrane_num_of_Nodes);
+//void Outer_Membrane_Identifier(int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int  Outer_Membrane_num_of_triangles, int  &Outer_Membrane_num_of_Nodes);
 
 
 //  Breif discription:
@@ -61,7 +62,7 @@ void Outer_Membrane_Identifier(int Membrane_Normal_direction[Membrane_num_of_Tri
 //  Suggested improvments:
 //        1-Nothing particular.
 
-void Membrane_and_Nucleus_Node_list_builder(double Membrane_Node_Position [Membrane_num_of_Nodes][3],int Nucleus_Membrane_list_of_Nodes[],int Outer_Membrane_list_of_Nodes[], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int  Outer_Membrane_num_of_triangles);
+//void Membrane_and_Nucleus_Node_list_builder(double Membrane_Node_Position [Membrane_num_of_Nodes][3],int Nucleus_Membrane_list_of_Nodes[],int Outer_Membrane_list_of_Nodes[], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int  Outer_Membrane_num_of_triangles);
 
 
 //  Breif discription:
@@ -69,7 +70,7 @@ void Membrane_and_Nucleus_Node_list_builder(double Membrane_Node_Position [Membr
 //  Suggested improvments:
 //        1-If we actually don't need the sorting procedure in the next function ('Membrane_Triangle_Pair_Identifier') we can altogether remove this function and integrate it into the next function.
 
-int Membrane_triangle_pair_counter( int Membrane_triangle_list[Membrane_num_of_Triangles][3]);
+int Membrane_triangle_pair_counter(int Membrane_triangle_list[Membrane_num_of_Triangles][3]);
 
 //  Breif discription:
 //      -Neighbouring triangle pairs on the membrane are identified and written to the 'Membrane_Triangle_Pair_Nodes' list.
@@ -77,7 +78,7 @@ int Membrane_triangle_pair_counter( int Membrane_triangle_list[Membrane_num_of_T
 //  Suggested improvments:
 //        1-Nothing particular.
 
-void Membrane_Triangle_Pair_Identifier(int Membrane_reiangle_list[Membrane_num_of_Triangles][3], vector <vector <int> > &Membrane_Triangle_Pair_Nodes, int Membrane_num_of_Triangle_Pairs, vector <vector <int> > &Membrane_triangle_triangle_neighbour_list);
+void Membrane_Triangle_Pair_Identifier(int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int Membrane_num_of_Triangle_Pairs, vector<vector<int> > &membrane_triangle_pair_list);
 
 //  Breif discription:
 //        1-Counts the 'Outer_Membrane_num_of_Node_Pairs'.
@@ -89,7 +90,7 @@ void Membrane_Triangle_Pair_Identifier(int Membrane_reiangle_list[Membrane_num_o
 //      -If the node pair was identified on triangles belonging to the outer membrane, we add a +1 to the  'Outer_Membrane_num_of_Node_Pairs'.
 //  Suggested improvments:
 //        1-Well we can modify the 'Membrane_Node_Pair_list' to a vector so that we can merge this function with 'Membrane_num_of_Node_Pair_Counter_2'. But it will take too much of my time at the moment.
-int Membrane_num_of_Node_Pair_Counter(int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Outer_Membrane_num_of_triangles, int &Outer_Membrane_num_of_Node_Pairs);
+int Membrane_num_of_Node_Pair_Counter(int Membrane_triangle_list[Membrane_num_of_Triangles][3]);
 
 //  Breif discription:
 //        1-Builds the 'Membrane_Node_Pair_list'.
@@ -97,10 +98,34 @@ int Membrane_num_of_Node_Pair_Counter(int Membrane_triangle_list[Membrane_num_of
 //  Suggested improvments:
 //        1-Well we can modify the 'Membrane_Node_Pair_list' to a vector so that we can merge this function with 'Membrane_num_of_Node_Pair_Counter'. But it will take too much of my time at the moment.
 
-void Membrane_num_of_Node_Pair_Counter_2(int Membrane_Node_Pair_list[][2], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Outer_Membrane_num_of_triangles, int Membrane_num_of_Node_Pairs);
+void Membrane_num_of_Node_Pair_Counter_2(int Membrane_Node_Pair_list[][2], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_num_of_Node_Pairs);
+
+//  Breif discription:
+//        1-Calculates the bond force between membrane node pairs.
+//        2-calculates the bending force generated due to triangle pairs that make an angle.
+
+//  In this function:
+//      -Reads the membrane node pair list and calculates the potential energy and the force generated between the nodes.
+//      -Then it combs through the 'Membrane_Triangle_Pair_Nodes' and calculates the energy and force of the triangle pairs.
+
+//  Suggested improvments:
+//        1-Nothing so far.
+void Membrane_Force_Calculator (double Membrane_Node_Position[Membrane_num_of_Nodes][3],double Membrane_Node_Velocity[Membrane_num_of_Nodes][3],double Membrane_Node_Force [Membrane_num_of_Nodes][3],int Membrane_Node_Pair_list[][2],int Membrane_Triangle_Pair_Nodes[][4],double &Total_Potential_Energy, int Membrane_num_of_Triangle_Pairs, int Membrane_num_of_Node_Pairs);// updates forces + relavant potential energy
+
+
+//  Breif discription:
+//        1-It was supposed to be a simple hookian force based on a local triangles deviation from an initial surface value. But I don't understand how the force components are calculated
+
+//  In this function:
+
+//  Suggested improvments:
+//        1-I think I should rewrite this function
+
+void ConstantSurfaceForceLocalTriangles(double Membrane_Node_Position[Membrane_num_of_Nodes][3],double Membrane_Node_Force[Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3]);
 
 
 
 
 
 #endif /* Membrane_functions_hpp */
+

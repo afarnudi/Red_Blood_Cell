@@ -82,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				004AE13D1FF396450054168F /* main.cpp */,
+				004AE1561FF396B60054168F /* General_constants.h */,
 				004AE14B1FF396B50054168F /* Actin_functions.cpp */,
 				004AE14E1FF396B50054168F /* Actin_functions.hpp */,
 				004AE1511FF396B60054168F /* General_Actin.h */,
@@ -96,7 +97,6 @@
 				004AE1451FF396B40054168F /* General_ECM.h */,
 				004AE1521FF396B60054168F /* General_functions.cpp */,
 				004AE1481FF396B50054168F /* General_functions.hpp */,
-				004AE1561FF396B60054168F /* General_constants.h */,
 				004AE14D1FF396B50054168F /* Membrane_functions.cpp */,
 				004AE1531FF396B60054168F /* Membrane_functions.hpp */,
 				004AE14A1FF396B50054168F /* General_Membrane.h */,
@@ -280,6 +280,8 @@
 		004AE1421FF396450054168F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_STYLE = Automatic;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -289,6 +291,8 @@
 		004AE1431FF396450054168F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
