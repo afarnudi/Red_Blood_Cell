@@ -14,6 +14,7 @@
 		004AE15C1FF396B70054168F /* General_functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 004AE1521FF396B60054168F /* General_functions.cpp */; };
 		004AE15D1FF396B70054168F /* ECM_functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 004AE1551FF396B60054168F /* ECM_functions.cpp */; };
 		004AE15E1FF396B70054168F /* Chromatin_functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 004AE1571FF396B60054168F /* Chromatin_functions.cpp */; };
+		00A1A0D3205934DC00DA4F68 /* Monte_Carlo_Bond_Flip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00A1A0D2205934DC00DA4F68 /* Monte_Carlo_Bond_Flip.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +50,8 @@
 		004AE1551FF396B60054168F /* ECM_functions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ECM_functions.cpp; sourceTree = "<group>"; };
 		004AE1561FF396B60054168F /* General_constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = General_constants.h; sourceTree = "<group>"; };
 		004AE1571FF396B60054168F /* Chromatin_functions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Chromatin_functions.cpp; sourceTree = "<group>"; };
+		00A1A0D1205934DB00DA4F68 /* Monte_Carlo_Bond_Flip.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Monte_Carlo_Bond_Flip.hpp; sourceTree = "<group>"; };
+		00A1A0D2205934DC00DA4F68 /* Monte_Carlo_Bond_Flip.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Monte_Carlo_Bond_Flip.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +85,8 @@
 			isa = PBXGroup;
 			children = (
 				004AE13D1FF396450054168F /* main.cpp */,
+				00A1A0D2205934DC00DA4F68 /* Monte_Carlo_Bond_Flip.cpp */,
+				00A1A0D1205934DB00DA4F68 /* Monte_Carlo_Bond_Flip.hpp */,
 				004AE1561FF396B60054168F /* General_constants.h */,
 				004AE14B1FF396B50054168F /* Actin_functions.cpp */,
 				004AE14E1FF396B50054168F /* Actin_functions.hpp */,
@@ -162,6 +167,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				004AE15C1FF396B70054168F /* General_functions.cpp in Sources */,
+				00A1A0D3205934DC00DA4F68 /* Monte_Carlo_Bond_Flip.cpp in Sources */,
 				004AE1591FF396B70054168F /* Actin_membrane_shared_functions.cpp in Sources */,
 				004AE15B1FF396B70054168F /* Membrane_functions.cpp in Sources */,
 				004AE13E1FF396450054168F /* main.cpp in Sources */,

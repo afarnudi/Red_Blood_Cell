@@ -15,3 +15,4 @@
 #define Nucleus_Membrane_Radius_of_Hard_Sphere_Interaction 0.50
 
 #endif /* General_Actin_Membrane_shared_h */
+

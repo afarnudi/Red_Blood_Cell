@@ -24,6 +24,7 @@ double vectorlength(double v[3]) // calculate length of vector
 {
     return  sqrt( v[0]*v[0]+v[1]*v[1]+v[2]*v[2] );
 }
+
 double sign_function(double x)
 {
     if(x<0){
@@ -32,3 +33,27 @@ double sign_function(double x)
     
     return 1.0;
 }
+
+double periodiccondition(double dx )
+{
+    if( dx>Lbox/2.0  )
+    {
+        return dx-(Lbox+1.0); /// so the new dx is <0
+    }
+    else if(dx<-Lbox/2.0  )
+    {
+        return (Lbox+1.0)+dx;  /// so the new dx is >0
+    }
+    else
+    {
+        return dx;
+    }
+}
+
+void Vector_transformation (double MV[3],double  M[3][3] ,double V[3])
+{
+    MV[0]= M[0][0] * V [0] + M[0][1] * V [1]  +M[0][2] * V [2] ;
+    MV[1]= M[1][0] * V [0] + M[1][1] * V [1]  +M[1][2] * V [2] ;
+    MV[2]= M[2][0] * V [0] + M[2][1] * V [1]  +M[2][2] * V [2] ;
+}
+
