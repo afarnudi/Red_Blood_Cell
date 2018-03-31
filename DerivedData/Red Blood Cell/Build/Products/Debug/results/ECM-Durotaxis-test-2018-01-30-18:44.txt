@@ -1,0 +1,77 @@
+MD_num_of_steps=	30000
+savingstep=	400
+MD_Time_Step=	0.001
+KT=	1
+RunThermostatePerstep=	100
+
+
+Membrane_num_of_Nodes=	1518
+Membrane_num_of_Triangles=	3032
+Membrane_Radius=	10
+Nucleus_Membrane_radius=	4
+K_surfaceConstant_local=	100
+Membrane_spring_coefficient=	2
+Membrane_bending_coefficient=	30
+membrane_damping_coefficient=	0
+Membrane_Node_Mass=	1
+fluidity=	0.002
+Nucleus_Membrane_Radius_of_Hard_Sphere_Interaction=	0.5
+
+
+k_actine_membrane=	1000
+Actin_num_of_Nodes=	587
+Actin_Membrane_shared_num_of_Nodes=	381
+Actin_spring_coefficient=	5
+Membrane_barrier_calculation_rate=	5
+CytoskeletonNetworkType=	0
+Actin_Passive_Cable_Network_Coefficient=	2
+KActinACN_EA=	2
+ACN_TL0=	0.5
+ACN_LC=	0.1
+Actin_kelvin_damping_coefficient=	1000
+Actin_damping_Coefficient=	0.1
+Actin_Node_Mass=	1
+minimumlengthActin=	1.5
+maximumlengthActin=	2.5
+Actin_Membrane_Radius_of_Hard_Sphere_Interaction=	0.5
+
+
+Chromatin_num_of_Beads=	500
+Chromatin_num_of_chains=	10
+Chromatin_Bead_Mass=	1
+Chromatin_spring_coefficient=	400
+Chromatin_bending_coefficient=	0
+sigmachromatin=	1
+Rmaxchromatin=	1.5
+Chromatin_Membrane_Radius_of_Hard_Sphere_Interaction=	0.5
+Chromatin_Scaling_Factor=	0.7
+ThermostatOnChromatin=	100
+chromatin_force_cut_off=	3000
+chromatin_force_cut_off=	3000
+
+
+ECM_num_of_Nodes=	4079
+ECM_Surface_num_of_Triangles=	1052
+AdhesiveIslandOffOrOn=	0
+NumberOfAdhesiveIslandNodes=	4
+ECM_Thickness=	10
+ECM_Flexibility=	1
+sigmaECM=	20
+ECM_LJ_just_Repultion=	0
+epsilonECM=	1
+ECM_kelvin_damping_coefficient=	1000
+miuDampECM=	4
+fECMcuttoff=	500
+ECM_Node_Mass=	5
+ECM_Min_Gradient_Coefficient=	5
+ECM_Max_Gradient_Coefficient=	50
+ECM_Gradient_length=	70
+spreading_force_magnitude=	-100
+spreading_force_min_range=	1
+spreading_force_max_range=	4
+spreading_flag=	0
+spreading_force_cos_triangle_interaction_angle=	0.4
+
+
+Actin_membrane_stiff_spring_coefficient=	400
+Actin_membrane_damping_coefficient=	0

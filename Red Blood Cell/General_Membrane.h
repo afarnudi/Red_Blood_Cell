@@ -9,8 +9,8 @@
 #ifndef General_Membrane_h
 #define General_Membrane_h
 
-#define Membrane_num_of_Nodes 1518//1648 // //This is the number of nodes on the membrane (Both the outer membrane and the Nucleus). This is the first number that appears in the 'membrane' file (once opend with a text editor)
-#define Membrane_num_of_Triangles 3032//3288//  //This is the number of triangles on the membrane (Both the outer membrane and the Nucleus). This is the number that appears in the 'membrane' file after the node position list is finished and before Gmesh lists the nodes that make a triangle.
+//#define Membrane_num_of_Nodes 1678//1648 // //This is the number of nodes on the membrane (Both the outer membrane and the Nucleus). This is the first number that appears in the 'membrane' file (once opend with a text editor)
+//#define Membrane_num_of_Triangles_temp 3488//3288//  //This is the number of triangles on the membrane (Both the outer membrane and the Nucleus). This is the number that appears in the 'membrane' file after the node position list is finished and before Gmesh lists the nodes that make a triangle.
 #define Membrane_Radius 10.0 //Is the outer membrane radius. The radius of the membrane should be the same as the one used to generate the Gmesh membrane file otherwise the programme crashes.
 //#define Nucleus_Membrane_radius   4.0  //Is the nucleus membrane radius. The radius of the nucleus should be the same as the one used to generate the Gmesh membrane file otherwise the programme crashes.
 #define kvolume    0.0
@@ -28,4 +28,3 @@
 #define Node_radius 1.0 // width of interacion range of nodes: use to be 1.0 !
 
 #endif /* General_Membrane_h */
-

@@ -14,8 +14,19 @@
 
 using namespace std;
 
-void Membrane_constructor(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], double Membrane_Node_Force[Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3])
+void Membrane_constructor(double Membrane_Node_Position[][3], double Membrane_Node_Velocity [][3], double Membrane_Node_Force[][3], vector<vector<int> > &Membrane_new_triangle_list, string membrane_mesh_file_name)
 {
+    
+    
+    ifstream read; //This is the main ifstream that will read the Gmesh-Membrane generated file
+    read.open(membrane_mesh_file_name.c_str()); //It should be noted that the name of the file should not contain '-'. I don't know why but the memory managnet of the arrays (at the very least) in the programme will collapse when we use '-' in the file name.
+    int temp_int; // This is just a temp intiger charachter that we use to read unnecessary Gmesh generated intigers. We never use these intigers in the actual programme.
+    string temp_string;
+    for (int i=0; i<6; i++) {
+        read>> temp_string;
+    }
+    read>> temp_int;
+    int Membrane_num_of_Nodes=temp_int;
     //    In this section we set all the Node forces and velocities to zero.
     for(int i=0;i<Membrane_num_of_Nodes;i++)
     {
@@ -27,11 +38,6 @@ void Membrane_constructor(double Membrane_Node_Position[Membrane_num_of_Nodes][3
         Membrane_Node_Force[i][1]= 0.0;
         Membrane_Node_Force[i][2]= 0.0;
     }
-    ifstream read; //This is the main ifstream that will read the Gmesh-Membrane generated file
-    read.open("membrane"); //It should be noted that the name of the file should not contain '-'. I don't know why but the memory managnet of the arrays (at the very least) in the programme will collapse when we use '-' in the file name.
-    int temp_int; // This is just a temp intiger charachter that we use to read unnecessary Gmesh generated intigers. We never use these intigers in the actual programme.
-    
-    read>> temp_int;
     // In this section the Node coordinates are read from the Gmesh membrane generated file. These include both the Nodes on the Membrane and on the nucleus membrane.
     for(int i=0;i<Membrane_num_of_Nodes;i++)
     {
@@ -39,11 +45,17 @@ void Membrane_constructor(double Membrane_Node_Position[Membrane_num_of_Nodes][3
         read>> Membrane_Node_Position [i][0];
         read>> Membrane_Node_Position [i][1];
         read>> Membrane_Node_Position [i][2];
+        
     }
     
     // In this section the Node list that make up triangles on the outer membrane and nucleus are read from the Gmesh generated file.
+    read>> temp_string;
+    read>> temp_string;
     read>> temp_int;
-    for(int i=0;i<Membrane_num_of_Triangles;i++)
+    int temp_num_of_triangles=temp_int;
+    vector<int> push;
+    push.resize(3);
+    for(int i=0;i<temp_num_of_triangles;i++)
     {
         read>>temp_int;
         read>>temp_int;
@@ -51,28 +63,35 @@ void Membrane_constructor(double Membrane_Node_Position[Membrane_num_of_Nodes][3
         read>>temp_int;
         read>>temp_int;
         
-        read>>Membrane_triangle_list[i][0];
-        read>>Membrane_triangle_list[i][1];
-        read>>Membrane_triangle_list[i][2];
+        read>>push[0];
+        read>>push[1];
+        read>>push[2];
         //We have written the programme so that the Node indecies start from '0'. The node indecies in the Gmesh generated file start from '1', so we correct the 'Membrane_triangle_list'.
-        Membrane_triangle_list[i][0]--;
-        Membrane_triangle_list[i][1]--;
-        Membrane_triangle_list[i][2]--;
+        push[0]--;
+        push[1]--;
+        push[2]--;
+        Membrane_new_triangle_list.push_back(push);
+        if (i!=0) {
+            if (Membrane_new_triangle_list[Membrane_new_triangle_list.size()-1][0]==Membrane_new_triangle_list[Membrane_new_triangle_list.size()-2][0] && Membrane_new_triangle_list[Membrane_new_triangle_list.size()-1][1]==Membrane_new_triangle_list[Membrane_new_triangle_list.size()-2][1] && Membrane_new_triangle_list[Membrane_new_triangle_list.size()-1][2]==Membrane_new_triangle_list[Membrane_new_triangle_list.size()-2][2]) {
+                Membrane_new_triangle_list.erase(Membrane_new_triangle_list.begin()+Membrane_new_triangle_list.size()-2);
+            }
+        }
     }
+    
 } //END OF: Membrane_constructor function
 
 
 
-void Membrane_Normal_direction_Identifier( double  Membrane_Node_Position [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3])
+void Membrane_Normal_direction_Identifier( double  Membrane_Node_Position [][3], vector<vector<int> > &Membrane_new_triangle_list, int Membrane_num_of_Nodes)
 {
     double AC[3], AB[3], ABxAC[3], xyz[3];
     int Point_A, Point_B, Point_C;
     
-    for(  int i=0;i<Membrane_num_of_Triangles;i++  )
+    for(  int i=0;i<Membrane_new_triangle_list.size();i++  )
     {
-        Point_A=Membrane_triangle_list[i][0];
-        Point_B=Membrane_triangle_list[i][1];
-        Point_C=Membrane_triangle_list[i][2];
+        Point_A=Membrane_new_triangle_list[i][0];
+        Point_B=Membrane_new_triangle_list[i][1];
+        Point_C=Membrane_new_triangle_list[i][2];
         
         AB[0]=Membrane_Node_Position[Point_B][0]-Membrane_Node_Position[Point_A][0];
         AB[1]=Membrane_Node_Position[Point_B][1]-Membrane_Node_Position[Point_A][1];
@@ -82,90 +101,90 @@ void Membrane_Normal_direction_Identifier( double  Membrane_Node_Position [Membr
         AC[1]=Membrane_Node_Position[Point_C][1]-Membrane_Node_Position[Point_A][1];
         AC[2]=Membrane_Node_Position[Point_C][2]-Membrane_Node_Position[Point_A][2];
         
-        xyz[0]=Membrane_Node_Position[ Membrane_triangle_list[i][0]][0];
-        xyz[1]=Membrane_Node_Position[ Membrane_triangle_list[i][0]][1];
-        xyz[2]=Membrane_Node_Position[ Membrane_triangle_list[i][0]][2];
+        xyz[0]=Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][0]/2.0;
+        xyz[1]=Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][1]/2.0;
+        xyz[2]=Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][2];
         
         crossvector(ABxAC, AB, AC);
         //        Throughout the code the ABC vertexes of the membrane triangles are taken as A=Membrane_triangle_list[][0], B=Membrane_triangle_list[][1], C=Membrane_triangle_list[][2]. Also we often use the ABxAC cross product and we want the triangles on the membrane to point out of the cell. At the beginning of the cell construction, the centre of the cell is the same as the origin. So for the ABxAC product to point outwards, the inner product of the position of the triangle and the ABxAC should be positive. We put +/- 1 in the 'Membrane_Normal_direction[][1]' list for each triangle and define the normal direction of each triangle as Membrane_Normal_direction[i][1]*ABxAC that will always be positive, hence pointing out of the cell.
         
         if(innerproduct(ABxAC, xyz)<0 )
         {
-            Membrane_triangle_list[i][1]=Point_C;
-            Membrane_triangle_list[i][2]=Point_B;
+            Membrane_new_triangle_list[i][1]=Point_C;
+            Membrane_new_triangle_list[i][2]=Point_B;
             //cout<<"min"<<endl;
         }
     } // END OF: for(  int i=0;i<Membrane_num_of_Triangles;i++  )
 }// END OF: Membrane_Normal_direction_Identifier function
 
 
-int Membrane_triangle_pair_counter(int Membrane_triangle_list[Membrane_num_of_Triangles][3])
+int Membrane_triangle_pair_counter(vector<vector<int> > Membrane_new_triangle_list)
 {
     //In this function we count the total number of triangles that have a common edge (we count them twice, hence report half the number at the end).
     int temp_triangle_node_A, temp_triangle_node_B, temp_triangle_node_C;
     int triangle_pairs=0;  // This counts the number of triangle pairs that have an edge in common.
-    for(int i=0 ;i<Membrane_num_of_Triangles;i++)  // who are neighbors??
+    for(int i=0 ;i<Membrane_new_triangle_list.size();i++)  // who are neighbors??
     {
-        temp_triangle_node_A=Membrane_triangle_list[i][0];  // read the tree lable number of nodes  of every triangle
-        temp_triangle_node_B=Membrane_triangle_list[i][1];
-        temp_triangle_node_C=Membrane_triangle_list[i][2];
+        temp_triangle_node_A=Membrane_new_triangle_list[i][0];  // read the tree lable number of nodes  of every triangle
+        temp_triangle_node_B=Membrane_new_triangle_list[i][1];
+        temp_triangle_node_C=Membrane_new_triangle_list[i][2];
         
-        for(int j=0;j<Membrane_num_of_Triangles;j++)
+        for(int j=0;j<Membrane_new_triangle_list.size();j++)
         {
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_triangle_list[j][1]==temp_triangle_node_B  & Membrane_triangle_list[j][2]!=temp_triangle_node_C ){
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_B  & Membrane_new_triangle_list[j][2]!=temp_triangle_node_C ){
                 triangle_pairs++;
             }
-            if     ( Membrane_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_triangle_list[j][1]==temp_triangle_node_A  & Membrane_triangle_list[j][2]!=temp_triangle_node_C ){
+            if     ( Membrane_new_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_A  & Membrane_new_triangle_list[j][2]!=temp_triangle_node_C ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_triangle_list[j][1]!=temp_triangle_node_C  & Membrane_triangle_list[j][2]==temp_triangle_node_B ){
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_C  & Membrane_new_triangle_list[j][2]==temp_triangle_node_B ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_triangle_list[j][1]!=temp_triangle_node_C  & Membrane_triangle_list[j][2]==temp_triangle_node_A ){
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_C  & Membrane_new_triangle_list[j][2]==temp_triangle_node_A ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_C  &  Membrane_triangle_list[j][1]==temp_triangle_node_A  & Membrane_triangle_list[j][2]==temp_triangle_node_B ){
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_A  & Membrane_new_triangle_list[j][2]==temp_triangle_node_B ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_C  &  Membrane_triangle_list[j][1]==temp_triangle_node_B  & Membrane_triangle_list[j][2]==temp_triangle_node_A ){
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_B  & Membrane_new_triangle_list[j][2]==temp_triangle_node_A ){
                 triangle_pairs++;
             }
             // neibors of temp_triangle_node_B-temp_triangle_node_C :
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_triangle_list[j][1]==temp_triangle_node_C  & Membrane_triangle_list[j][2]!=temp_triangle_node_A ){
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_C  & Membrane_new_triangle_list[j][2]!=temp_triangle_node_A ){
                 triangle_pairs++;
             }
-            if     ( Membrane_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_triangle_list[j][1]==temp_triangle_node_B  & Membrane_triangle_list[j][2]!=temp_triangle_node_A ){
+            if     ( Membrane_new_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_B  & Membrane_new_triangle_list[j][2]!=temp_triangle_node_A ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_triangle_list[j][1]!=temp_triangle_node_A  & Membrane_triangle_list[j][2]==temp_triangle_node_C ){
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_A  & Membrane_new_triangle_list[j][2]==temp_triangle_node_C ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_triangle_list[j][1]!=temp_triangle_node_A  & Membrane_triangle_list[j][2]==temp_triangle_node_B ){
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_A  & Membrane_new_triangle_list[j][2]==temp_triangle_node_B ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_A  &  Membrane_triangle_list[j][1]==temp_triangle_node_B  & Membrane_triangle_list[j][2]==temp_triangle_node_C ){
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_A  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_B  & Membrane_new_triangle_list[j][2]==temp_triangle_node_C ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_A  &  Membrane_triangle_list[j][1]==temp_triangle_node_C  & Membrane_triangle_list[j][2]==temp_triangle_node_B ){
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_A  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_C  & Membrane_new_triangle_list[j][2]==temp_triangle_node_B ){
                 triangle_pairs++;
             }
             // neibors of temp_triangle_node_C-temp_triangle_node_A :
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_triangle_list[j][1]==temp_triangle_node_A  & Membrane_triangle_list[j][2]!=temp_triangle_node_B ){
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_A  & Membrane_new_triangle_list[j][2]!=temp_triangle_node_B ){
                 triangle_pairs++;
             }
-            if     ( Membrane_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_triangle_list[j][1]==temp_triangle_node_C  & Membrane_triangle_list[j][2]!=temp_triangle_node_B ){
+            if     ( Membrane_new_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_C  & Membrane_new_triangle_list[j][2]!=temp_triangle_node_B ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_triangle_list[j][1]!=temp_triangle_node_B  & Membrane_triangle_list[j][2]==temp_triangle_node_A ){
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_B  & Membrane_new_triangle_list[j][2]==temp_triangle_node_A ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_triangle_list[j][1]!=temp_triangle_node_B  & Membrane_triangle_list[j][2]==temp_triangle_node_C ){
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_B  & Membrane_new_triangle_list[j][2]==temp_triangle_node_C ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_B  &  Membrane_triangle_list[j][1]==temp_triangle_node_C  & Membrane_triangle_list[j][2]==temp_triangle_node_A ){
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_B  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_C  & Membrane_new_triangle_list[j][2]==temp_triangle_node_A ){
                 triangle_pairs++;
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_B  &  Membrane_triangle_list[j][1]==temp_triangle_node_A  & Membrane_triangle_list[j][2]==temp_triangle_node_C ){
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_B  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_A  & Membrane_new_triangle_list[j][2]==temp_triangle_node_C ){
                 triangle_pairs++;
             }
         }
@@ -174,7 +193,7 @@ int Membrane_triangle_pair_counter(int Membrane_triangle_list[Membrane_num_of_Tr
 }
 
 
-void Membrane_Triangle_Pair_Identifier(int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int Membrane_num_of_Triangle_Pairs, vector<vector<int> > &membrane_triangle_pair_list){
+void Membrane_Triangle_Pair_Identifier(vector<vector<int> > Membrane_new_triangle_list, int Membrane_Triangle_Pair_Nodes[][4], int Membrane_num_of_Triangle_Pairs, vector<vector<int> > &membrane_triangle_pair_list){
     
     int temp_triangle_node_A, temp_triangle_node_B, temp_triangle_node_C, temp_triangle_node_D, neighbour=0, neighbour_indicator;
     int triangle_pairs=0;
@@ -182,96 +201,96 @@ void Membrane_Triangle_Pair_Identifier(int Membrane_triangle_list[Membrane_num_o
     int temp2[2*Membrane_num_of_Triangle_Pairs][4];
     
     
-    for(int i=0 ;i<Membrane_num_of_Triangles;i++)
+    for(int i=0 ;i<Membrane_new_triangle_list.size();i++)
     {
-        temp_triangle_node_A=Membrane_triangle_list[i][0];  // read the tree lable number of nodes  of every triangle
-        temp_triangle_node_B=Membrane_triangle_list[i][1];
-        temp_triangle_node_C=Membrane_triangle_list[i][2];
+        temp_triangle_node_A=Membrane_new_triangle_list[i][0];  // read the tree lable number of nodes  of every triangle
+        temp_triangle_node_B=Membrane_new_triangle_list[i][1];
+        temp_triangle_node_C=Membrane_new_triangle_list[i][2];
         neighbour_indicator=0;
         //        Indicates the existence of Node neighbour for a node pair (other than the membrane of the triangle):
         //        neighbour_indicator=0 No Node Pairs; neighbour_indicator=1, for temp_triangle_node_A-temp_triangle_node_B; neighbour_indicator=2, for temp_triangle_node_B-temp_triangle_node_C; And neighbour_indicator=3 for temp_triangle_node_C-temp_triangle_node_A.
-        for(int j=0;j<Membrane_num_of_Triangles;j++)
+        for(int j=0;j<Membrane_new_triangle_list.size();j++)
         {
             //************************** finding neighbours **************************
             // neibours of temp_triangle_node_A-temp_triangle_node_B:
-            if ( Membrane_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_triangle_list[j][1]==temp_triangle_node_B  & Membrane_triangle_list[j][2]!=temp_triangle_node_C ){
-                neighbour=Membrane_triangle_list[j][2];
+            if ( Membrane_new_triangle_list[j][0]==temp_triangle_node_A  &&  Membrane_new_triangle_list[j][1]==temp_triangle_node_B  && Membrane_new_triangle_list[j][2]!=temp_triangle_node_C ){
+                neighbour=Membrane_new_triangle_list[j][2];
                 neighbour_indicator=1;
             }
-            if     ( Membrane_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_triangle_list[j][1]==temp_triangle_node_A  & Membrane_triangle_list[j][2]!=temp_triangle_node_C )
+            if     ( Membrane_new_triangle_list[j][0]==temp_triangle_node_B  &&  Membrane_new_triangle_list[j][1]==temp_triangle_node_A  && Membrane_new_triangle_list[j][2]!=temp_triangle_node_C )
             {
-                neighbour=Membrane_triangle_list[j][2];
+                neighbour=Membrane_new_triangle_list[j][2];
                 neighbour_indicator=1;
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_triangle_list[j][1]!=temp_triangle_node_C  & Membrane_triangle_list[j][2]==temp_triangle_node_B ){
-                neighbour=Membrane_triangle_list[j][1];
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_C  & Membrane_new_triangle_list[j][2]==temp_triangle_node_B ){
+                neighbour=Membrane_new_triangle_list[j][1];
                 neighbour_indicator=1;
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_triangle_list[j][1]!=temp_triangle_node_C  & Membrane_triangle_list[j][2]==temp_triangle_node_A ){
-                neighbour=Membrane_triangle_list[j][1];
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_C  & Membrane_new_triangle_list[j][2]==temp_triangle_node_A ){
+                neighbour=Membrane_new_triangle_list[j][1];
                 neighbour_indicator=1;
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_C  &  Membrane_triangle_list[j][1]==temp_triangle_node_A  & Membrane_triangle_list[j][2]==temp_triangle_node_B ){
-                neighbour=Membrane_triangle_list[j][0];
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_A  & Membrane_new_triangle_list[j][2]==temp_triangle_node_B ){
+                neighbour=Membrane_new_triangle_list[j][0];
                 neighbour_indicator=1;
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_C  &  Membrane_triangle_list[j][1]==temp_triangle_node_B  & Membrane_triangle_list[j][2]==temp_triangle_node_A ){
-                neighbour=Membrane_triangle_list[j][0];
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_B  & Membrane_new_triangle_list[j][2]==temp_triangle_node_A ){
+                neighbour=Membrane_new_triangle_list[j][0];
                 neighbour_indicator=1;
             }
             // neibors of temp_triangle_node_B-temp_triangle_node_C :
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_triangle_list[j][1]==temp_triangle_node_C  & Membrane_triangle_list[j][2]!=temp_triangle_node_A ){
-                neighbour=Membrane_triangle_list[j][2];
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_C  & Membrane_new_triangle_list[j][2]!=temp_triangle_node_A ){
+                neighbour=Membrane_new_triangle_list[j][2];
                 neighbour_indicator=2;
             }
-            if     ( Membrane_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_triangle_list[j][1]==temp_triangle_node_B  & Membrane_triangle_list[j][2]!=temp_triangle_node_A ){
-                neighbour=Membrane_triangle_list[j][2];
+            if     ( Membrane_new_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_B  & Membrane_new_triangle_list[j][2]!=temp_triangle_node_A ){
+                neighbour=Membrane_new_triangle_list[j][2];
                 neighbour_indicator=2;
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_triangle_list[j][1]!=temp_triangle_node_A  & Membrane_triangle_list[j][2]==temp_triangle_node_C ){
-                neighbour=Membrane_triangle_list[j][1];
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_B  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_A  & Membrane_new_triangle_list[j][2]==temp_triangle_node_C ){
+                neighbour=Membrane_new_triangle_list[j][1];
                 neighbour_indicator=2;
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_triangle_list[j][1]!=temp_triangle_node_A  & Membrane_triangle_list[j][2]==temp_triangle_node_B )
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_A  & Membrane_new_triangle_list[j][2]==temp_triangle_node_B )
             {
-                neighbour=Membrane_triangle_list[j][1];
+                neighbour=Membrane_new_triangle_list[j][1];
                 neighbour_indicator=2;
                 
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_A  &  Membrane_triangle_list[j][1]==temp_triangle_node_B  & Membrane_triangle_list[j][2]==temp_triangle_node_C ){
-                neighbour=Membrane_triangle_list[j][0];
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_A  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_B  & Membrane_new_triangle_list[j][2]==temp_triangle_node_C ){
+                neighbour=Membrane_new_triangle_list[j][0];
                 neighbour_indicator=2;
                 
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_A  &  Membrane_triangle_list[j][1]==temp_triangle_node_C  & Membrane_triangle_list[j][2]==temp_triangle_node_B ){
-                neighbour=Membrane_triangle_list[j][0];
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_A  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_C  & Membrane_new_triangle_list[j][2]==temp_triangle_node_B ){
+                neighbour=Membrane_new_triangle_list[j][0];
                 neighbour_indicator=2;
             }
             // neibors of temp_triangle_node_C-temp_triangle_node_A :
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_triangle_list[j][1]==temp_triangle_node_A  & Membrane_triangle_list[j][2]!=temp_triangle_node_B ){
-                neighbour=Membrane_triangle_list[j][2];
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_A  & Membrane_new_triangle_list[j][2]!=temp_triangle_node_B ){
+                neighbour=Membrane_new_triangle_list[j][2];
                 neighbour_indicator=3;
                 
             }
-            if     ( Membrane_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_triangle_list[j][1]==temp_triangle_node_C  & Membrane_triangle_list[j][2]!=temp_triangle_node_B ){
-                neighbour=Membrane_triangle_list[j][2];
+            if     ( Membrane_new_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_C  & Membrane_new_triangle_list[j][2]!=temp_triangle_node_B ){
+                neighbour=Membrane_new_triangle_list[j][2];
                 neighbour_indicator=3;
                 
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_triangle_list[j][1]!=temp_triangle_node_B  & Membrane_triangle_list[j][2]==temp_triangle_node_A ){
-                neighbour=Membrane_triangle_list[j][1];
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_C  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_B  & Membrane_new_triangle_list[j][2]==temp_triangle_node_A ){
+                neighbour=Membrane_new_triangle_list[j][1];
                 neighbour_indicator=3;
             }
-            if      ( Membrane_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_triangle_list[j][1]!=temp_triangle_node_B  & Membrane_triangle_list[j][2]==temp_triangle_node_C ){
-                neighbour=Membrane_triangle_list[j][1];
+            if      ( Membrane_new_triangle_list[j][0]==temp_triangle_node_A  &  Membrane_new_triangle_list[j][1]!=temp_triangle_node_B  & Membrane_new_triangle_list[j][2]==temp_triangle_node_C ){
+                neighbour=Membrane_new_triangle_list[j][1];
                 neighbour_indicator=3;
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_B  &  Membrane_triangle_list[j][1]==temp_triangle_node_C  & Membrane_triangle_list[j][2]==temp_triangle_node_A ){
-                neighbour=Membrane_triangle_list[j][0];
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_B  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_C  & Membrane_new_triangle_list[j][2]==temp_triangle_node_A ){
+                neighbour=Membrane_new_triangle_list[j][0];
                 neighbour_indicator=3;
             }
-            if      ( Membrane_triangle_list[j][0]!=temp_triangle_node_B  &  Membrane_triangle_list[j][1]==temp_triangle_node_A  & Membrane_triangle_list[j][2]==temp_triangle_node_C ){
-                neighbour=Membrane_triangle_list[j][0];
+            if      ( Membrane_new_triangle_list[j][0]!=temp_triangle_node_B  &  Membrane_new_triangle_list[j][1]==temp_triangle_node_A  & Membrane_new_triangle_list[j][2]==temp_triangle_node_C ){
+                neighbour=Membrane_new_triangle_list[j][0];
                 neighbour_indicator=3;
             }
             
@@ -310,9 +329,17 @@ void Membrane_Triangle_Pair_Identifier(int Membrane_triangle_list[Membrane_num_o
         }
     }
     
-    for (int i=0; i<Membrane_num_of_Triangles; i++) {
+    for (int i=0; i<Membrane_new_triangle_list.size(); i++) {
         if (membrane_triangle_pair_list[i].size()!=3) {
-            cout<<"There is an error in the 'Membrane_Triangle_Pair_Identifier' function. This error indicates that there is a membrane triangle that has more/less than 3 triangle neighbours."<<endl;
+            cout<<"\nThere is an error in the 'Membrane_Triangle_Pair_Identifier' function. This error indicates that there is a membrane triangle that has more/less than 3 triangle neighbours."<<endl;
+            //            cout<<"membrane_triangle_pair_list["<<i<<"].size()="<<membrane_triangle_pair_list[i].size()<<endl;
+            cout<<"triangle "<<i<<" neighbours:\n";
+            for (int k=0; k<membrane_triangle_pair_list[i].size(); k++) {
+                cout<<membrane_triangle_pair_list[i][k]<<"\n";
+                //                for (int k2=0; k2<3; k2++) {
+                ////                    Membrane_new_triangle_list[membrane_triangle_pair_list[i][k]][k2]<<"\t";
+                //                }
+            }
         }
     }
     
@@ -410,7 +437,7 @@ void Membrane_Triangle_Pair_Identifier(int Membrane_triangle_list[Membrane_num_o
     }
 }
 
-int Membrane_num_of_Node_Pair_Counter(int Membrane_triangle_list[Membrane_num_of_Triangles][3])
+int Membrane_num_of_Node_Pair_Counter(vector<vector<int> > Membrane_new_triangle_list, int Membrane_num_of_Nodes)
 {
     int bondslist[10*Membrane_num_of_Nodes][2];
     for (int j=0 ; j< Membrane_num_of_Nodes*10 ; j++)
@@ -426,11 +453,11 @@ int Membrane_num_of_Node_Pair_Counter(int Membrane_triangle_list[Membrane_num_of
     int repeatednumber2=0;
     int repeatednumber3=0;
     
-    for(int i=0;i<Membrane_num_of_Triangles;i++)
+    for(int i=0;i<Membrane_new_triangle_list.size();i++)
     {
-        temp_Membrane_triangle_Node_A= Membrane_triangle_list[i][0];
-        temp_Membrane_triangle_Node_B= Membrane_triangle_list[i][1];
-        temp_Membrane_triangle_Node_C= Membrane_triangle_list[i][2];
+        temp_Membrane_triangle_Node_A= Membrane_new_triangle_list[i][0];
+        temp_Membrane_triangle_Node_B= Membrane_new_triangle_list[i][1];
+        temp_Membrane_triangle_Node_C= Membrane_new_triangle_list[i][2];
         
         for(int j=0;j<10*Membrane_num_of_Nodes;j++)
         {
@@ -498,7 +525,7 @@ int Membrane_num_of_Node_Pair_Counter(int Membrane_triangle_list[Membrane_num_of
     
 }
 
-void Membrane_num_of_Node_Pair_Counter_2(int Membrane_Node_Pair_list[][2], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_num_of_Node_Pairs)
+void Membrane_num_of_Node_Pair_Counter_2(int Membrane_Node_Pair_list[][2], vector<vector<int> > Membrane_new_triangle_list, int Membrane_num_of_Node_Pairs)
 {
     for (int j=0 ; j< Membrane_num_of_Node_Pairs ; j++)
     {
@@ -512,11 +539,11 @@ void Membrane_num_of_Node_Pair_Counter_2(int Membrane_Node_Pair_list[][2], int M
     int repeatednumber1=0;
     int repeatednumber2=0;
     int repeatednumber3=0;
-    for(int i=0;i<Membrane_num_of_Triangles;i++)
+    for(int i=0;i<Membrane_new_triangle_list.size();i++)
     {
-        temp_Membrane_triangle_Node_A= Membrane_triangle_list[i][0];
-        temp_Membrane_triangle_Node_B= Membrane_triangle_list[i][1];
-        temp_Membrane_triangle_Node_C= Membrane_triangle_list[i][2];
+        temp_Membrane_triangle_Node_A= Membrane_new_triangle_list[i][0];
+        temp_Membrane_triangle_Node_B= Membrane_new_triangle_list[i][1];
+        temp_Membrane_triangle_Node_C= Membrane_new_triangle_list[i][2];
         
         for(int j=0;j<Membrane_num_of_Node_Pairs;j++)
         {
@@ -571,7 +598,7 @@ void Membrane_num_of_Node_Pair_Counter_2(int Membrane_Node_Pair_list[][2], int M
 }
 
 
-void Membrane_Force_Calculator (double Membrane_Node_Position[Membrane_num_of_Nodes][3],double Membrane_Node_Velocity[Membrane_num_of_Nodes][3],double Membrane_Node_Force [Membrane_num_of_Nodes][3],int Membrane_Node_Pair_list[][2],int Membrane_Triangle_Pair_Nodes[][4],double &Total_Potential_Energy, int Membrane_num_of_Triangle_Pairs, int Membrane_num_of_Node_Pairs)
+void Membrane_Force_Calculator (double Membrane_Node_Position[][3],double Membrane_Node_Velocity[][3], double Membrane_Node_Force [][3],int Membrane_Node_Pair_list[][2],int Membrane_Triangle_Pair_Nodes[][4],double &Total_Potential_Energy, int Membrane_num_of_Triangle_Pairs, int Membrane_num_of_Node_Pairs, int Membrane_num_of_Nodes)
 {
     double le0,le1,lmax,lmin;
     double deltax,deltay,deltaz,temp_Node_distance,temp_force;
@@ -742,7 +769,7 @@ void Membrane_Force_Calculator (double Membrane_Node_Position[Membrane_num_of_No
 }///end of function
 
 
-void ConstantSurfaceForceLocalTriangles(double Membrane_Node_Position[Membrane_num_of_Nodes][3],double Membrane_Node_Force[Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3])
+void ConstantSurfaceForceLocalTriangles(double Membrane_Node_Position[][3],double Membrane_Node_Force[][3], vector<vector<int> > Membrane_new_triangle_list)
 {
     
     int temp_node_A, temp_node_B, temp_node_C;
@@ -753,11 +780,11 @@ void ConstantSurfaceForceLocalTriangles(double Membrane_Node_Position[Membrane_n
     double s_i=0;
     
     
-    for(  int i=0;i<Membrane_num_of_Triangles;i++)
+    for(  int i=0;i<Membrane_new_triangle_list.size();i++)
     {
-        temp_node_A=Membrane_triangle_list[i][0];
-        temp_node_B=Membrane_triangle_list[i][1];
-        temp_node_C=Membrane_triangle_list[i][2];
+        temp_node_A=Membrane_new_triangle_list[i][0];
+        temp_node_B=Membrane_new_triangle_list[i][1];
+        temp_node_C=Membrane_new_triangle_list[i][2];
         
         AB[0]=Membrane_Node_Position[temp_node_B][0]-Membrane_Node_Position[temp_node_A][0];
         AB[1]=Membrane_Node_Position[temp_node_B][1]-Membrane_Node_Position[temp_node_A][1];
@@ -772,9 +799,9 @@ void ConstantSurfaceForceLocalTriangles(double Membrane_Node_Position[Membrane_n
         f0= K_surfaceConstant_local*(s_i -  s0_i )/2.0*vectorlength(temp_ABxAC);
         
         for (int j=0; j<3; j++) {
-            temp_node_A=Membrane_triangle_list[i][j%3];
-            temp_node_B=Membrane_triangle_list[i][(j+1)%3];
-            temp_node_C=Membrane_triangle_list[i][(j+2)%3];
+            temp_node_A=Membrane_new_triangle_list[i][j%3];
+            temp_node_B=Membrane_new_triangle_list[i][(j+1)%3];
+            temp_node_C=Membrane_new_triangle_list[i][(j+2)%3];
             
             AB[0]=Membrane_Node_Position[temp_node_B][0]-Membrane_Node_Position[temp_node_A][0];
             AB[1]=Membrane_Node_Position[temp_node_B][1]-Membrane_Node_Position[temp_node_A][1];

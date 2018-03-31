@@ -24,34 +24,34 @@ using namespace std;
 
 //-----------------------HEADERS
 
-void  Actin_Force_calculator( double  Actin_Node_Position [][3],double  Actin_Node_VelocityRungKuta [][3],double  Actin_Node_Force [][3],double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds, double &Total_Potential_Energy);
+void  Actin_Force_calculator( double  Actin_Node_Position [][3],double  Actin_Node_Velocity [][3],double  Actin_Node_Force [][3],double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds, double &Total_Potential_Energy);
 
 
-void Actin_Membrane_Barrier_2(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3],  int Membrane_triangle_list[Membrane_num_of_Triangles][3]);
+void Actin_Membrane_Barrier_2(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double Membrane_Node_Position[][3], double Membrane_Node_Velocity[][3],  vector<vector<int> > Membrane_new_triangle_list, vector<vector<int> > Membrane_Actin_shared_Node_list);
 
 
 //--------------------------------ECM--------------------------------
 
 
-void cellshift(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Actin_Node_Position[Actin_num_of_Nodes][3], double  Membrane_Node_Velocity [Membrane_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3]);
+void cellshift(double Membrane_Node_Position[][3], double Actin_Node_Position[Actin_num_of_Nodes][3], double  Membrane_Node_Velocity [][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], int Membrane_num_of_Nodes);
 
 #define membraneshiftinXdirection 0
 #define membraneshiftinZdirection 0
 #define cell_downward_speed 0.0
 
-void CellCOM( double com[3], double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Actin_Node_Position[][3]);
+void CellCOM( double com[3], double Membrane_Node_Position[][3], double Actin_Node_Position[][3], int Membrane_num_of_Nodes);
 
 //-----------------------------thermostat------------------
-void Thermostat_2(double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], double Actin_Node_Velocity[][3]);
+void Thermostat_2(double Membrane_Node_Velocity[][3], double Actin_Node_Velocity[][3], int Membrane_num_of_Nodes);
 //-----------------------------thermostat------------------
 
 
 //---------------------------restart-----------------------
 
-void restartsave(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity [Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int Membrane_Node_Pair_list[][2], vector<vector<int> > membrane_triangle_pair_list, double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds);
+void restartsave(double Membrane_Node_Position[][3], double Membrane_Node_Velocity [][3], vector<vector<int> > Membrane_new_triangle_list, int Membrane_Triangle_Pair_Nodes[][4], int Membrane_Node_Pair_list[][2], vector<vector<int> > membrane_triangle_pair_list, double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds, int Membrane_num_of_Nodes);
 
 
-void restartread(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int Membrane_Node_Pair_list[][2], vector<vector<int> > &membrane_triangle_pair_list, double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds);
+void restartread(double Membrane_Node_Position[][3], double Membrane_Node_Velocity[][3], vector<vector<int> > &Membrane_new_triangle_list, int Membrane_Triangle_Pair_Nodes[][4], int Membrane_Node_Pair_list[][2], vector<vector<int> > &membrane_triangle_pair_list, double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds, int Membrane_num_of_Nodes);
 //---------------------------restart-----------------------
 
 
@@ -60,9 +60,22 @@ void restartread(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double
 //void povray_output_creator(int currentStep, double Membrane_Node_Position[Membrane_num_of_Nodes][3], int  Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Normal_direction[Membrane_num_of_Triangles][2], int Membrane_Node_Pair_list[][2], double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], double Chromatin_Bead_Position[Chromatin_num_of_Beads][3], double  ECM_Node_Position[][3], double ECM_Node_Pair_List[][3], int ECM_surface_triangle_list[ECM_Surface_num_of_Triangles][3], int Outer_Membrane_num_of_triangles, int Membrane_num_of_Node_Pairs, int Outer_Membrane_num_of_Node_Pairs, int Actin_num_of_Bonds, int ECM_num_of_Bonds);
 
 //Ali
-void Membrane_Actin_shared_Node_Force_calculator (double Membrane_Node_Position[Membrane_num_of_Nodes][3],double  Actin_Node_Position [Actin_num_of_Nodes][3], double Membrane_Node_Force [Membrane_num_of_Nodes][3], double  Actin_Node_Force [Actin_num_of_Nodes][3], int Membrane_Actin_shared_Node_list[Actin_Membrane_shared_num_of_Nodes][2], double Membrane_Node_velocity[Membrane_num_of_Nodes][3], double Actin_Node_velocity[Actin_num_of_Nodes][3]);// updates forces + relavant potential energy
+void Membrane_Actin_shared_Node_Force_calculator (double Membrane_Node_Position[][3],double  Actin_Node_Position [Actin_num_of_Nodes][3], double Membrane_Node_Force [][3], double  Actin_Node_Force [Actin_num_of_Nodes][3], vector<vector<int> > Membrane_Actin_shared_Node_list, double Membrane_Node_velocity[][3], double Actin_Node_velocity[Actin_num_of_Nodes][3]);// updates forces + relavant potential energy
 
-void generate_initial_condition_report (string initial_condition_file_name);
+void generate_initial_condition_report (string initial_condition_file_name, int Membrane_num_of_Nodes);
+int Membrane_Num_of_Nodes_reader (string membrane_mesh_file_name);
+int Membrane_Num_of_Nodes_reader (string membrane_mesh_file_name){
+    ifstream read; //This is the main ifstream that will read the Gmesh-Membrane generated file
+    read.open(membrane_mesh_file_name.c_str() ); //It should be noted that the name of the file should not contain '-'. I don't know why but the memory managnet of the arrays (at the very least) in the programme will collapse when we use '-' in the file name.
+    int temp_int; // This is just a temp intiger charachter that we use to read unnecessary Gmesh generated intigers. We never use these intigers in the actual programme.
+    string temp_string;
+    for (int i=0; i<6; i++) {
+        read>> temp_string;
+    }
+    read>> temp_int;
+    cout<<"Membrane number of Nodes is=\t"<<temp_int<<endl;
+    return temp_int;
+}
 
 #define Actin_membrane_stiff_spring_coefficient 400
 #define Actin_membrane_damping_coefficient 0.0
@@ -80,6 +93,9 @@ void generate_initial_condition_report (string initial_condition_file_name);
 #define spreading_force_max_range 4.0
 #define spreading_force_cos_triangle_interaction_angle 0.4
 #define energy_calculation_flag 0.0
+
+
+
 
 int main() //main**
 {
@@ -143,7 +159,7 @@ int main() //main**
     ofstream trajectory;
     trajectory.open(traj_file_name.c_str() );
     trajectory << std:: fixed;
-    generate_initial_condition_report(initial_condition_file_name);
+    
     
     //Energy Calculation variables-Begin
     double Membrane_total_potential_Energy=0.0, Actin_total_potential_Energy=0.0, Chromatin_total_potential_Energy=0.0, ECM_total_potential_Energy=0.0, ECM_membrane_total_potential_Energy=0.0;
@@ -171,32 +187,39 @@ int main() //main**
     //    bool chromatin_contant_matrix_calculation_flag=false;
     //-----------------------------------------------membrane:
     //    int counter = 0;//This counter counts the number of MD steps and wil be used to determin on which steps the preogramme is saved ('restartsave').
+    string membrane_mesh_file_name="RBCMembrane";
+    const int Membrane_num_of_Nodes=Membrane_Num_of_Nodes_reader(membrane_mesh_file_name);
     
     double Membrane_Node_Position[Membrane_num_of_Nodes][3], Membrane_Node_Velocity[Membrane_num_of_Nodes][3], Membrane_Node_Force[Membrane_num_of_Nodes][3];
-    int Membrane_triangle_list[Membrane_num_of_Triangles][3];
+    //    int Membrane_triangle_list[Membrane_num_of_Triangles_temp][3];
     
+    generate_initial_condition_report(initial_condition_file_name, Membrane_num_of_Nodes);
     
-    double Total_Kinetic_Energy,Total_Potential_Energy; // total kineti , potential ,and mechanical energy
+    double Total_Kinetic_Energy, Total_Potential_Energy; // total kineti , potential ,and mechanical energy
     
-    cout << "Please double check the Membrane Radius, it should be "<< Membrane_Radius<<endl;
+    cout <<"Please double check the Membrane Radius, it should be "<< Membrane_Radius<<endl;
     cout <<"Initialising the programme ..."<<endl;
+    vector<vector<int> > Membrane_new_triangle_list;
+    Membrane_constructor(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_Node_Force, Membrane_new_triangle_list, membrane_mesh_file_name);
     
-    vector<vector<int> > membrane_triangle_pair_list;
-    membrane_triangle_pair_list.resize(Membrane_num_of_Triangles);
     
-    Membrane_constructor(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_Node_Force, Membrane_triangle_list);
+    //    RBC_triangle_list_builder(Membrane_triangle_list, Membrane_triangle_list_2);
     
-    Membrane_Normal_direction_Identifier(Membrane_Node_Position, Membrane_triangle_list);
+    
+    Membrane_Normal_direction_Identifier(Membrane_Node_Position, Membrane_new_triangle_list, Membrane_num_of_Nodes);
     
     int  Membrane_num_of_Triangle_Pairs;
-    Membrane_num_of_Triangle_Pairs=Membrane_triangle_pair_counter( Membrane_triangle_list);
+    Membrane_num_of_Triangle_Pairs=Membrane_triangle_pair_counter( Membrane_new_triangle_list);
     int Membrane_Triangle_Pair_Nodes[Membrane_num_of_Triangle_Pairs][4]; // pos1 pos2 pos3 and po4 of all interactions are stored here
-    Membrane_Triangle_Pair_Identifier(Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_num_of_Triangle_Pairs, membrane_triangle_pair_list); //mod**
+    vector<vector<int> > membrane_triangle_pair_list;
+    membrane_triangle_pair_list.resize(Membrane_new_triangle_list.size());
+    
+    Membrane_Triangle_Pair_Identifier(Membrane_new_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_num_of_Triangle_Pairs, membrane_triangle_pair_list); //mod**
     
     
     //    int Outer_Membrane_num_of_Node_Pairs ; // usefull in POV ray- modulate in void sortingbonds(int bondslist[][2],int tri[3][Membrane_num_of_Triangles])
     int Membrane_num_of_Node_Pairs;
-    Membrane_num_of_Node_Pairs=Membrane_num_of_Node_Pair_Counter(Membrane_triangle_list);
+    Membrane_num_of_Node_Pairs=Membrane_num_of_Node_Pair_Counter(Membrane_new_triangle_list, Membrane_num_of_Nodes);
     
     int Membrane_Node_Pair_list[Membrane_num_of_Node_Pairs][2];
     //*******************************************************************************************************
@@ -211,7 +234,7 @@ int main() //main**
     //***************** Since we use the 'Membrane_num_of_Node_Pair_Counter' just to count the number of Node pairs, we have to write a similar function to build the actual 'Membrane_Node_Pair_list', which I have assigned 'Membrane_num_of_Node_Pair_Counter' to do so. Let t be noted that not calling this function will not cause any problems if the 'resume' is on!. *****************************
     //*******************************************************************************************************
     if (resume==false) {
-        Membrane_num_of_Node_Pair_Counter_2(Membrane_Node_Pair_list, Membrane_triangle_list, Membrane_num_of_Node_Pairs);
+        Membrane_num_of_Node_Pair_Counter_2(Membrane_Node_Pair_list, Membrane_new_triangle_list, Membrane_num_of_Node_Pairs);
     }
     
     //-----------------------------------------------membrane:
@@ -250,7 +273,7 @@ int main() //main**
     double Actin_Node_Position[Actin_num_of_Nodes][3];
     double Actin_Node_Velocity[Actin_num_of_Nodes][3];
     double Actin_Node_Force[Actin_num_of_Nodes][3];
-    double Actin_Node_VelocityRungKuta[Actin_num_of_Nodes][3];  //only used in  Rungekuta step
+    //    double Actin_Node_VelocityRungKuta[Actin_num_of_Nodes][3];  //only used in  Rungekuta step
     Actin_constructor(Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Force, Actin_Node_Pair_List, Actin_num_of_Bonds);
     
     
@@ -258,17 +281,18 @@ int main() //main**
     
     
     //-----------------------------actin-membrane part: shared beads(suppose to have masses like mass of membrane)
-    int Membrane_Actin_shared_Node_list[Actin_Membrane_shared_num_of_Nodes][2];// IMPORTANT: this list contains the indices of shared beads on the membrane and actin. [0] for membrane and [1] for actin.
-    Membrane_Actin_shared_Node_Identifier(Membrane_Actin_shared_Node_list, Membrane_Node_Position, Actin_Node_Position);
+    //    int Membrane_Actin_shared_Node_list[Actin_Membrane_shared_num_of_Nodes][2];// IMPORTANT: this list contains the indices of shared beads on the membrane and actin. [0] for membrane and [1] for actin.
+    vector<vector<int> > Membrane_Actin_shared_Node_list;
+    Membrane_Actin_shared_Node_Identifier(Membrane_Actin_shared_Node_list, Membrane_Node_Position, Actin_Node_Position, Membrane_num_of_Nodes);
     
     
     
     
-    cellshift(Membrane_Node_Position, Actin_Node_Position, Membrane_Node_Velocity, Actin_Node_Velocity);
+    cellshift(Membrane_Node_Position, Actin_Node_Position, Membrane_Node_Velocity, Actin_Node_Velocity, Membrane_num_of_Nodes);
     if( resume==true )
     {
-        restartread(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, membrane_triangle_pair_list, Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds);
-        cellshift(Membrane_Node_Position, Actin_Node_Position, Membrane_Node_Velocity, Actin_Node_Velocity);
+        restartread(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_new_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, membrane_triangle_pair_list, Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds, Membrane_num_of_Nodes);
+        cellshift(Membrane_Node_Position, Actin_Node_Position, Membrane_Node_Velocity, Actin_Node_Velocity, Membrane_num_of_Nodes);
     }
     //*******************************************************************************************************
     /*BUG
@@ -350,16 +374,16 @@ int main() //main**
         // **********calling aceel update
         
         
-        Membrane_Force_Calculator(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_Node_Force, Membrane_Node_Pair_list, Membrane_Triangle_Pair_Nodes, Total_Potential_Energy,  Membrane_num_of_Triangle_Pairs, Membrane_num_of_Node_Pairs); // **********calling aceel update
+        Membrane_Force_Calculator(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_Node_Force, Membrane_Node_Pair_list, Membrane_Triangle_Pair_Nodes, Total_Potential_Energy,  Membrane_num_of_Triangle_Pairs, Membrane_num_of_Node_Pairs, Membrane_num_of_Nodes); // **********calling aceel update
         
         
-        ConstantSurfaceForceLocalTriangles( Membrane_Node_Position, Membrane_Node_Force, Membrane_triangle_list);
+        ConstantSurfaceForceLocalTriangles( Membrane_Node_Position, Membrane_Node_Force, Membrane_new_triangle_list);
         
         if (MD_Step % mcstep == 0)// collsi
         {
             for(int s=0; s< fluidity*Membrane_num_of_Nodes ;s++)
             {
-                Monte_carlo_bond_flip(Membrane_Node_Position, Membrane_triangle_list, membrane_triangle_pair_list, Membrane_Node_Pair_list, Membrane_num_of_Node_Pairs);
+                Monte_carlo_bond_flip(Membrane_Node_Position, Membrane_new_triangle_list, membrane_triangle_pair_list, Membrane_Node_Pair_list, Membrane_num_of_Node_Pairs, Membrane_num_of_Nodes);
                 //                MonteCarlo(Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, Total_Potential_Energy, Membrane_Node_Position, Membrane_Normal_direction, Outer_Membrane_num_of_triangles, Nucleus_Membrane_num_of_triangles, Membrane_num_of_Triangle_Pairs, Membrane_num_of_Node_Pairs);
                 counter2=0;
             }
@@ -373,15 +397,15 @@ int main() //main**
         }
         
         
-        for(int j=0 ; j<Actin_num_of_Nodes ; j++)  //Rung kuta update
-        {
-            Actin_Node_VelocityRungKuta[j][0] += -Actin_Node_Force[j][0]*MD_Time_Step/(Actin_Node_Mass);
-            Actin_Node_VelocityRungKuta[j][1] += -Actin_Node_Force[j][1]*MD_Time_Step/(Actin_Node_Mass);
-            Actin_Node_VelocityRungKuta[j][2] += -Actin_Node_Force[j][2]*MD_Time_Step/(Actin_Node_Mass);
-        }
+        //        for(int j=0 ; j<Actin_num_of_Nodes ; j++)  //Rung kuta update
+        //        {
+        //            Actin_Node_VelocityRungKuta[j][0] += -Actin_Node_Force[j][0]*MD_Time_Step/(Actin_Node_Mass);
+        //            Actin_Node_VelocityRungKuta[j][1] += -Actin_Node_Force[j][1]*MD_Time_Step/(Actin_Node_Mass);
+        //            Actin_Node_VelocityRungKuta[j][2] += -Actin_Node_Force[j][2]*MD_Time_Step/(Actin_Node_Mass);
+        //        }
         
         
-        Actin_Force_calculator(Actin_Node_Position, Actin_Node_VelocityRungKuta, Actin_Node_Force, Actin_Node_Pair_List, Actin_num_of_Bonds, Total_Potential_Energy); // updates with runge kuta
+        Actin_Force_calculator(Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Force, Actin_Node_Pair_List, Actin_num_of_Bonds, Total_Potential_Energy); // updates with runge kuta
         
         
         if (energy_calculation_flag==1.0) {
@@ -393,7 +417,7 @@ int main() //main**
         
         if(MD_Step%Membrane_barrier_calculation_rate==0)
         {
-            Actin_Membrane_Barrier_2(Actin_Node_Position, Actin_Node_Velocity, Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list);
+            Actin_Membrane_Barrier_2(Actin_Node_Position, Actin_Node_Velocity, Membrane_Node_Position, Membrane_Node_Velocity, Membrane_new_triangle_list, Membrane_Actin_shared_Node_list);
             
         }
         
@@ -429,7 +453,7 @@ int main() //main**
         {
             
             cout<<"Saving temp..."<<endl;
-            restartsave(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, membrane_triangle_pair_list,  Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds);
+            restartsave(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_new_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, membrane_triangle_pair_list,  Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds, Membrane_num_of_Nodes);
         }
         
         //--------------------------------Thermostate
@@ -438,7 +462,7 @@ int main() //main**
         
         if(MD_Step%RunThermostatePerstep==0)
         {
-            Thermostat_2(Membrane_Node_Velocity, Actin_Node_Velocity);
+            Thermostat_2(Membrane_Node_Velocity, Actin_Node_Velocity, Membrane_num_of_Nodes);
         }
         
         
@@ -481,7 +505,7 @@ int main() //main**
             
             ///__________________________________________________Traj__________________________
             
-            CellCOM(centerOfmassoftheCell, Membrane_Node_Position, Actin_Node_Position);
+            CellCOM(centerOfmassoftheCell, Membrane_Node_Position, Actin_Node_Position, Membrane_num_of_Nodes);
             
             write_COM<<MD_Step<<"\t"<<centerOfmassoftheCell[0]<<"\t"<<centerOfmassoftheCell[1]<<"\t"<<centerOfmassoftheCell[2]<<endl;
         }
@@ -500,7 +524,7 @@ int main() //main**
     //_______________________________restart:
     
     cout<<"Saving..."<<endl;
-    restartsave(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, membrane_triangle_pair_list, Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds);
+    restartsave(Membrane_Node_Position, Membrane_Node_Velocity, Membrane_new_triangle_list, Membrane_Triangle_Pair_Nodes, Membrane_Node_Pair_list, membrane_triangle_pair_list, Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Pair_List, Membrane_num_of_Triangle_Pairs, Actin_num_of_Bonds, Membrane_num_of_Nodes);
     
     
     
@@ -527,13 +551,13 @@ int main() //main**
 
 
 
-void Membrane_Actin_shared_Node_Force_calculator (double Membrane_Node_Position[Membrane_num_of_Nodes][3], double  Actin_Node_Position[][3], double Membrane_Node_Force[Membrane_num_of_Nodes][3], double Actin_Node_Force[][3],  int Membrane_Actin_shared_Node_list[][2], double Membrane_Node_velocity[Membrane_num_of_Nodes][3], double Actin_Node_velocity[Actin_num_of_Nodes][3])
+void Membrane_Actin_shared_Node_Force_calculator (double Membrane_Node_Position[][3], double  Actin_Node_Position[][3], double Membrane_Node_Force[][3], double Actin_Node_Force[][3],  vector<vector<int> > Membrane_Actin_shared_Node_list, double Membrane_Node_velocity[][3], double Actin_Node_velocity[Actin_num_of_Nodes][3])
 {
     double delta_x,delta_y,delta_z,temp_Node_distance,temp_force;
     
     int temp_Node_mem,temp_Node_act;
     
-    for (int act_mem_temp_node=0 ; act_mem_temp_node< Actin_Membrane_shared_num_of_Nodes ; act_mem_temp_node++)
+    for (int act_mem_temp_node=0 ; act_mem_temp_node< Membrane_Actin_shared_Node_list.size() ; act_mem_temp_node++)
     {
         temp_Node_mem = Membrane_Actin_shared_Node_list[act_mem_temp_node][0];
         temp_Node_act = Membrane_Actin_shared_Node_list[act_mem_temp_node][1];
@@ -580,7 +604,7 @@ void Membrane_Actin_shared_Node_Force_calculator (double Membrane_Node_Position[
 //______________________Actin functions
 
 
-void  Actin_Force_calculator(double Actin_Node_Position[][3], double Actin_Node_VelocityRungKuta[][3], double  Actin_Node_Force[][3], double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds, double &Total_Potential_Energy)
+void  Actin_Force_calculator(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double  Actin_Node_Force[][3], double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds, double &Total_Potential_Energy)
 {
     
     double deltax, deltay, deltaz, temp_distance, initial_distance;// defined below in "for loop" in detail
@@ -693,11 +717,11 @@ void  Actin_Force_calculator(double Actin_Node_Position[][3], double Actin_Node_
         }
         
         ///Damping force
-        temp_force[0]= Actin_damping_Coefficient*(Actin_Node_VelocityRungKuta[node1][0]-Actin_Node_VelocityRungKuta[node2][0]);
-        temp_force[1]= Actin_damping_Coefficient*(Actin_Node_VelocityRungKuta[node1][1]-Actin_Node_VelocityRungKuta[node2][1]);
-        temp_force[2]= Actin_damping_Coefficient*(Actin_Node_VelocityRungKuta[node1][2]-Actin_Node_VelocityRungKuta[node2][2]);
+        temp_force[0]= Actin_damping_Coefficient*(Actin_Node_Velocity[node1][0]-Actin_Node_Velocity[node2][0]);
+        temp_force[1]= Actin_damping_Coefficient*(Actin_Node_Velocity[node1][1]-Actin_Node_Velocity[node2][1]);
+        temp_force[2]= Actin_damping_Coefficient*(Actin_Node_Velocity[node1][2]-Actin_Node_Velocity[node2][2]);
         if (energy_calculation_flag==1.0) {
-            Total_Potential_Energy -= 0.5*Actin_damping_Coefficient*((Actin_Node_VelocityRungKuta[node1][2]-Actin_Node_VelocityRungKuta[node2][2])*(Actin_Node_VelocityRungKuta[node1][2]-Actin_Node_VelocityRungKuta[node2][2])+(Actin_Node_VelocityRungKuta[node1][1]-Actin_Node_VelocityRungKuta[node2][1])*(Actin_Node_VelocityRungKuta[node1][1]-Actin_Node_VelocityRungKuta[node2][1])+(Actin_Node_VelocityRungKuta[node1][0]-Actin_Node_VelocityRungKuta[node2][0])*(Actin_Node_VelocityRungKuta[node1][0]-Actin_Node_VelocityRungKuta[node2][0]));
+            Total_Potential_Energy -= 0.5*Actin_damping_Coefficient*((Actin_Node_Velocity[node1][2]-Actin_Node_Velocity[node2][2])*(Actin_Node_Velocity[node1][2]-Actin_Node_Velocity[node2][2])+(Actin_Node_Velocity[node1][1]-Actin_Node_Velocity[node2][1])*(Actin_Node_Velocity[node1][1]-Actin_Node_Velocity[node2][1])+(Actin_Node_Velocity[node1][0]-Actin_Node_Velocity[node2][0])*(Actin_Node_Velocity[node1][0]-Actin_Node_Velocity[node2][0]));
         }
         
         //        cout<<temp_force[0]<<"\t"<<temp_force[1]<<"\t"<<temp_force[2]<<"\n";
@@ -724,7 +748,7 @@ void  Actin_Force_calculator(double Actin_Node_Position[][3], double Actin_Node_
 }
 
 
-void Actin_Membrane_Barrier_2( double  Actin_Node_Position [][3], double  Actin_Node_Velocity [][3], double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3])
+void Actin_Membrane_Barrier_2( double  Actin_Node_Position [][3], double  Actin_Node_Velocity [][3], double Membrane_Node_Position[][3], double Membrane_Node_Velocity[][3], vector<vector<int> > Membrane_new_triangle_list, vector<vector<int> > Membrane_Actin_shared_Node_list)
 {
     double membrane_triangle_COM_position[3]; // coordinates to the centre of mass of the triangles
     double membrane_triangle_COM_velocity[3]; // velocity of the center of mass of the triangles
@@ -734,27 +758,27 @@ void Actin_Membrane_Barrier_2( double  Actin_Node_Position [][3], double  Actin_
     double perpendicular_distance;
     double relevant_velocity[3];
     
-    for (int i =0; i < Membrane_num_of_Triangles  ; i++)
+    for (int i =0; i < Membrane_new_triangle_list.size()  ; i++)
     {
-        membrane_triangle_COM_position[0]=(Membrane_Node_Position[ Membrane_triangle_list[i][0]][0] + Membrane_Node_Position[Membrane_triangle_list[i][1]][0] + Membrane_Node_Position[ Membrane_triangle_list[i][2]][0])/3.0;
-        membrane_triangle_COM_position[1]=(Membrane_Node_Position[ Membrane_triangle_list[i][0]][1] + Membrane_Node_Position[Membrane_triangle_list[i][1]][1] + Membrane_Node_Position[ Membrane_triangle_list[i][2]][1])/3.0;
-        membrane_triangle_COM_position[2]=(Membrane_Node_Position[ Membrane_triangle_list[i][0]][2] + Membrane_Node_Position[Membrane_triangle_list[i][1]][2] + Membrane_Node_Position[ Membrane_triangle_list[i][2]][2])/3.0;
+        membrane_triangle_COM_position[0]=(Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][0] + Membrane_Node_Position[Membrane_new_triangle_list[i][1]][0] + Membrane_Node_Position[ Membrane_new_triangle_list[i][2]][0])/3.0;
+        membrane_triangle_COM_position[1]=(Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][1] + Membrane_Node_Position[Membrane_new_triangle_list[i][1]][1] + Membrane_Node_Position[ Membrane_new_triangle_list[i][2]][1])/3.0;
+        membrane_triangle_COM_position[2]=(Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][2] + Membrane_Node_Position[Membrane_new_triangle_list[i][1]][2] + Membrane_Node_Position[ Membrane_new_triangle_list[i][2]][2])/3.0;
         
-        membrane_triangle_COM_velocity[0]=(Membrane_Node_Velocity[ Membrane_triangle_list[i][0]][0] + Membrane_Node_Velocity[Membrane_triangle_list[i][1]][0] + Membrane_Node_Velocity[ Membrane_triangle_list[i][2]][0])/3.0;
-        membrane_triangle_COM_velocity[1]=(Membrane_Node_Velocity[ Membrane_triangle_list[i][0]][1] + Membrane_Node_Velocity[Membrane_triangle_list[i][1]][1] + Membrane_Node_Velocity[ Membrane_triangle_list[i][2]][1])/3.0;
-        membrane_triangle_COM_velocity[2]=(Membrane_Node_Velocity[ Membrane_triangle_list[i][0]][2] + Membrane_Node_Velocity[Membrane_triangle_list[i][1]][2] + Membrane_Node_Velocity[ Membrane_triangle_list[i][2]][2])/3.0;
+        membrane_triangle_COM_velocity[0]=(Membrane_Node_Velocity[ Membrane_new_triangle_list[i][0]][0] + Membrane_Node_Velocity[Membrane_new_triangle_list[i][1]][0] + Membrane_Node_Velocity[ Membrane_new_triangle_list[i][2]][0])/3.0;
+        membrane_triangle_COM_velocity[1]=(Membrane_Node_Velocity[ Membrane_new_triangle_list[i][0]][1] + Membrane_Node_Velocity[Membrane_new_triangle_list[i][1]][1] + Membrane_Node_Velocity[ Membrane_new_triangle_list[i][2]][1])/3.0;
+        membrane_triangle_COM_velocity[2]=(Membrane_Node_Velocity[ Membrane_new_triangle_list[i][0]][2] + Membrane_Node_Velocity[Membrane_new_triangle_list[i][1]][2] + Membrane_Node_Velocity[ Membrane_new_triangle_list[i][2]][2])/3.0;
         
-        for (int actin_counter=Actin_Membrane_shared_num_of_Nodes;actin_counter<Actin_num_of_Nodes;actin_counter++)
+        for (int actin_counter=int(Membrane_Actin_shared_Node_list.size());actin_counter<Actin_num_of_Nodes;actin_counter++)
         {
             actin_membrane_distance_amplitude = sqrt( (membrane_triangle_COM_position[0] -Actin_Node_Position[actin_counter][0] ) * (membrane_triangle_COM_position[0] - Actin_Node_Position[actin_counter][0]) + (membrane_triangle_COM_position[1] - Actin_Node_Position[actin_counter][1]) * (membrane_triangle_COM_position[1]- Actin_Node_Position[actin_counter][1]) + (membrane_triangle_COM_position[2] - Actin_Node_Position[actin_counter][2]) * (membrane_triangle_COM_position[2] - Actin_Node_Position[actin_counter][2]));
             if (  actin_membrane_distance_amplitude < sqrt(0.43*Node_radius * 0.43*Node_radius + Actin_Membrane_Radius_of_Hard_Sphere_Interaction*Actin_Membrane_Radius_of_Hard_Sphere_Interaction )  )
             {
-                AB[0]=Membrane_Node_Position[ Membrane_triangle_list[i][1]][0]-Membrane_Node_Position[ Membrane_triangle_list[i][0]][0];
-                AB[1]=Membrane_Node_Position[ Membrane_triangle_list[i][1]][1]-Membrane_Node_Position[ Membrane_triangle_list[i][0]][1];
-                AB[2]=Membrane_Node_Position[ Membrane_triangle_list[i][1]][2]-Membrane_Node_Position[ Membrane_triangle_list[i][0]][2];
-                AC[0]=Membrane_Node_Position[ Membrane_triangle_list[i][2]][0]-Membrane_Node_Position[ Membrane_triangle_list[i][0]][0];
-                AC[1]=Membrane_Node_Position[ Membrane_triangle_list[i][2]][1]-Membrane_Node_Position[ Membrane_triangle_list[i][0]][1];
-                AC[2]=Membrane_Node_Position[ Membrane_triangle_list[i][2]][2]-Membrane_Node_Position[ Membrane_triangle_list[i][0]][2];
+                AB[0]=Membrane_Node_Position[ Membrane_new_triangle_list[i][1]][0]-Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][0];
+                AB[1]=Membrane_Node_Position[ Membrane_new_triangle_list[i][1]][1]-Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][1];
+                AB[2]=Membrane_Node_Position[ Membrane_new_triangle_list[i][1]][2]-Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][2];
+                AC[0]=Membrane_Node_Position[ Membrane_new_triangle_list[i][2]][0]-Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][0];
+                AC[1]=Membrane_Node_Position[ Membrane_new_triangle_list[i][2]][1]-Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][1];
+                AC[2]=Membrane_Node_Position[ Membrane_new_triangle_list[i][2]][2]-Membrane_Node_Position[ Membrane_new_triangle_list[i][0]][2];
                 crossvector(ABxAC,AB,AC);
                 //                ABxAC[0]=ABxAC[0]*Membrane_Normal_direction[i][1];
                 //                ABxAC[1]=ABxAC[1]*Membrane_Normal_direction[i][1];
@@ -792,9 +816,9 @@ void Actin_Membrane_Barrier_2( double  Actin_Node_Position [][3], double  Actin_
                     
                     for (int i1 = 0; i1 < 3; i1++)
                     {
-                        Membrane_Node_Velocity[Membrane_triangle_list[i][i1]][0] += (-Membrane_triangle_COM_velocity_N + Membrane_triangle_COM_velocity_N_new)*ABxAC_unit_vector[0];
-                        Membrane_Node_Velocity[Membrane_triangle_list[i][i1]][1] += (-Membrane_triangle_COM_velocity_N + Membrane_triangle_COM_velocity_N_new)*ABxAC_unit_vector[1];
-                        Membrane_Node_Velocity[Membrane_triangle_list[i][i1]][2] += (-Membrane_triangle_COM_velocity_N + Membrane_triangle_COM_velocity_N_new)*ABxAC_unit_vector[2];
+                        Membrane_Node_Velocity[Membrane_new_triangle_list[i][i1]][0] += (-Membrane_triangle_COM_velocity_N + Membrane_triangle_COM_velocity_N_new)*ABxAC_unit_vector[0];
+                        Membrane_Node_Velocity[Membrane_new_triangle_list[i][i1]][1] += (-Membrane_triangle_COM_velocity_N + Membrane_triangle_COM_velocity_N_new)*ABxAC_unit_vector[1];
+                        Membrane_Node_Velocity[Membrane_new_triangle_list[i][i1]][2] += (-Membrane_triangle_COM_velocity_N + Membrane_triangle_COM_velocity_N_new)*ABxAC_unit_vector[2];
                     }
                 }//END OF:  if    ( (abs( perpendicular_distance )<Actin_Membrane_Radius_of_Hard_Sphere_Interaction) &&
             }//END OF: if (  actin_membrane_distance_amplitude < sqrt(0.43*a * 0.43*a +
@@ -807,7 +831,7 @@ void Actin_Membrane_Barrier_2( double  Actin_Node_Position [][3], double  Actin_
 
 
 
-void cellshift(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Actin_Node_Position[Actin_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3])
+void cellshift(double Membrane_Node_Position[][3], double Actin_Node_Position[Actin_num_of_Nodes][3], double Membrane_Node_Velocity[][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], int Membrane_num_of_Nodes)
 {
     for (int i=0; i<Membrane_num_of_Nodes ; i++)
     {
@@ -837,7 +861,7 @@ void cellshift(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double A
 
 //___________________migration
 
-void CellCOM( double com[3],double  Membrane_Node_Position [Membrane_num_of_Nodes][3],double  Actin_Node_Position [][3])
+void CellCOM( double com[3],double  Membrane_Node_Position [][3],double  Actin_Node_Position [][3], int Membrane_num_of_Nodes)
 {
     com[0]=0;
     com[1]=0;
@@ -879,7 +903,7 @@ void CellCOM( double com[3],double  Membrane_Node_Position [Membrane_num_of_Node
 
 
 //-----------------------------thermostat------------------
-void Thermostat_2(double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], double Actin_Node_Velocity[][3])
+void Thermostat_2(double Membrane_Node_Velocity[][3], double Actin_Node_Velocity[][3], int Membrane_num_of_Nodes)
 {
     double V_com[3], temp_V[3];
     
@@ -1010,7 +1034,7 @@ void Thermostat_2(double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], doubl
 
 
 //---------------------------restart-----------------------
-void restartsave(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int Membrane_Node_Pair_list[][2], vector<vector<int> > membrane_triangle_pair_list, double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds)
+void restartsave(double Membrane_Node_Position[][3], double Membrane_Node_Velocity[][3], vector<vector<int> > Membrane_new_triangle_list, int Membrane_Triangle_Pair_Nodes[][4], int Membrane_Node_Pair_list[][2], vector<vector<int> > membrane_triangle_pair_list, double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds, int Membrane_num_of_Nodes)
 {
     ofstream restart;
     restart.open("restart_1.txt");
@@ -1033,11 +1057,11 @@ void restartsave(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double
     }
     
     
-    for (int i=0; i<Membrane_num_of_Triangles ; i++)
+    for (int i=0; i<Membrane_new_triangle_list.size() ; i++)
     {
         for (int j=0; j<3 ; j++)
         {
-            restart<< Membrane_triangle_list[i][j]<<endl;
+            restart<< Membrane_new_triangle_list[i][j]<<endl;
         }
     }
     
@@ -1058,7 +1082,7 @@ void restartsave(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double
         }
     }
     
-    for (int i=0; i<Membrane_num_of_Triangles ; i++)
+    for (int i=0; i<membrane_triangle_pair_list.size() ; i++)
     {
         for (int j=0; j<3 ; j++)
         {
@@ -1094,7 +1118,7 @@ void restartsave(double Membrane_Node_Position[Membrane_num_of_Nodes][3], double
 }
 
 
-void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], double Membrane_Node_Velocity[Membrane_num_of_Nodes][3], int Membrane_triangle_list[Membrane_num_of_Triangles][3], int Membrane_Triangle_Pair_Nodes[][4], int Membrane_Node_Pair_list[][2], vector<vector<int> > &membrane_triangle_pair_list, double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds)
+void restartread(double Membrane_Node_Position [][3], double Membrane_Node_Velocity[][3], vector<vector<int> > &Membrane_new_triangle_list, int Membrane_Triangle_Pair_Nodes[][4], int Membrane_Node_Pair_list[][2], vector<vector<int> > &membrane_triangle_pair_list, double Actin_Node_Position[Actin_num_of_Nodes][3], double Actin_Node_Velocity[Actin_num_of_Nodes][3], double Actin_Node_Pair_List[][3], int Membrane_num_of_Triangle_Pairs, int Actin_num_of_Bonds, int Membrane_num_of_Nodes)
 {
     ifstream restart;
     //    restart.open("restart-backup.txt");
@@ -1117,11 +1141,11 @@ void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], doubl
     }
     
     
-    for (int i=0; i<Membrane_num_of_Triangles ; i++)
+    for (int i=0; i<Membrane_new_triangle_list.size() ; i++)
     {
         for (int j=0; j<3 ; j++)
         {
-            restart>> Membrane_triangle_list[i][j];
+            restart>> Membrane_new_triangle_list[i][j];
         }
     }
     
@@ -1143,7 +1167,7 @@ void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], doubl
         }
     }
     
-    for (int i=0; i<Membrane_num_of_Triangles ; i++)
+    for (int i=0; i<membrane_triangle_pair_list.size() ; i++)
     {
         for (int j=0; j<3 ; j++)
         {
@@ -1187,7 +1211,7 @@ void restartread(double Membrane_Node_Position [Membrane_num_of_Nodes][3], doubl
 
 
 
-void generate_initial_condition_report (string initial_condition_file_name){
+void generate_initial_condition_report (string initial_condition_file_name, int Membrane_num_of_Nodes){
     ofstream write_initial_condition;
     write_initial_condition.open(initial_condition_file_name.c_str() );
     
@@ -1198,7 +1222,7 @@ void generate_initial_condition_report (string initial_condition_file_name){
     write_initial_condition<<"RunThermostatePerstep"<<"=\t"<<RunThermostatePerstep<<endl;
     write_initial_condition<<"\n\n";
     write_initial_condition<<"Membrane_num_of_Nodes"<<"=\t"<<Membrane_num_of_Nodes<<endl;
-    write_initial_condition<<"Membrane_num_of_Triangles"<<"=\t"<<Membrane_num_of_Triangles<<endl;
+    //    write_initial_condition<<"Membrane_num_of_Triangles"<<"=\t"<<Membrane_num_of_Triangles<<endl;
     write_initial_condition<<"Membrane_Radius"<<"=\t"<<Membrane_Radius<<endl;
     //    write_initial_condition<<"Nucleus_Membrane_radius"<<"=\t"<<Nucleus_Membrane_radius<<endl;
     write_initial_condition<<"K_surfaceConstant_local"<<"=\t"<<K_surfaceConstant_local<<endl;
@@ -1211,7 +1235,7 @@ void generate_initial_condition_report (string initial_condition_file_name){
     write_initial_condition<<"\n\n";
     write_initial_condition<<"k_actine_membrane"<<"=\t"<<k_actine_membrane<<endl;
     write_initial_condition<<"Actin_num_of_Nodes"<<"=\t"<<Actin_num_of_Nodes<<endl;
-    write_initial_condition<<"Actin_Membrane_shared_num_of_Nodes"<<"=\t"<<Actin_Membrane_shared_num_of_Nodes<<endl;
+    //    write_initial_condition<<"Actin_Membrane_shared_num_of_Nodes"<<"=\t"<<Actin_Membrane_shared_num_of_Nodes<<endl;
     write_initial_condition<<"Actin_spring_coefficient"<<"=\t"<<Actin_spring_coefficient<<endl;
     write_initial_condition<<"Membrane_barrier_calculation_rate"<<"=\t"<<Membrane_barrier_calculation_rate<<endl;
     write_initial_condition<<"CytoskeletonNetworkType"<<"=\t"<<CytoskeletonNetworkType<<endl;
@@ -1265,4 +1289,9 @@ void generate_initial_condition_report (string initial_condition_file_name){
     write_initial_condition<<"Actin_membrane_damping_coefficient"<<"=\t"<<Actin_membrane_damping_coefficient<<endl;
     
 }
+
+
+
+
+
 

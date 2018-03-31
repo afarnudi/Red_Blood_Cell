@@ -18,6 +18,7 @@ int  Actin_Node_Pair_Identifier( )  // Reads the 'Actin' files and Identifies th
     
     int Actin_pyramid_Node_1, Actin_pyramid_Node_2, Actin_pyramid_Node_3, Actin_pyramid_Node_4;
     double temp_double;
+    string temp_string;
     int Num_of_objects;
     
     Node_Pairs.resize(2,-1);
@@ -31,8 +32,10 @@ int  Actin_Node_Pair_Identifier( )  // Reads the 'Actin' files and Identifies th
     int temp_int_repeated_pair_counter_6=0;
     
     ifstream read;
-    read.open("actin");
-    
+    read.open("RBCActin");
+    for (int i=0; i<6; i++) {
+        read>> temp_string;
+    }
     //------------------------------------------------------------------------------------------------------
     //------------------------------------------- Improvement ----------------------------------------------
     // We Should, at some point, use a better method for reading the external files (getline for instance).
@@ -48,9 +51,25 @@ int  Actin_Node_Pair_Identifier( )  // Reads the 'Actin' files and Identifies th
         read>> temp_double;
         read>> temp_double;
     }
+    read>> temp_string;
+    read>> temp_string;
     read>> Num_of_objects;//Sweep not needed elements
-    
-    for(int i=0;i<Num_of_objects;i++)    // This loop reads the nettemp_double between the actin nodes
+    for (int i=0; i<Actin_num_of_triangles; i++) {
+        read>>temp_double;//Ignoring first five numbers
+        read>>temp_double;
+        read>>temp_double;
+        read>>temp_double;
+        read>>temp_double;
+        
+        read>>temp_double;
+        cout<<temp_double;
+        read>>temp_double;
+        cout<<"\t"<<temp_double;
+        read>>temp_double;
+        cout<<"\t"<<temp_double<<endl;
+    }
+    cout<<endl;
+    for(int i=Actin_num_of_triangles;i<Num_of_objects;i++)    // This loop reads the nettemp_double between the actin nodes
         // Remmember that we manually deleted the triangles from the 'actin' file by making an 'actin2d' file, so when we start reading the file, the triangular pyramid coordinates are written immediately after the node coordinates.
     {
         read>>temp_double;//Ignoring first five numbers
@@ -70,7 +89,7 @@ int  Actin_Node_Pair_Identifier( )  // Reads the 'Actin' files and Identifies th
         Actin_pyramid_Node_3--;
         Actin_pyramid_Node_4--;
         
-        //        cout<<"Node_1= "<<Actin_pyramid_Node_1<<"\t"<<"Node_2= "<<Actin_pyramid_Node_2<<"\t"<<"Node_3= "<<Actin_pyramid_Node_3<<"\t"<<"Node_4= "<<Actin_pyramid_Node_4<<"\n";
+        cout<<Actin_pyramid_Node_1<<"\t"<<Actin_pyramid_Node_2<<"\t"<<Actin_pyramid_Node_3<<"\t"<<Actin_pyramid_Node_4<<"\n";
         //========================================== Very Fast, No need for modification =========================================
         for(int j=0;j<Actin_Node_Pair_list_temp.size()-1;j++)
         {
@@ -195,7 +214,11 @@ void  Actin_constructor(double Actin_Node_Position[][3], double Actin_Node_Veloc
         Actin_Node_Pair_List[i][1]=-1;
     }
     ifstream read;
-    read.open("actin");
+    read.open("RBCActin");
+    string temp_string;
+    for (int i=0; i<6; i++) {
+        read>> temp_string;
+    }
     read>> temp_double;
     
     for(int i=0;i<Actin_num_of_Nodes;i++) // In this loop we will read the position coordinates of the Actin Nodes
@@ -211,9 +234,23 @@ void  Actin_constructor(double Actin_Node_Position[][3], double Actin_Node_Veloc
     // function. It is copied down here because the 'Actin_num_of_Bonds' was needed to construct the Global
     // array'Actin_Node_Pair_List'. Since this is a very fast code, it is not worth the time to change.
     //------------------------------------------------------------------------------------------------------
-    
+    read>> temp_string;
+    read>> temp_string;
     read>> Num_of_objects;
-    for(int i=0;i<Num_of_objects;i++)    // this loop read network between nodes
+    
+    for (int i=0; i<Actin_num_of_triangles; i++) {
+        read>>temp_double;//Ignoring first five numbers
+        read>>temp_double;
+        read>>temp_double;
+        read>>temp_double;
+        read>>temp_double;
+        
+        read>>temp_double;
+        read>>temp_double;
+        read>>temp_double;
+    }
+    
+    for(int k=Actin_num_of_triangles;k<Num_of_objects;k++)    // this loop read network between nodes
     {
         read>>temp_double;//only sweep not needed elements
         read>>temp_double;//only sweep not needed elements
@@ -231,7 +268,7 @@ void  Actin_constructor(double Actin_Node_Position[][3], double Actin_Node_Veloc
         Actin_pyramid_Node_2=Actin_pyramid_Node_2-1;
         Actin_pyramid_Node_3=Actin_pyramid_Node_3-1;
         Actin_pyramid_Node_4=Actin_pyramid_Node_4-1;
-        
+        //        cout<<Actin_pyramid_Node_1<<"\t"<<Actin_pyramid_Node_2<<"\t"<<Actin_pyramid_Node_3<<"\t"<<Actin_pyramid_Node_4<<"\n";
         for(int j=0;j<counter;j++)
         {
             if(  (  Actin_Node_Pair_List[j][0]==Actin_pyramid_Node_1 &   Actin_Node_Pair_List[j][1]==Actin_pyramid_Node_2 )  || (  Actin_Node_Pair_List[j][0]==Actin_pyramid_Node_2 &   Actin_Node_Pair_List[j][1]==Actin_pyramid_Node_1 )    )
@@ -359,13 +396,6 @@ void  Actin_constructor(double Actin_Node_Position[][3], double Actin_Node_Veloc
     //***************** I am going to comment it out of the code and see if I incounter any problems ********
     //*******************************************************************************************************
 }
-
-
-
-
-
-
-
 
 
 

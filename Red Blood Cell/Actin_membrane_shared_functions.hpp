@@ -14,7 +14,7 @@
 #include "General_Membrane.h"
 #include "General_Actin_Membrane_shared.h"
 #include "General_Actin.h"
-
+using namespace std;
 //  Breif discription:
 //      -A very simple programme that identifies the Actin nodes on the Membrane
 
@@ -23,8 +23,7 @@
 
 //  Suggested improvments:
 //        1-Nope
-void Membrane_Actin_shared_Node_Identifier(int Membrane_Actin_shared_Node_list[Actin_Membrane_shared_num_of_Nodes][2],double Membrane_Node_Position[Membrane_num_of_Nodes][3],double  Actin_Node_Position [][3]);
+void Membrane_Actin_shared_Node_Identifier(vector<vector<int> > &Membrane_Actin_shared_Node_list, double Membrane_Node_Position[][3],double  Actin_Node_Position [][3], int Membrane_num_of_Nodes);
 
 
 #endif /* Actin_membrane_shared_functions_hpp */
-

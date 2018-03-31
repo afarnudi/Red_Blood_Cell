@@ -1,0 +1,1 @@
+Time	Total Energy	Membrane	Actin	Chromatin	ECM	Interaction_4

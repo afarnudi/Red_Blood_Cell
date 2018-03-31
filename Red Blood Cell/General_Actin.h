@@ -9,7 +9,8 @@
 #ifndef General_Actin_h
 #define General_Actin_h
 
-#define Actin_num_of_Nodes 587//566// //This is the number of nodes in the actin volume. It is the first number that appears in the 'actin' file.
+#define Actin_num_of_Nodes 579//566// //This is the number of nodes in the actin volume. It is the first number that appears in the 'actin' file.
+#define Actin_num_of_triangles 872
 #define Actin_spring_coefficient      5.0//10.0//5.0//0.3 // force constant of springs
 #define Actin_kelvin_damping_coefficient        1000.0 // viscouse constant for avtin Maxwell fluids: maxwell model >> IT RESISTS AGAINST CHANGING BOND ENGTHS
 #define CytoskeletonNetworkType  0 // 0=normal hookian network    1=passive cable network  2=active cable network
@@ -30,3 +31,4 @@
 
 
 #endif /* General_Actin_h */
+
