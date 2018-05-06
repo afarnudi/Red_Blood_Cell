@@ -15,8 +15,8 @@
 //#define Nucleus_Membrane_radius   4.0  //Is the nucleus membrane radius. The radius of the nucleus should be the same as the one used to generate the Gmesh membrane file otherwise the programme crashes.
 #define kvolume    0.0
 
-#define Membrane_spring_coefficient     2.0  //1.0   // streching constant
-#define Membrane_bending_coefficient   0.0//30.0//15.0     // bending constant
+//#define Membrane_spring_coefficient     2.0  //1.0   // streching constant
+//#define Membrane_bending_coefficient   0.0//30.0//15.0     // bending constant
 #define membrane_damping_coefficient 0.0   // Viscosity of the Mmmbrane. It is applied in Force calculation for the Membrane Node pairs. I have commented out these parts in the 'Membrane_Force_Calculator' because I think the current code does not need it (some energy consuming array calculations were invloved).
 #define Membrane_Node_Mass 1.0
 #define K_surfaceConstant_local 100
