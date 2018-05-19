@@ -44,6 +44,7 @@ int  Actin_Node_Pair_Identifier( );  // gets input file and the output is networ
 
 //  Suggested improvments:
 //        1-Nope
-void Actin_constructor(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double Actin_Node_Force [][3], double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds);
+void Actin_constructor(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double Actin_Node_Force [][3], double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds, double Actin_Node_Pair_List_2[][5]);
 
 #endif /* Actin_functions_hpp */
+

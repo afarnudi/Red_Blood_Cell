@@ -26,4 +26,3 @@ void new_trinalge_pair_node_sorter(int triangle_A_node_A, int triangle_A_node_B,
 
 
 #endif /* Monte_Carlo_Bond_Flip_hpp */
-

@@ -24,7 +24,7 @@ using namespace std;
 
 //-----------------------HEADERS
 
-void  Actin_Force_calculator( double  Actin_Node_Position [][3],double  Actin_Node_Velocity [][3],double  Actin_Node_Force [][3],double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds, double &Total_Potential_Energy);
+void  Actin_Force_calculator( double  Actin_Node_Position [][3],double  Actin_Node_Velocity [][3],double  Actin_Node_Force [][3],double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds, double &Total_Potential_Energy, double Actin_Node_Pair_List_2[][5], double Actin_Force_history[]);
 
 
 void Actin_Membrane_Barrier_2(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double Membrane_Node_Position[][3], double Membrane_Node_Velocity[][3],  vector<vector<int> > Membrane_new_triangle_list, vector<vector<int> > Membrane_Actin_shared_Node_list);
@@ -77,6 +77,27 @@ int Membrane_Num_of_Nodes_reader (string membrane_mesh_file_name){
     return temp_int;
 }
 
+void Actin_node_pair_list_2_updater (double Actin_Node_Position[][3], double Actin_Node_Pair_List_2[][5], int Actin_num_of_Bonds);
+void Actin_node_pair_list_2_updater (double Actin_Node_Position[][3], double Actin_Node_Pair_List_2[][5], int Actin_num_of_Bonds){
+    int node_1, node_2;
+    double temp_distance=0, delta_x=0, delta_y=0, delta_z=0;
+    //    double distance_at_t_1=0, distance_at_t_0=0;
+    for (int actin_pair_index=0; actin_pair_index<Actin_num_of_Bonds; actin_pair_index++) {
+        node_1=int(Actin_Node_Pair_List_2[actin_pair_index][0]);
+        node_2=int(Actin_Node_Pair_List_2[actin_pair_index][1]);
+        delta_x=Actin_Node_Position[node_2][0]-Actin_Node_Position[node_1][0];// delta x  betwwn i and i+1 th beads
+        delta_y=Actin_Node_Position[node_2][1]-Actin_Node_Position[node_1][1];// delta y  betwwn i and i+1 th beads
+        delta_z=Actin_Node_Position[node_2][2]-Actin_Node_Position[node_1][2];// delta z  betwwn i and i+1 th beads
+        temp_distance=sqrt(delta_x*delta_x+delta_y*delta_y+delta_z*delta_z); // distance btween i th and i+1 th  bead
+        //        distance_at_t_0=Actin_Node_Pair_List_2[actin_pair_index][2];
+        //        distance_at_t_1=Actin_Node_Pair_List_2[actin_pair_index][3];
+        Actin_Node_Pair_List_2[actin_pair_index][4]=Actin_Node_Pair_List_2[actin_pair_index][3];
+        Actin_Node_Pair_List_2[actin_pair_index][3]=Actin_Node_Pair_List_2[actin_pair_index][2];
+        Actin_Node_Pair_List_2[actin_pair_index][2]=temp_distance;
+    }
+}
+
+
 #define Actin_membrane_stiff_spring_coefficient 400
 #define Actin_membrane_damping_coefficient 0.0
 #define Membrane_ECM_Max_cos_triangle_interaction_angle 0.2
@@ -125,13 +146,16 @@ int main() //main**
     //Edges
     test_particles[num_of_test_particles-3][0]=20;
     test_particles[num_of_test_particles-3][1]=10;
+    test_particles[num_of_test_particles-3][2]=0;
     test_particles[num_of_test_particles-2][0]=-20;
     test_particles[num_of_test_particles-2][1]=10;
+    test_particles[num_of_test_particles-2][2]=0;
     
     
     test_particles[num_of_test_particles-4][2]=20;
     test_particles[num_of_test_particles-4][1]=10;
     test_particles[num_of_test_particles-4][0]=0;
+    
     test_particles[num_of_test_particles-5][2]=-20;
     test_particles[num_of_test_particles-5][1]=10;
     test_particles[num_of_test_particles-5][0]=0;
@@ -269,12 +293,17 @@ int main() //main**
     int Actin_num_of_Bonds=Actin_Node_Pair_Identifier(); // the value will be set automatically in actin parameter function
     
     double Actin_Node_Pair_List[Actin_num_of_Bonds][3]; //In this array 3 numbers are stored for each Actin Node pairs. The first two are of course the label (number) of the nodes that are a pair. The third element is used to store the distance between these pairs. The distance is used in the force calculations for the Maxwell spring initial length. The initial length is updated during each step so we have a diferent initial length, hence the Maxwell spring.
+    double Actin_Node_Pair_List_2[Actin_num_of_Bonds][5]; //In this array 5 numbers are stored for each Actin Node pairs. The first two are of course the label (number) of the nodes that are a pair. The rest are used to store the history of the distance between these pairs at diffenet time steps. The 3nd, 4rd, and 5th elements are used to stor the distance at t, t-1, and t-2 respectfully. The distance is used in the force calculations for the Maxwell spring initial length. The initial length is updated during each step so we have a diferent initial length, hence the Maxwell spring.
+    double Actin_Force_history[Actin_num_of_Bonds];//used to store the force history between nodes
+    for (int i=0; i<Actin_num_of_Bonds; i++) {
+        Actin_Force_history[i]=0.0;
+    }
     
     double Actin_Node_Position[Actin_num_of_Nodes][3];
     double Actin_Node_Velocity[Actin_num_of_Nodes][3];
     double Actin_Node_Force[Actin_num_of_Nodes][3];
     //    double Actin_Node_VelocityRungKuta[Actin_num_of_Nodes][3];  //only used in  Rungekuta step
-    Actin_constructor(Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Force, Actin_Node_Pair_List, Actin_num_of_Bonds);
+    Actin_constructor(Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Force, Actin_Node_Pair_List, Actin_num_of_Bonds, Actin_Node_Pair_List_2);
     
     
     //---------------------------------------------------actin
@@ -313,6 +342,26 @@ int main() //main**
     //==========================================================================================================================
     //==========================================================================================================================
     
+    
+    //Optical Tweaser
+    int num_of_solid_particles=3;
+    double solid_particles[num_of_solid_particles][3];
+    solid_particles[0][0]=Membrane_Node_Position[5][0]-1;
+    solid_particles[0][1]=Membrane_Node_Position[5][1];
+    solid_particles[0][2]=Membrane_Node_Position[5][2];
+    solid_particles[1][0]=Membrane_Node_Position[5][0]-1;
+    solid_particles[1][1]=Membrane_Node_Position[5][1];
+    solid_particles[1][2]=Membrane_Node_Position[5][2];
+    solid_particles[2][0]=10;
+    solid_particles[2][1]=0;
+    solid_particles[2][2]=0;
+    
+    fstream write_optical_tweaser_force;
+    string OT_file_name="OT"+initial_condition_file_name+".txt";
+    write_optical_tweaser_force.open(OT_file_name.c_str());
+    
+    
+    
     int counter2=0;
     cout<<"Beginning the MD loop\n";
     for(int MD_Step=0 ;MD_Step<=MD_num_of_steps ; MD_Step++)
@@ -337,6 +386,7 @@ int main() //main**
             Actin_Node_Position[j][1] += Actin_Node_Velocity[j][1]*MD_Time_Step - Actin_Node_Force[j][1]*MD_Time_Step*MD_Time_Step/(Actin_Node_Mass*2.0);
             Actin_Node_Position[j][2] += Actin_Node_Velocity[j][2]*MD_Time_Step - Actin_Node_Force[j][2]*MD_Time_Step*MD_Time_Step/(Actin_Node_Mass*2.0);
         }
+        
         
         for(int j=0 ; j<Membrane_num_of_Nodes ; j++)  // loop to count every particle  and update its velocity
         {
@@ -405,7 +455,7 @@ int main() //main**
         //        }
         
         
-        Actin_Force_calculator(Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Force, Actin_Node_Pair_List, Actin_num_of_Bonds, Total_Potential_Energy); // updates with runge kuta
+        Actin_Force_calculator(Actin_Node_Position, Actin_Node_Velocity, Actin_Node_Force, Actin_Node_Pair_List, Actin_num_of_Bonds, Total_Potential_Energy, Actin_Node_Pair_List_2, Actin_Force_history); // updates with runge kuta
         
         
         if (energy_calculation_flag==1.0) {
@@ -448,6 +498,37 @@ int main() //main**
         
         write_force<<"\t"<<actin_total_force[0]<<"\t"<<actin_total_force[1]<<"\t"<<actin_total_force[2]<<endl;
         
+        //Optical_tweaser_force();
+        double Optical_tweaser_force=100, OT_spring_coefficient=1, OT_spring_force=0, OT_delta_x=0, OT_delta_y=0, OT_delta_z=0, OT_delta_R=0;
+        
+        
+        solid_particles[2][0]=Membrane_Node_Position[0][0];
+        solid_particles[2][1]=Membrane_Node_Position[0][1];
+        solid_particles[2][2]=Membrane_Node_Position[0][2];
+        solid_particles[1][0]=Membrane_Node_Position[5][0];
+        solid_particles[1][1]=Membrane_Node_Position[5][1];
+        solid_particles[1][2]=Membrane_Node_Position[5][2];
+        
+        OT_delta_x=(Membrane_Node_Position[5][0]-solid_particles[0][0]);
+        OT_delta_y=(Membrane_Node_Position[5][1]-solid_particles[0][1]);
+        OT_delta_z=(Membrane_Node_Position[5][2]-solid_particles[0][2]);
+        OT_delta_R=sqrt(OT_delta_x*OT_delta_x+OT_delta_y*OT_delta_y+OT_delta_z*OT_delta_z);
+        OT_spring_force=OT_delta_R;
+        OT_spring_force*=OT_spring_coefficient;
+        
+        //        Membrane_Node_Force[0][0]+=-Optical_tweaser_force;
+        
+        //        Membrane_Node_Force[5][0]+=OT_spring_coefficient*OT_delta_x/OT_delta_R;
+        //        Membrane_Node_Force[5][1]+=OT_spring_coefficient*OT_delta_y/OT_delta_R;
+        //        Membrane_Node_Force[5][2]+=OT_spring_coefficient*OT_delta_z/OT_delta_R;
+        
+        if (MD_Step%100==0 && MD_Step>10000) {
+            
+            write_optical_tweaser_force<<MD_Step<<"\t"<<OT_spring_force<<endl;
+        }
+        
+        
+        
         
         if (MD_Step%10000==0 & MD_Step!=0  )
         {
@@ -478,7 +559,7 @@ int main() //main**
             
             ///__________________________________________________Traj__________________________
             
-            trajectory << Membrane_num_of_Nodes+Actin_num_of_Nodes+num_of_test_particles<<endl;//+Num_of_Actin_Nodes_on_Membrane_list <<endl;    // saving trajectories
+            trajectory << Membrane_num_of_Nodes+Actin_num_of_Nodes+num_of_test_particles+num_of_solid_particles<<endl;//+Num_of_Actin_Nodes_on_Membrane_list <<endl;    // saving trajectories
             
             trajectory << " nodes  "<<endl;
             
@@ -500,7 +581,10 @@ int main() //main**
             {
                 trajectory <<"test"  <<setprecision(5)<< setw(20)<<test_particles[j][0]<< setw(20)<<test_particles[j][1]<< setw(20)<<test_particles[j][2]<<endl;
             }
-            
+            for(int j=0; j<num_of_solid_particles;j++) // saving trajectory
+            {
+                trajectory <<"ot"  <<setprecision(5)<< setw(20)<<solid_particles[j][0]<< setw(20)<<solid_particles[j][1]<< setw(20)<<solid_particles[j][2]<<endl;
+            }
             
             
             ///__________________________________________________Traj__________________________
@@ -604,7 +688,7 @@ void Membrane_Actin_shared_Node_Force_calculator (double Membrane_Node_Position[
 //______________________Actin functions
 
 
-void  Actin_Force_calculator(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double  Actin_Node_Force[][3], double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds, double &Total_Potential_Energy)
+void  Actin_Force_calculator(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double  Actin_Node_Force[][3], double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds, double &Total_Potential_Energy, double Actin_Node_Pair_List_2[][5], double Actin_Force_history[])
 {
     
     double deltax, deltay, deltaz, temp_distance, initial_distance;// defined below in "for loop" in detail
@@ -642,13 +726,13 @@ void  Actin_Force_calculator(double Actin_Node_Position[][3], double Actin_Node_
                 
             }
             
-            Actin_Node_Force[node1][0] += temp_force[0]  ; // force of springs and dashes
-            Actin_Node_Force[node1][1] += temp_force[1]  ;// force of springs and dashes
-            Actin_Node_Force[node1][2] += temp_force[2]  ;// force of springs and dashes
-            
-            Actin_Node_Force[node2][0] += - temp_force[0]  ; // force of springs and dashes
-            Actin_Node_Force[node2][1] += - temp_force[1]  ;// force of springs and dashes
-            Actin_Node_Force[node2][2] += - temp_force[2]  ;// force of springs and dashes
+            //            Actin_Node_Force[node1][0] += temp_force[0]  ; // force of springs and dashes
+            //            Actin_Node_Force[node1][1] += temp_force[1]  ;// force of springs and dashes
+            //            Actin_Node_Force[node1][2] += temp_force[2]  ;// force of springs and dashes
+            //
+            //            Actin_Node_Force[node2][0] += - temp_force[0]  ; // force of springs and dashes
+            //            Actin_Node_Force[node2][1] += - temp_force[1]  ;// force of springs and dashes
+            //            Actin_Node_Force[node2][2] += - temp_force[2]  ;// force of springs and dashes
             
             Actin_Node_Pair_List[i][2] +=  MD_Time_Step*   (  (temp_distance-initial_distance)/temp_distance  )   /Actin_kelvin_damping_coefficient; //We have used the Kelvin model for the Visco elasticity. Kelvin model: A spring and dashpot (in series) are in parralel with a spring.
             
@@ -679,9 +763,7 @@ void  Actin_Force_calculator(double Actin_Node_Position[][3], double Actin_Node_
                 if (energy_calculation_flag==1.0) {
                     Total_Potential_Energy += 0.5*KActinACN_EA*(temp_distance-initial_distance)*(temp_distance-initial_distance) + ACN_TL0*(temp_distance-initial_distance);
                 }
-                
-            }
-            else if(   (temp_distance < initial_distance)  &&  temp_distance>ACN_LC )   //more detail in the paper: Contractile network models for adherent cells
+            } else if(   (temp_distance < initial_distance)  &&  temp_distance>ACN_LC )   //more detail in the paper: Contractile network models for adherent cells
             {
                 temp_force[0]=-(ACN_TL0)   *  deltax/temp_distance  ;
                 temp_force[1]=-(ACN_TL0)   *  deltay/temp_distance  ;
@@ -691,10 +773,7 @@ void  Actin_Force_calculator(double Actin_Node_Position[][3], double Actin_Node_
                     Total_Potential_Energy += ACN_TL0*(temp_distance-initial_distance);
                 }
                 
-            }
-            
-            else if(temp_distance < ACN_LC)   //more detail in the paper: Contractile network models for adherent cells
-                
+            } else if(temp_distance < ACN_LC)   //more detail in the paper: Contractile network models for adherent cells
             {
                 temp_force[0]=-( ACN_TL0 *(temp_distance)/ACN_LC )   *  deltax/temp_distance  ;
                 temp_force[1]=-( ACN_TL0 *(temp_distance)/ACN_LC )   *  deltay/temp_distance  ;
@@ -704,39 +783,57 @@ void  Actin_Force_calculator(double Actin_Node_Position[][3], double Actin_Node_
                 }
                 
             }
+        } else if(CytoskeletonNetworkType==3){
+            double temp_force_value=0;
+            temp_force_value=-( Actin_spring_coefficient*MD_Time_Step/(Actin_spring_coefficient*MD_Time_Step+Actin_viscosity) )*( Actin_spring_coefficient*(Actin_Node_Pair_List_2[i][2]-Actin_Node_Pair_List_2[i][3]) +(2*Actin_viscosity/MD_Time_Step)*(Actin_Node_Pair_List_2[i][2]-2*Actin_Node_Pair_List_2[i][3]+Actin_Node_Pair_List_2[i][4]) ) + Actin_Force_history[i]*Actin_viscosity/(Actin_viscosity+Actin_spring_coefficient*MD_Time_Step);
             
-            
-            Actin_Node_Force[node1][0] +=  temp_force[0]  ;// force of springs and dashes
-            Actin_Node_Force[node1][1] +=  temp_force[1]  ;// force of springs and dashes
-            Actin_Node_Force[node1][2] +=  temp_force[2]  ;// force of springs and dashes
-            
-            Actin_Node_Force[node2][0] += - temp_force[0]  ;// force of springs and dashes
-            Actin_Node_Force[node2][1] += - temp_force[1]  ;// force of springs and dashes
-            Actin_Node_Force[node2][2] += - temp_force[2]  ;// force of springs and dashes
-            
+            Actin_Force_history[i]=temp_force_value;
+            temp_force[0]=-temp_force_value*deltax/temp_distance;
+            temp_force[1]=-temp_force_value*deltay/temp_distance;
+            temp_force[2]=-temp_force_value*deltaz/temp_distance;
+        } else if(CytoskeletonNetworkType==4){
+            double temp_force_value=Actin_Force_history[i];
+            temp_force_value+=Actin_spring_coefficient*( 1+exp(Actin_spring_coefficient/Actin_viscosity) )*(Actin_Node_Pair_List_2[i][2]-Actin_Node_Pair_List_2[i][3])/MD_Time_Step;
+            Actin_Force_history[i]=temp_force_value;
+            temp_force[0]=-temp_force_value*deltax/temp_distance;
+            temp_force[1]=-temp_force_value*deltay/temp_distance;
+            temp_force[2]=-temp_force_value*deltaz/temp_distance;
         }
+        
+        
+        
+        Actin_Node_Force[node1][0] +=  2*temp_force[0]  ;// force of springs and dashes
+        Actin_Node_Force[node1][1] +=  2*temp_force[1]  ;// force of springs and dashes
+        Actin_Node_Force[node1][2] +=  2*temp_force[2]  ;// force of springs and dashes
+        
+        Actin_Node_Force[node2][0] += - 2*temp_force[0]  ;// force of springs and dashes
+        Actin_Node_Force[node2][1] += - 2*temp_force[1]  ;// force of springs and dashes
+        Actin_Node_Force[node2][2] += - 2*temp_force[2]  ;// force of springs and dashes
+        
+        
         
         ///Damping force
-        temp_force[0]= Actin_damping_Coefficient*(Actin_Node_Velocity[node1][0]-Actin_Node_Velocity[node2][0]);
-        temp_force[1]= Actin_damping_Coefficient*(Actin_Node_Velocity[node1][1]-Actin_Node_Velocity[node2][1]);
-        temp_force[2]= Actin_damping_Coefficient*(Actin_Node_Velocity[node1][2]-Actin_Node_Velocity[node2][2]);
-        if (energy_calculation_flag==1.0) {
-            Total_Potential_Energy -= 0.5*Actin_damping_Coefficient*((Actin_Node_Velocity[node1][2]-Actin_Node_Velocity[node2][2])*(Actin_Node_Velocity[node1][2]-Actin_Node_Velocity[node2][2])+(Actin_Node_Velocity[node1][1]-Actin_Node_Velocity[node2][1])*(Actin_Node_Velocity[node1][1]-Actin_Node_Velocity[node2][1])+(Actin_Node_Velocity[node1][0]-Actin_Node_Velocity[node2][0])*(Actin_Node_Velocity[node1][0]-Actin_Node_Velocity[node2][0]));
-        }
-        
-        //        cout<<temp_force[0]<<"\t"<<temp_force[1]<<"\t"<<temp_force[2]<<"\n";
-        
-        
-        Actin_Node_Force[node1][0] += temp_force[0]  ; // force of springs and dashes
-        Actin_Node_Force[node1][1] += temp_force[1]  ;// force of springs and dashes
-        Actin_Node_Force[node1][2] += temp_force[2]  ;// force of springs and dashes
-        
-        Actin_Node_Force[node2][0] += -temp_force[0]  ; // force of springs and dashes
-        Actin_Node_Force[node2][1] += -temp_force[1]  ;// force of springs and dashes
-        Actin_Node_Force[node2][2] += -temp_force[2]  ;// force of springs and dashes
-        
-        
-        
+        /*
+         temp_force[0]= Actin_damping_Coefficient*(Actin_Node_Velocity[node1][0]-Actin_Node_Velocity[node2][0]);
+         temp_force[1]= Actin_damping_Coefficient*(Actin_Node_Velocity[node1][1]-Actin_Node_Velocity[node2][1]);
+         temp_force[2]= Actin_damping_Coefficient*(Actin_Node_Velocity[node1][2]-Actin_Node_Velocity[node2][2]);
+         if (energy_calculation_flag==1.0) {
+         Total_Potential_Energy -= 0.5*Actin_damping_Coefficient*((Actin_Node_Velocity[node1][2]-Actin_Node_Velocity[node2][2])*(Actin_Node_Velocity[node1][2]-Actin_Node_Velocity[node2][2])+(Actin_Node_Velocity[node1][1]-Actin_Node_Velocity[node2][1])*(Actin_Node_Velocity[node1][1]-Actin_Node_Velocity[node2][1])+(Actin_Node_Velocity[node1][0]-Actin_Node_Velocity[node2][0])*(Actin_Node_Velocity[node1][0]-Actin_Node_Velocity[node2][0]));
+         }
+         
+         //        cout<<temp_force[0]<<"\t"<<temp_force[1]<<"\t"<<temp_force[2]<<"\n";
+         
+         
+         Actin_Node_Force[node1][0] += temp_force[0]  ; // force of springs and dashes
+         Actin_Node_Force[node1][1] += temp_force[1]  ;// force of springs and dashes
+         Actin_Node_Force[node1][2] += temp_force[2]  ;// force of springs and dashes
+         
+         Actin_Node_Force[node2][0] += -temp_force[0]  ; // force of springs and dashes
+         Actin_Node_Force[node2][1] += -temp_force[1]  ;// force of springs and dashes
+         Actin_Node_Force[node2][2] += -temp_force[2]  ;// force of springs and dashes
+         
+         
+         */
         //
     }
     

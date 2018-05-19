@@ -62,13 +62,13 @@ int  Actin_Node_Pair_Identifier( )  // Reads the 'Actin' files and Identifies th
         read>>temp_double;
         
         read>>temp_double;
-        cout<<temp_double;
+        //        cout<<temp_double;
         read>>temp_double;
-        cout<<"\t"<<temp_double;
+        //        cout<<"\t"<<temp_double;
         read>>temp_double;
-        cout<<"\t"<<temp_double<<endl;
+        //        cout<<"\t"<<temp_double<<endl;
     }
-    cout<<endl;
+    //    cout<<endl;
     for(int i=Actin_num_of_triangles;i<Num_of_objects;i++)    // This loop reads the nettemp_double between the actin nodes
         // Remmember that we manually deleted the triangles from the 'actin' file by making an 'actin2d' file, so when we start reading the file, the triangular pyramid coordinates are written immediately after the node coordinates.
     {
@@ -89,7 +89,7 @@ int  Actin_Node_Pair_Identifier( )  // Reads the 'Actin' files and Identifies th
         Actin_pyramid_Node_3--;
         Actin_pyramid_Node_4--;
         
-        cout<<Actin_pyramid_Node_1<<"\t"<<Actin_pyramid_Node_2<<"\t"<<Actin_pyramid_Node_3<<"\t"<<Actin_pyramid_Node_4<<"\n";
+        //        cout<<Actin_pyramid_Node_1<<"\t"<<Actin_pyramid_Node_2<<"\t"<<Actin_pyramid_Node_3<<"\t"<<Actin_pyramid_Node_4<<"\n";
         //========================================== Very Fast, No need for modification =========================================
         for(int j=0;j<Actin_Node_Pair_list_temp.size()-1;j++)
         {
@@ -184,7 +184,7 @@ int  Actin_Node_Pair_Identifier( )  // Reads the 'Actin' files and Identifies th
 }
 
 
-void  Actin_constructor(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double  Actin_Node_Force[][3], double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds)
+void  Actin_constructor(double Actin_Node_Position[][3], double Actin_Node_Velocity[][3], double  Actin_Node_Force[][3], double Actin_Node_Pair_List[][3], int Actin_num_of_Bonds, double Actin_Node_Pair_List_2[][5])
 {
     int Actin_pyramid_Node_1, Actin_pyramid_Node_2, Actin_pyramid_Node_3, Actin_pyramid_Node_4;
     double temp_double;
@@ -381,7 +381,11 @@ void  Actin_constructor(double Actin_Node_Position[][3], double Actin_Node_Veloc
         temp_node_pair_distance[2]=temp_Actin_node_2_position[2]-temp_Actin_node_1_position[2];
         
         Actin_Node_Pair_List[i][2]=vectorlength(temp_node_pair_distance);
-        
+        Actin_Node_Pair_List_2[i][0]=Actin_Node_Pair_List[i][0];
+        Actin_Node_Pair_List_2[i][1]=Actin_Node_Pair_List[i][1];
+        Actin_Node_Pair_List_2[i][2]=Actin_Node_Pair_List[i][2];
+        Actin_Node_Pair_List_2[i][3]=Actin_Node_Pair_List[i][2];
+        //        Actin_Node_Pair_List_2[i][4]=Actin_Node_Pair_List[i][2];
     }
     //*******************************************************************************************************
     /*BUG

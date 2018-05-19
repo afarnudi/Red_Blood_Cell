@@ -28,3 +28,4 @@
 #define Node_radius 1.0 // width of interacion range of nodes: use to be 1.0 !
 
 #endif /* General_Membrane_h */
+
