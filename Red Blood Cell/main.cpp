@@ -126,10 +126,6 @@ int main() //main**
     int num_of_test_particles=13;
     int test_particles[num_of_test_particles][3];
     //direction identifier
-    
-    //I want to ignore this one
-    
-    
     for (int i=0; i<num_of_test_particles; i++) {
         test_particles[i][0]=12+i;
         test_particles[i][1]=-11.5+i*1;
