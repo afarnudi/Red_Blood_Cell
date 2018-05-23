@@ -116,7 +116,7 @@ void Actin_node_pair_list_2_updater (double Actin_Node_Position[][3], double Act
 #define energy_calculation_flag 0.0
 
 
-//sample modification
+//I want to keep this change
 
 int main() //main**
 {
@@ -126,6 +126,10 @@ int main() //main**
     int num_of_test_particles=13;
     int test_particles[num_of_test_particles][3];
     //direction identifier
+    
+    //I want to ignore this one
+    
+    
     for (int i=0; i<num_of_test_particles; i++) {
         test_particles[i][0]=12+i;
         test_particles[i][1]=-11.5+i*1;
