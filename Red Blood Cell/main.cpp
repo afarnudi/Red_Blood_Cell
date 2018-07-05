@@ -43,6 +43,11 @@ void CellCOM( double com[3], double Membrane_Node_Position[][3], double Actin_No
 
 //-----------------------------thermostat------------------
 void Thermostat_2(double Membrane_Node_Velocity[][3], double Actin_Node_Velocity[][3], int Membrane_num_of_Nodes);
+void Thermostat_N6(double Membrane_Node_Position[][3], double Actin_Node_Position[Actin_num_of_Nodes][3], double Membrane_Node_Velocity[][3], double Actin_Node_Velocity[][3], int Membrane_num_of_Nodes);
+
+void two_vector_COM_calculator(double vec_COM[3], double vec_1[][3], double vec_2[][3], double vec_1_mass, double vec_2_mass, int vec_1_size, int vec_2_size);
+
+void COM_omega_calculator(double Omega_com[3], double Membrane_Node_Velocity[][3], double Actin_Node_Velocity[][3], int Membrane_num_of_Nodes,  double Membrane_Node_Position[][3], double Actin_Node_Position[Actin_num_of_Nodes][3], double Position_COM[3], double V_com[3]);
 //-----------------------------thermostat------------------
 
 
@@ -116,8 +121,8 @@ void Actin_node_pair_list_2_updater (double Actin_Node_Position[][3], double Act
 #define energy_calculation_flag 0.0
 
 
-//I want to keep this change
-//
+
+
 int main() //main**
 {
     clock_t tStart = clock();//Time the programme
@@ -543,7 +548,8 @@ int main() //main**
         
         if(MD_Step%RunThermostatePerstep==0)
         {
-            Thermostat_2(Membrane_Node_Velocity, Actin_Node_Velocity, Membrane_num_of_Nodes);
+            //            Thermostat_2(Membrane_Node_Velocity, Actin_Node_Velocity, Membrane_num_of_Nodes);
+            Thermostat_N6(Membrane_Node_Position, Actin_Node_Position, Membrane_Node_Velocity, Actin_Node_Velocity, Membrane_num_of_Nodes);
         }
         
         
@@ -1120,6 +1126,154 @@ void Thermostat_2(double Membrane_Node_Velocity[][3], double Actin_Node_Velocity
     //    V_com[2]=(V_com[2]+temp_V[2])/(Membrane_num_of_Nodes*Membrane_Node_Mass+Actin_num_of_Nodes*Actin_Node_Mass);
     //
     //    cout<<"COM after= "<<sqrt(V_com[0]*V_com[0]+V_com[1]*V_com[1]+V_com[2]*V_com[2])<<"\nV_X="<<V_com[0]<<"\tV_Y="<<V_com[1]<<"\tV_Z="<<V_com[2]<<"\n\n";
+    
+}
+
+void two_vector_COM_calculator(double vec_COM[3], double vec_1[][3], double vec_2[][3], double vec_1_mass, double vec_2_mass, int vec_1_size, int vec_2_size){
+    double vec_2_COM[3]={0,0,0};
+    
+    for (int i=0; i<3; i++) {
+        vec_COM[i]=0;
+    }
+    
+    for (int i=0; i<vec_1_size; i++) {
+        vec_COM[0]+=vec_1[i][0];
+        vec_COM[1]+=vec_1[i][1];
+        vec_COM[2]+=vec_1[i][2];
+    }
+    
+    vec_COM[0]*=vec_1_mass;
+    vec_COM[1]*=vec_1_mass;
+    vec_COM[2]*=vec_1_mass;
+    
+    for (int i=0; i<vec_2_size; i++) {
+        vec_2_COM[0]+=vec_2[i][0];
+        vec_2_COM[1]+=vec_2[i][1];
+        vec_2_COM[2]+=vec_2[i][2];
+    }
+    
+    vec_2_COM[0]*=vec_2_mass;
+    vec_2_COM[1]*=vec_2_mass;
+    vec_2_COM[2]*=vec_2_mass;
+    
+    vec_COM[0]=(vec_COM[0]+vec_2_COM[0])/(vec_1_size*vec_1_mass+vec_2_size*vec_2_mass);
+    vec_COM[1]=(vec_COM[1]+vec_2_COM[1])/(vec_1_size*vec_1_mass+vec_2_size*vec_2_mass);
+    vec_COM[2]=(vec_COM[2]+vec_2_COM[2])/(vec_1_size*vec_1_mass+vec_2_size*vec_2_mass);
+}
+
+
+void COM_omega_calculator(double Omega_com[3], double Membrane_Node_Velocity[][3], double Actin_Node_Velocity[][3], int Membrane_num_of_Nodes, double Membrane_Node_Position[][3], double Actin_Node_Position[Actin_num_of_Nodes][3], double Position_COM[3], double V_com[3]){
+    double angular_momentum[3]={0,0,0}, actin_angular_momentum[3]={0,0,0}, moment_of_inertia=0, actin_moment_of_inertia=0, temp_cross_product[3], temp_position[3], temp_velocity[3];
+    
+    for (int i=0; i<Membrane_num_of_Nodes; i++) {
+        for (int j=0; j<3; j++) {
+            temp_position[j]=Membrane_Node_Position[i][j]-Position_COM[j];
+            temp_velocity[j]=Membrane_Node_Velocity[i][j]-V_com[j];
+        }
+        
+        crossvector(temp_cross_product, temp_position, temp_velocity);
+        moment_of_inertia+=innerproduct(temp_position, temp_position);
+        
+        for (int j=0; j<3; j++) {
+            angular_momentum[j]+=temp_cross_product[j];
+        }
+        
+    }
+    moment_of_inertia*=Membrane_Node_Mass;
+    for (int j=0; j<3; j++) {
+        angular_momentum[j]*=Membrane_Node_Mass;
+    }
+    
+    //========================== Actin ==========================
+    for (int i=0; i<Actin_num_of_Nodes; i++) {
+        for (int j=0; j<3; j++) {
+            temp_position[j]=Actin_Node_Position[i][j]-Position_COM[j];
+            temp_velocity[j]=Actin_Node_Velocity[i][j]-V_com[j];
+        }
+        crossvector(temp_cross_product, temp_position, temp_velocity);
+        actin_moment_of_inertia+=innerproduct(temp_position, temp_position);
+        for (int j=0; j<3; j++) {
+            actin_angular_momentum[j]+=temp_cross_product[j];
+        }
+        
+    }
+    moment_of_inertia+=actin_moment_of_inertia*Actin_Node_Mass;
+    for (int j=0; j<3; j++) {
+        angular_momentum[j]+=actin_angular_momentum[j]*Actin_Node_Mass;
+        Omega_com[j]=angular_momentum[j]/moment_of_inertia;
+    }
+    
+    
+}
+
+void Thermostat_N6(double Membrane_Node_Position[][3], double Actin_Node_Position[Actin_num_of_Nodes][3], double Membrane_Node_Velocity[][3], double Actin_Node_Velocity[][3], int Membrane_num_of_Nodes)
+{
+    double Position_COM[3]={0,0,0}, Velocity_COM[3]={0,0,0}, Omega_com[3]={0,0,0}, Extended_velocity[3]={0,0,0};
+    
+    two_vector_COM_calculator(Velocity_COM, Membrane_Node_Velocity, Actin_Node_Velocity, Membrane_Node_Mass, Actin_Node_Mass, Membrane_num_of_Nodes, Actin_num_of_Nodes);
+    
+    two_vector_COM_calculator(Position_COM, Membrane_Node_Position, Actin_Node_Position, Membrane_Node_Mass, Actin_Node_Mass, Membrane_num_of_Nodes, Actin_num_of_Nodes);
+    
+    COM_omega_calculator(Omega_com, Membrane_Node_Velocity, Actin_Node_Velocity, Membrane_num_of_Nodes, Membrane_Node_Position, Actin_Node_Position, Position_COM, Velocity_COM);
+    //    COM_velocity_calculator(V_com, Membrane_Node_Velocity, Actin_Node_Velocity, Membrane_num_of_Nodes);
+    
+    
+    double alpha;
+    //----------------------membrane---------------------
+    double Kinetic_energy=0, temp_Kinetic_energy=0, temp_velocity[3]={0,0,0}, temp_cross_product[3]={0,0,0}, temp_vector[3]={0,0,0};
+    for (int i=0; i<Membrane_num_of_Nodes; i++) {
+        
+        for (int j=0; j<3; j++) {
+            temp_vector[j]=Membrane_Node_Position[i][j]-Position_COM[j];
+        }
+        crossvector(temp_cross_product, Omega_com, temp_vector);
+        for (int j=0; j<3; j++) {
+            temp_vector[j]=Membrane_Node_Velocity[i][j]-Velocity_COM[j]-temp_cross_product[j];
+        }
+        Kinetic_energy+=vectorlength_squared(temp_vector);
+    }
+    Kinetic_energy*=Membrane_Node_Mass;
+    
+    
+    
+    
+    
+    for (int i=0; i<Actin_num_of_Nodes; i++) {
+        for (int j=0; j<3; j++) {
+            temp_vector[j]=Actin_Node_Position[i][j]-Position_COM[j];
+        }
+        crossvector(temp_cross_product, Omega_com, temp_vector);
+        for (int j=0; j<3; j++) {
+            temp_vector[j]=Actin_Node_Velocity[i][j]-Velocity_COM[j]-temp_cross_product[j];
+        }
+        temp_Kinetic_energy+=vectorlength_squared(temp_vector);
+    }
+    temp_Kinetic_energy*=Actin_Node_Mass;
+    Kinetic_energy+=temp_Kinetic_energy;
+    
+    alpha=sqrt(6*(Membrane_num_of_Nodes+Actin_num_of_Nodes)*KT)/Kinetic_energy;
+    
+    for(int i=0;i<Membrane_num_of_Nodes;i++)
+    {
+        Membrane_Node_Velocity[i][0]*=alpha;
+        Membrane_Node_Velocity[i][1]*=alpha;
+        Membrane_Node_Velocity[i][2]*=alpha;
+        //        Membrane_Node_Velocity[i][0]+=V_com[0];
+        //        Membrane_Node_Velocity[i][1]+=V_com[1];
+        //        Membrane_Node_Velocity[i][2]+=V_com[2];
+    }
+    
+    for(int i=0;i<Actin_num_of_Nodes;i++)
+    {
+        Actin_Node_Velocity [i] [0]*=alpha;
+        Actin_Node_Velocity [i] [1]*=alpha;
+        Actin_Node_Velocity [i] [2]*=alpha;
+        //        Actin_Node_Velocity[i][0]+=V_com[0];
+        //        Actin_Node_Velocity[i][1]+=V_com[1];
+        //        Actin_Node_Velocity[i][2]+=V_com[2];
+    }
+    
+    
     
 }
 
