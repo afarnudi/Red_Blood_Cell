@@ -24,6 +24,9 @@ double vectorlength(double v[3]) // calculate length of vector
 {
     return  sqrt( v[0]*v[0]+v[1]*v[1]+v[2]*v[2] );
 }
+double vectorlength_squared(double v[3]){
+    return   v[0]*v[0]+v[1]*v[1]+v[2]*v[2];
+}
 
 double sign_function(double x)
 {
@@ -56,4 +59,3 @@ void Vector_transformation (double MV[3],double  M[3][3] ,double V[3])
     MV[1]= M[1][0] * V [0] + M[1][1] * V [1]  +M[1][2] * V [2] ;
     MV[2]= M[2][0] * V [0] + M[2][1] * V [1]  +M[2][2] * V [2] ;
 }
-
