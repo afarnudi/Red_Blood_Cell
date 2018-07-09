@@ -14,6 +14,9 @@
 		004AE15C1FF396B70054168F /* General_functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 004AE1521FF396B60054168F /* General_functions.cpp */; };
 		004AE15D1FF396B70054168F /* ECM_functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 004AE1551FF396B60054168F /* ECM_functions.cpp */; };
 		004AE15E1FF396B70054168F /* Chromatin_functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 004AE1571FF396B60054168F /* Chromatin_functions.cpp */; };
+		005BAB0D20F1EF8E00A278EA /* Thermostat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 005BAB0B20F1EF8E00A278EA /* Thermostat.cpp */; };
+		005BAB0F20F37EA700A278EA /* N6_Thermostat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 005BAB0E20F37EA700A278EA /* N6_Thermostat.cpp */; };
+		005BAB1120F37F0000A278EA /* COM_calculators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 005BAB1020F37F0000A278EA /* COM_calculators.cpp */; };
 		00A1A0D3205934DC00DA4F68 /* Monte_Carlo_Bond_Flip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00A1A0D2205934DC00DA4F68 /* Monte_Carlo_Bond_Flip.cpp */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +53,10 @@
 		004AE1551FF396B60054168F /* ECM_functions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ECM_functions.cpp; sourceTree = "<group>"; };
 		004AE1561FF396B60054168F /* General_constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = General_constants.h; sourceTree = "<group>"; };
 		004AE1571FF396B60054168F /* Chromatin_functions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Chromatin_functions.cpp; sourceTree = "<group>"; };
+		005BAB0B20F1EF8E00A278EA /* Thermostat.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Thermostat.cpp; sourceTree = "<group>"; };
+		005BAB0C20F1EF8E00A278EA /* Thermostat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Thermostat.hpp; sourceTree = "<group>"; };
+		005BAB0E20F37EA700A278EA /* N6_Thermostat.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = N6_Thermostat.cpp; sourceTree = "<group>"; };
+		005BAB1020F37F0000A278EA /* COM_calculators.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = COM_calculators.cpp; sourceTree = "<group>"; };
 		00A1A0D1205934DB00DA4F68 /* Monte_Carlo_Bond_Flip.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Monte_Carlo_Bond_Flip.hpp; sourceTree = "<group>"; };
 		00A1A0D2205934DC00DA4F68 /* Monte_Carlo_Bond_Flip.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Monte_Carlo_Bond_Flip.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,6 +91,7 @@
 		004AE13C1FF396450054168F /* Red Blood Cell */ = {
 			isa = PBXGroup;
 			children = (
+				005BAB1220F37F3400A278EA /* Thermostat */,
 				004AE13D1FF396450054168F /* main.cpp */,
 				00A1A0D2205934DC00DA4F68 /* Monte_Carlo_Bond_Flip.cpp */,
 				00A1A0D1205934DB00DA4F68 /* Monte_Carlo_Bond_Flip.hpp */,
@@ -107,6 +115,17 @@
 				004AE14A1FF396B50054168F /* General_Membrane.h */,
 			);
 			path = "Red Blood Cell";
+			sourceTree = "<group>";
+		};
+		005BAB1220F37F3400A278EA /* Thermostat */ = {
+			isa = PBXGroup;
+			children = (
+				005BAB0B20F1EF8E00A278EA /* Thermostat.cpp */,
+				005BAB1020F37F0000A278EA /* COM_calculators.cpp */,
+				005BAB0E20F37EA700A278EA /* N6_Thermostat.cpp */,
+				005BAB0C20F1EF8E00A278EA /* Thermostat.hpp */,
+			);
+			path = Thermostat;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -169,6 +188,9 @@
 				004AE15C1FF396B70054168F /* General_functions.cpp in Sources */,
 				00A1A0D3205934DC00DA4F68 /* Monte_Carlo_Bond_Flip.cpp in Sources */,
 				004AE1591FF396B70054168F /* Actin_membrane_shared_functions.cpp in Sources */,
+				005BAB0D20F1EF8E00A278EA /* Thermostat.cpp in Sources */,
+				005BAB1120F37F0000A278EA /* COM_calculators.cpp in Sources */,
+				005BAB0F20F37EA700A278EA /* N6_Thermostat.cpp in Sources */,
 				004AE15B1FF396B70054168F /* Membrane_functions.cpp in Sources */,
 				004AE13E1FF396450054168F /* main.cpp in Sources */,
 				004AE15E1FF396B70054168F /* Chromatin_functions.cpp in Sources */,
